@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "comission")
 public class Comission {
@@ -35,17 +36,22 @@ public class Comission {
 	@Column(name = "location_c")
 	private String location;
 	
+	@Column(name = "student_limit")
+	private short studentLimit;
+	
 	public Comission() {}
 	
 	public Comission(ZonedDateTime startDateTime,
 					 ZonedDateTime endDateTime,
 					 boolean presenceFormat,
 					 String studyDirection,
-					 String location) {
+					 String location,
+					 Short studentLimit) {
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
 		this.presenceFormat = presenceFormat;
 		this.studyDirection = studyDirection;
 		this.location = location;
+		this.studentLimit = studentLimit;
 	}
 }

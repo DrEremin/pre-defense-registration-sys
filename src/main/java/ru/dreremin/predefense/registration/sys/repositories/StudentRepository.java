@@ -7,5 +7,5 @@ import ru.dreremin.predefense.registration.sys.models.Student;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long>{
-
+	
 }

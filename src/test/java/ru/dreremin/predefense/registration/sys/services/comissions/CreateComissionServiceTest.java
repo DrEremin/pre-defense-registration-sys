@@ -7,7 +7,6 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +47,8 @@ class CreateComissionServiceTest {
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
 				true,
 				"ПИ",
-				"Аудитория №7");
+				"Аудитория №7",
+				(short)10);
 	}
 	
 	@BeforeEach

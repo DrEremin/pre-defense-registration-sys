@@ -1,8 +1,6 @@
 package ru.dreremin.predefense.registration.sys.dto.requestdto.impl;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -11,7 +9,6 @@ import ru.dreremin.predefense.registration.sys.exceptions.NegativeTimePeriodExce
 
 public class ComissionDto {
 	
-	//public static final String rgx = "20[2-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])T([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9][+-][0-1][0-9]:[034][05]\\[[A-Za-z]/[A-Za-z]\\]";
 	@NotNull
 	private final ZonedDateTime startTimestamp;
 	@NotNull
@@ -28,21 +25,21 @@ public class ComissionDto {
 	@NotNull
 	private final String location;
 	
+	@NotNull
+	private final Short studentLimit;
+	
 	public ComissionDto(ZonedDateTime startDateTime, 
 						ZonedDateTime endDateTime, 
 						Boolean presenceFormat, 
 						String studyDirection, 
-						String location) /*throws DateTimeParseException*/ {
-		/*
-		this.startTimestamp = ZonedDateTime.parse(
-					startDateTime, DateTimeFormatter.ISO_ZONED_DATE_TIME);
-		this.endTimestamp = ZonedDateTime.parse(
-					endDateTime, DateTimeFormatter.ISO_ZONED_DATE_TIME);*/
+						String location,
+						Short studentLimit) {
 		this.startTimestamp = startDateTime;
 		this.endTimestamp = endDateTime;
 		this.presenceFormat = presenceFormat;
 		this.studyDirection = studyDirection;
 		this.location = location;
+		this.studentLimit = studentLimit;
 	}
 	 
 	public ZonedDateTime getStartTimestamp() { return this.startTimestamp; }
@@ -54,6 +51,8 @@ public class ComissionDto {
 	public String getStudyDirection() { return this.studyDirection; }
 	
 	public String getLocation() { return this.location; }
+	
+	public Short getStudentLimit() { return this.studentLimit; }
 	
 	public void periodValidation() throws NegativeTimePeriodException {
 		if (this.endTimestamp.toLocalDateTime().compareTo(

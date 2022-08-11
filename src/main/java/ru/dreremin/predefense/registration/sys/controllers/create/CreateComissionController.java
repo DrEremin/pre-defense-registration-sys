@@ -1,7 +1,5 @@
 package ru.dreremin.predefense.registration.sys.controllers.create;
 
-import java.time.format.DateTimeParseException;
-
 import javax.validation.Valid;
 
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,8 +26,7 @@ public class CreateComissionController {
 	@PutMapping(value = "/comission-create", consumes = "application/json")
 	public StatusDto createComission(@Valid @RequestBody ComissionDto dto) 
 			throws MethodArgumentNotValidException,
-				   NegativeTimePeriodException,
-				   DateTimeParseException {
+				   NegativeTimePeriodException {
 		dto.periodValidation();
 		service.createComission(dto);
 		log.info("CreateComissionController.createComission() success");

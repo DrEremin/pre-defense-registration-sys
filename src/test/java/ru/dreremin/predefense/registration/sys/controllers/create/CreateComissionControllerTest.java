@@ -31,11 +31,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.exceptions.UniquenessViolationException;
+import ru.dreremin.predefense.registration.sys.exceptions.NegativeTimePeriodException;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
-import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateComissionService;
 
 @Slf4j
 @SpringBootTest
@@ -44,9 +42,6 @@ import ru.dreremin.predefense.registration.sys.services.comissions
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CreateComissionControllerTest {
-	
-	@Autowired
-	private CreateComissionService service;
 	
 	@Autowired
 	private ComissionRepository repository;
@@ -75,7 +70,7 @@ class CreateComissionControllerTest {
 				+ "\"2022-08-03T12:15:30+03:00[Europe/Moscow]\",\n";
 		this.presenceFormatString = "\t\"presenceFormat\" : true,\n";
 		this.studyDirectionString = "\t\"studyDirection\" : \"ПИ\",\n";
-		this.locationString = "\t\"location\" : \"Аудитория №7\"\n";
+		this.locationString = "\t\"location\" : \"Аудитория №7\",\n";
 	}
 	
 	private String createJson() {
@@ -85,6 +80,7 @@ class CreateComissionControllerTest {
 				.append(this.presenceFormatString)
 				.append(this.studyDirectionString)
 				.append(this.locationString)
+				.append("\t\"studentLimit\" : 10\n")
 				.append("}")
 				.toString();
 	}
@@ -143,6 +139,25 @@ class CreateComissionControllerTest {
 		.andExpect(jsonPath("$.message", is("Failed to read request body")))
 		.andExpect(r -> assertInstanceOf(
 				HttpMessageNotReadableException.class, 
+				r.getResolvedException()));
+	}
+	
+	@Test
+	void CreateComission_NegativeTimePeriod() throws Exception {
+		this.json = this.json.replace("endDateTime", "startDateTime");
+		this.json = this.json.replaceFirst("startDateTime", 
+										   "endDateTime");
+		this.mockMvc.perform(put("/comission-create")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(this.json)
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isBadRequest())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		.andExpect(jsonPath("$.status", is(400)))
+		.andExpect(jsonPath("$.message", 
+				is("The end date-time is earlier than start date-time")))
+		.andExpect(r -> assertInstanceOf(
+				NegativeTimePeriodException.class, 
 				r.getResolvedException()));
 	}
 }

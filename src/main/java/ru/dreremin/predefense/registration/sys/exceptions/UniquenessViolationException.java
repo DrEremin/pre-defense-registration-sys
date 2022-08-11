@@ -10,4 +10,6 @@ public class UniquenessViolationException extends Exception {
 	public String toString() {
 		return "UniquenessViolationException: " + super.getMessage();
 	}
+	
+	
 }

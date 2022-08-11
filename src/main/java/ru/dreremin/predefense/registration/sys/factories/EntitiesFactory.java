@@ -41,6 +41,7 @@ public class EntitiesFactory {
 							 dto.getEndTimestamp(), 
 							 dto.getPresenceFormat(), 
 							 dto.getStudyDirection(), 
-							 dto.getLocation());
+							 dto.getLocation(),
+							 dto.getStudentLimit());
 	}
 }
