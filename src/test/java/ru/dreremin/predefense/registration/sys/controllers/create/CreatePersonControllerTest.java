@@ -57,7 +57,8 @@ class CreatePersonControllerTest {
 	
 	private Instant time;
 
-	@BeforeAll void beforeAll() throws Exception {
+	@BeforeAll 
+	void beforeAll() throws Exception {
 		this.firstDto = new TeacherDto("Иванов", 
 								  	   "Иван", 
 								  	   "Иванович", 
@@ -67,7 +68,8 @@ class CreatePersonControllerTest {
 								  	   "Преподаватель");
 	}
 
-	@BeforeEach void beforeEach() throws Exception {
+	@BeforeEach 
+	void beforeEach() throws Exception {
 		this.time = Instant.now();
 	}
 
@@ -78,7 +80,8 @@ class CreatePersonControllerTest {
 		log.info("run time: " + Duration.between(time, Instant.now()));
 	}
 
-	@Test void createTeacher_Success() throws Exception {
+	@Test 
+	void createTeacher_Success() throws Exception {
 		mockMvc.perform(put("/person-create/teacher")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(mapper.writeValueAsString(this.firstDto))
@@ -93,7 +96,8 @@ class CreatePersonControllerTest {
 		assertTrue(this.boxRepo.findAll().size() == 1);
 	}
 	
-	@Test void createTeacher_LoginExists() throws Exception {
+	@Test 
+	void createTeacher_LoginExists() throws Exception {
 		TeacherDto dto = new TeacherDto("Петров", 
 										"Петр", 
 										"Петрович", 
@@ -125,7 +129,8 @@ class CreatePersonControllerTest {
 		assertTrue(this.boxRepo.findAll().size() == 1);
 	}
 
-	@Test void createTeacher_EmailExists() throws Exception {
+	@Test 
+	void createTeacher_EmailExists() throws Exception {
 		TeacherDto dto = new TeacherDto("Петров", 
 										"Петр", 
 										"Петрович", 

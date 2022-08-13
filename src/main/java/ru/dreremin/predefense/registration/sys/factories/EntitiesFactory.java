@@ -2,11 +2,13 @@ package ru.dreremin.predefense.registration.sys.factories;
 
 import ru.dreremin.predefense.registration.sys.dto.requestdto.PersonDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
 import ru.dreremin.predefense.registration.sys.models.Authorization;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.models.Student;
+import ru.dreremin.predefense.registration.sys.models.StudentComission;
 
 public class EntitiesFactory {
 

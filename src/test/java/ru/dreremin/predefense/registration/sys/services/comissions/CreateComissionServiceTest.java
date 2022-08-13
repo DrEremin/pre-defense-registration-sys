@@ -48,7 +48,7 @@ class CreateComissionServiceTest {
 				true,
 				"ПИ",
 				"Аудитория №7",
-				(short)10);
+				(short)2);
 	}
 	
 	@BeforeEach

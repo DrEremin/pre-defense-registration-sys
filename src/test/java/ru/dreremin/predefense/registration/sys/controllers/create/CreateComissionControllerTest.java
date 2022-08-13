@@ -43,11 +43,9 @@ import ru.dreremin.predefense.registration.sys.repositories
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CreateComissionControllerTest {
 	
-	@Autowired
-	private ComissionRepository repository;
+	@Autowired private ComissionRepository repository;
 	
-	@Autowired
-	private MockMvc mockMvc;
+	@Autowired private MockMvc mockMvc;
 	
 	private String startDateTimeString;
 	

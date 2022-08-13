@@ -2,10 +2,8 @@ package ru.dreremin.predefense.registration.sys.controllers.create;
 
 import javax.validation.Valid;
 
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -18,15 +16,12 @@ import ru.dreremin.predefense.registration.sys.services.comissions.CreateComissi
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping
 public class CreateComissionController {
 	
 	private final CreateComissionService service;
 	
 	@PutMapping(value = "/comission-create", consumes = "application/json")
-	public StatusDto createComission(@Valid @RequestBody ComissionDto dto) 
-			throws MethodArgumentNotValidException,
-				   NegativeTimePeriodException {
+	public StatusDto createComission(@Valid @RequestBody ComissionDto dto) throws NegativeTimePeriodException {
 		dto.periodValidation();
 		service.createComission(dto);
 		log.info("CreateComissionController.createComission() success");
