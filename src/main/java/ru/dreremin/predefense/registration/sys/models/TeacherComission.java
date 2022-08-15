@@ -7,6 +7,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.Getter;
+
+@Getter
 @Entity
 @Table(name = "teacher_comission")
 public class TeacherComission {
@@ -21,5 +24,11 @@ public class TeacherComission {
 	
 	@Column(name = "id_c_tcfk")
 	private int comissionId;
-
+	
+	public TeacherComission() {}
+	
+	public TeacherComission(long teacherId, int comissionId) {
+		this.teacherId = teacherId;
+		this.comissionId = comissionId;
+	}
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .EntitiesMismatchException;
+import ru.dreremin.predefense.registration.sys.exceptions.FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .NegativeTimePeriodException;
 import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
@@ -68,6 +69,13 @@ public class ExceptionsController {
 	@ExceptionHandler(EntitiesMismatchException.class)
 	public ResponseEntity<StatusDto> handleEntityAbsenceException(
 			EntitiesMismatchException e) {
+		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
+									HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(FailedAuthenticationException.class)
+	public ResponseEntity<StatusDto> handleEntityAbsenceException(
+			FailedAuthenticationException e) {
 		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
 									HttpStatus.CONFLICT);
 	}
