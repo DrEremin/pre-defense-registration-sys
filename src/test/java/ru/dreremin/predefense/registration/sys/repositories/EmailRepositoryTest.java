@@ -19,7 +19,6 @@ import org.springframework.boot.test.autoconfigure.jdbc
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
 import lombok.extern.slf4j.Slf4j;
 
 import ru.dreremin.predefense.registration.sys.models.Email;
@@ -45,11 +44,11 @@ class EmailRepositoryTest {
 		repo.save(new Email(box, personId));
 	}
 	@BeforeEach
-    void beforeEach() { this.time = Instant.now(); }
+    void beforeEach() { time = Instant.now(); }
 
     @AfterEach
     void afterEach() {
-        log.info("run time: " + Duration.between(time, Instant.now()));
+        log.info("testing time: " + Duration.between(time, Instant.now()));
     }
     
     @AfterAll

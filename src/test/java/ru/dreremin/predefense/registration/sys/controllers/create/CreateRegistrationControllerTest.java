@@ -157,15 +157,13 @@ class CreateRegistrationControllerTest {
 	}
 	
 	@BeforeEach
-    void beforeEach() { 
-		this.time = Instant.now();
-	}
+    void beforeEach() { this.time = Instant.now(); }
 	
 	@AfterEach
     void afterEach() {
 		studentComissionRepo.deleteAll();
 		teacherComissionRepo.deleteAll();
-		log.info("test time: " + Duration.between(time, Instant.now()));
+		log.info("testing time: " + Duration.between(time, Instant.now()));
 	}
 	
 	@AfterAll

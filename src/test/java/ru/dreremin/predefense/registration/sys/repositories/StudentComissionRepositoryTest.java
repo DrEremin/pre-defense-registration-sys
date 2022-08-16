@@ -81,14 +81,14 @@ class StudentComissionRepositoryTest {
 		String[] logins = {"1", "2", "3"};
 		
 		for (int i = 0; i < 3; i++) {
-			this.studentDto = new StudentDto(
+			studentDto = new StudentDto(
 					s, s, s, emails[i], logins[i], s, s, s, s);
-			this.studentService.createStudent(this.studentDto);
+			studentService.createStudent(studentDto);
 		}
 		
-		List<Student> students = this.studentRepo.findAll();
+		List<Student> students = studentRepo.findAll();
 		
-		this.comissionDto = new ComissionDto(
+		comissionDto = new ComissionDto(
 				ZonedDateTime.parse(
 						"2022-08-03T10:15:30+03:00[Europe/Moscow]"),
 				ZonedDateTime.parse(
@@ -97,46 +97,44 @@ class StudentComissionRepositoryTest {
 				s,
 				s,
 				(short)10);
-		this.comissionService.createComission(this.comissionDto);
+		comissionService.createComission(comissionDto);
 		
-		this.comission = comissionRepo.findAll().get(0);
+		comission = comissionRepo.findAll().get(0);
 		
 		for(Student student : students) {
 			studentComissionRepo.save(
 					new StudentComission(
-							student.getId(), this.comission.getId()));
+							student.getId(), comission.getId()));
 		}
 	}
 	
 	@BeforeEach
-	public void beforeEach() {
-		time = Instant.now();
-	}
+	public void beforeEach() { time = Instant.now(); }
 	
 	@AfterEach
 	public void afterEach() {
-		log.info("time: " + Duration.between(time, Instant.now()));
+		log.info("testing time: " + Duration.between(time, Instant.now()));
 	}
 	
 	@AfterAll
 	public void afterAll() {
-		this.emailRepo.deleteAll();
-        this.authorizationRepo.deleteAll();
-		this.personRepo.deleteAll();
-		this.comissionRepo.deleteAll();
-		this.studentRepo.deleteAll();
-		this.studentComissionRepo.deleteAll();
+		emailRepo.deleteAll();
+        authorizationRepo.deleteAll();
+		personRepo.deleteAll();
+		comissionRepo.deleteAll();
+		studentRepo.deleteAll();
+		studentComissionRepo.deleteAll();
 	}
 	
 	@Test
 	void findByComissionId_Success() {
-		assertTrue(this.studentComissionRepo.findByComissionId(
-				this.comission.getId()).size() == 3);
+		assertTrue(studentComissionRepo.findByComissionId(
+				comission.getId()).size() == 3);
 	}
 	
 	@Test
 	void findByComissionId_IdDoesNotExists() {
-		assertTrue(this.studentComissionRepo.findByComissionId(
-				this.comission.getId() + 1).size() == 0);
+		assertTrue(studentComissionRepo.findByComissionId(
+				comission.getId() + 1).size() == 0);
 	}
 }

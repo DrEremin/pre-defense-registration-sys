@@ -19,8 +19,8 @@ import org.springframework.boot.test.autoconfigure.jdbc
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
 import lombok.extern.slf4j.Slf4j;
+
 import ru.dreremin.predefense.registration.sys.models.Authorization;
 
 @Slf4j
@@ -46,14 +46,14 @@ class AuthorizationRepositoryTest {
 	}
 	
 	@BeforeEach
-    void beforeEach() { this.time = Instant.now(); }
+    void beforeEach() { time = Instant.now(); }
 
 	@AfterAll
 	void afterAll() { repo.deleteById(login); }
 	
     @AfterEach
     void afterEach() {
-        log.info("run time: " + Duration.between(time, Instant.now()));
+        log.info("testing time: " + Duration.between(time, Instant.now()));
     }
     
 	@Test

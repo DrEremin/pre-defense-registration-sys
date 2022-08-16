@@ -15,13 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
 import lombok.extern.slf4j.Slf4j;
 
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
-import ru.dreremin.predefense.registration.sys.exceptions.UniquenessViolationException;
+import ru.dreremin.predefense.registration.sys.exceptions
+		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Person;
-import ru.dreremin.predefense.registration.sys.repositories.AuthorizationRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .AuthorizationRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 
@@ -42,70 +43,71 @@ class CreateStudentServiceTest {
 	
 	@BeforeAll
 	void beforeAll() {
-		this.firstDto = new StudentDto("Иванов", 
-									   "Иван", 
-									   "Иванович", 
-									   "ivan@mail.ru", 
-									   "ivanlogin", 
-									   "password12345",
-									   "ПИ",
-									   "Очно",
-									   "ЗИ981");
+		firstDto = new StudentDto(
+				"Иванов", 
+				"Иван", 
+				"Иванович", 
+				"ivan@mail.ru", 
+				"ivanlogin", 
+				"password12345",
+				"ПИ",
+				"Очно",
+				"ЗИ981");
 	}
 	
 	@BeforeEach
-    void beforeEach() { 
-		this.time = Instant.now();
-	}
+    void beforeEach() { time = Instant.now(); }
 	
 	@AfterEach
     void afterEach() {
-        this.box.deleteAll();
-        this.author.deleteAll();
-		this.person.deleteAll();
-		log.info("run time: " + Duration.between(time, Instant.now()));
+        box.deleteAll();
+        author.deleteAll();
+		person.deleteAll();
+		log.info("testing time: " + Duration.between(time, Instant.now()));
     }
 	
 	@Test
 	void createStudent_Success() {
-		assertDoesNotThrow(() -> this.service.createStudent(this.firstDto));
-		assertTrue(this.author.existsByLogin("ivanlogin"));
-		assertTrue(this.box.existsByBox("ivan@mail.ru"));
+		assertDoesNotThrow(() -> service.createStudent(firstDto));
+		assertTrue(author.existsByLogin("ivanlogin"));
+		assertTrue(box.existsByBox("ivan@mail.ru"));
 	}
 	
 	@Test
 	void createStudent_LoginExists() throws UniquenessViolationException {
-		this.service.createStudent(this.firstDto);
-		this.currentDto = new StudentDto("Петров", 
-										 "Петр", 
-										 "Петрович", 
-										 "petya@mail.ru", 
-										 "ivanlogin", 
-										 "password6789", 
-										 "ПИ",
-										 "Очно",
-										 "ЗИ981");
+		service.createStudent(firstDto);
+		currentDto = new StudentDto(
+				"Петров", 
+				"Петр", 
+				"Петрович", 
+				"petya@mail.ru", 
+				"ivanlogin", 
+				"password6789", 
+				"ПИ",
+				"Очно",
+				"ЗИ981");
 		assertThrowsExactly(UniquenessViolationException.class, 
-				() -> this.service.createStudent(this.currentDto));
-		assertFalse(this.box.existsByBox("petya@mail.ru"));
-		assertTrue(((List<Person>)this.person.findAll()).size() == 1);
+				() -> service.createStudent(currentDto));
+		assertFalse(box.existsByBox("petya@mail.ru"));
+		assertTrue(((List<Person>)person.findAll()).size() == 1);
 	}
 	
 	@Test
 	void createStudent_BoxExists() throws UniquenessViolationException {
-		this.service.createStudent(this.firstDto);
-		this.currentDto = new StudentDto("Петров", 
-										 "Петр", 
-										 "Петрович", 
-										 "ivan@mail.ru", 
-										 "petyalogin", 
-										 "password6789", 
-										 "ПИ",
-										 "Очно",
-										 "ЗИ981");
+		service.createStudent(firstDto);
+		currentDto = new StudentDto(
+				"Петров", 
+				"Петр", 
+				"Петрович", 
+				"ivan@mail.ru", 
+				"petyalogin", 
+				"password6789", 
+				"ПИ",
+				"Очно",
+				"ЗИ981");
 		assertThrowsExactly(UniquenessViolationException.class, 
-				() -> this.service.createStudent(this.currentDto));
-		assertFalse(this.author.existsByLogin("petya@mail.ru"));
-		assertTrue(((List<Person>)this.person.findAll()).size() == 1);
+				() -> service.createStudent(currentDto));
+		assertFalse(author.existsByLogin("petya@mail.ru"));
+		assertTrue(((List<Person>)person.findAll()).size() == 1);
 	}
 }

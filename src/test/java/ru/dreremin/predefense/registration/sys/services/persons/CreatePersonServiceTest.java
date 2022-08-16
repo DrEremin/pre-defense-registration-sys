@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
 import lombok.extern.slf4j.Slf4j;
 
 import ru.dreremin.predefense.registration.sys.dto.requestdto.PersonDto;
@@ -48,62 +47,63 @@ class CreatePersonServiceTest {
 	
 	@BeforeAll
 	void beforeAll() {
-		this.firstDto = new TeacherDto("Иванов", 
-									   "Иван", 
-									   "Иванович", 
-									   "ivan@mail.ru", 
-									   "ivanlogin", 
-									   "password12345", 
-									   "Профессор");
+		firstDto = new TeacherDto(
+				"Иванов", 
+				"Иван", 
+				"Иванович", 
+				"ivan@mail.ru", 
+				"ivanlogin", 
+				"password12345", 
+				"Профессор");
 	}
 	
 	@BeforeEach
-    void beforeEach() { 
-		this.time = Instant.now();
-	}
+    void beforeEach() { time = Instant.now(); }
 	
 	@AfterEach
     void afterEach() {
         box.deleteAll();
 		autor.deleteAll();
 		person.deleteAll();
-		log.info("run time: " + Duration.between(time, Instant.now()));
+		log.info("testing time: " + Duration.between(time, Instant.now()));
     }
 	
 	@Test
 	void createPerson_Success() {
-		assertDoesNotThrow(() -> this.service.createPerson(this.firstDto));
+		assertDoesNotThrow(() -> service.createPerson(firstDto));
 		assertTrue(autor.existsByLogin("ivanlogin"));
 		assertTrue(box.existsByBox("ivan@mail.ru"));
 	}
 	
 	@Test
 	void createPerson_LoginExists() throws UniquenessViolationException {
-		this.service.createPerson(this.firstDto);
-		this.currentDto = new TeacherDto("Петров", 
-										 "Петр", 
-										 "Петрович", 
-										 "petya@mail.ru", 
-										 "ivanlogin", 
-										 "password6789", 
-										 "Доцент");
+		service.createPerson(firstDto);
+		currentDto = new TeacherDto(
+				"Петров", 
+				"Петр", 
+				"Петрович", 
+				"petya@mail.ru", 
+				"ivanlogin", 
+				"password6789", 
+				"Доцент");
 		assertThrowsExactly(UniquenessViolationException.class, 
-				() -> this.service.createPerson(this.currentDto));
+				() -> service.createPerson(currentDto));
 		assertFalse(box.existsByBox("petya@mail.ru"));
 	}
 	
 	@Test
 	void createPerson_BoxExists() throws UniquenessViolationException {
-		this.service.createPerson(this.firstDto);
-		this.currentDto = new TeacherDto("Сидоров", 
-										 "Сидр", 
-										 "Сидорович", 
-										 "ivan@mail.ru", 
-										 "sidlogin", 
-										 "password0000", 
-										 "Ассистент");
+		service.createPerson(firstDto);
+		currentDto = new TeacherDto(
+				"Сидоров", 
+				"Сидр", 
+				"Сидорович", 
+				"ivan@mail.ru", 
+				"sidlogin", 
+				"password0000", 
+				"Ассистент");
 		assertThrowsExactly(UniquenessViolationException.class, 
-				() -> this.service.createPerson(this.currentDto));
+				() -> service.createPerson(currentDto));
 		assertFalse(autor.existsByLogin("sidlogin"));
 	}
 }

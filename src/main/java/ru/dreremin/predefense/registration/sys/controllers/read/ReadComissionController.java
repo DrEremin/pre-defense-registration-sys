@@ -1,5 +1,22 @@
 package ru.dreremin.predefense.registration.sys.controllers.read;
 
-public class ReadComissionController {
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@RestController
+@RequestMapping
+public class ReadComissionController {
+	
+	public void getComissionForStudent() {
+		
+	}
+	
+	public void getActualComissionsForStudent() {
+		
+	}
+	
+	//public void get
 }

@@ -15,7 +15,6 @@ import lombok.Getter;
 public class Authorization {
 	
 	@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(length = 20)
 	private String login;
 	
