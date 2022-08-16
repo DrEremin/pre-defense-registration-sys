@@ -11,12 +11,6 @@ import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentComission;
 
 public class EntitiesFactory {
-
-	/*
-	 * public static Teacher createTeacher(long personId, String jobTitle) {
-	 * 
-	 * Teacher teacher = new Teacher(personId, jobTitle); return teacher; }
-	 */
 	
 	public static Person createPerson(PersonDto dto) {
 		

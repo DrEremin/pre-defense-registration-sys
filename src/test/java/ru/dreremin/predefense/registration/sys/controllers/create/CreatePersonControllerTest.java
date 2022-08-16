@@ -97,7 +97,7 @@ class CreatePersonControllerTest {
 	}
 	
 	@Test 
-	void createTeacher_LoginExists() throws Exception {
+	void createTeacher_LoginExist() throws Exception {
 		TeacherDto dto = new TeacherDto("Петров", 
 										"Петр", 
 										"Петрович", 
@@ -130,7 +130,7 @@ class CreatePersonControllerTest {
 	}
 
 	@Test 
-	void createTeacher_EmailExists() throws Exception {
+	void createTeacher_EmailExist() throws Exception {
 		TeacherDto dto = new TeacherDto("Петров", 
 										"Петр", 
 										"Петрович", 

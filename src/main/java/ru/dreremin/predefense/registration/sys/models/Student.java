@@ -44,5 +44,6 @@ public class Student {
 		this.groupNumber = groupNumber;
 		this.studyDirection = studyDirection;
 		this.studyType = studyType;
+		this.grade = 1;
 	}
 }

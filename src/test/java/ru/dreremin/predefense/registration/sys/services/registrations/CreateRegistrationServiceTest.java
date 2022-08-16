@@ -103,7 +103,9 @@ class CreateRegistrationServiceTest {
 		final int LENGTH = 3;
 		emails = new String[LENGTH << 1];
 		logins = new String[LENGTH << 1];
+		
 		StringBuilder builder = new StringBuilder();
+		
 		for (int i = 0; i < LENGTH << 1; i++) {
 			logins[i] = builder.append("person").append(i + 1).toString();
 			emails[i] = builder.append("@mail.ru").toString();

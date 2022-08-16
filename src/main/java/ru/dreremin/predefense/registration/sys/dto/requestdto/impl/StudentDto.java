@@ -34,5 +34,6 @@ public class StudentDto extends PersonDto {
 		this.studyDirection = studyDirection;
 		this.studyType = studyType;
 		this.groupNumber = groupNumber;
+		
 	}
 }

@@ -162,7 +162,7 @@ public class CreateRegistrationService {
 		
 		if (registrations.size() >= comissionOpt.get().getStudentLimit()) {
 			throw new OverLimitException(
-					"Еhe limit of the allowed number of students"
+					"The limit of the allowed number of students"
 					+ " in this commission has been reached");
 		}
 		for (StudentComission registration : registrations) {
