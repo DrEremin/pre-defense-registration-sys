@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping
+@RequestMapping(value = "/read")
 public class ReadComissionController {
 	
 	public void getComissionForStudent() {
