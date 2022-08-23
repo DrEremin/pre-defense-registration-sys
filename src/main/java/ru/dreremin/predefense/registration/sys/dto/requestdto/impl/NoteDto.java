@@ -5,16 +5,17 @@ import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class NoteDto {
 
 	@NotNull
-	private Integer comissionId;
+	private final Integer comissionId;
 	
 	@NotNull
 	@NotEmpty
-	private String noteContent;
+	private final String noteContent;
 	
 }

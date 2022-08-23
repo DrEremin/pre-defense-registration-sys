@@ -12,12 +12,12 @@ public class AuthorizationDto {
 	@NotNull
 	@NotEmpty
 	@Size(min = 2, max = 20)
-	protected String personLogin;
+	protected final String personLogin;
 	
 	@NotNull
 	@NotEmpty
 	@Size(min = 2, max = 20)
-	protected String personPassword;
+	protected final String personPassword;
 	
 	public AuthorizationDto(String personLogin,
 			   String personPassword) {

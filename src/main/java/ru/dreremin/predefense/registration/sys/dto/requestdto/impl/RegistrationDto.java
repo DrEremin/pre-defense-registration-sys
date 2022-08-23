@@ -10,7 +10,7 @@ import lombok.Getter;
 public class RegistrationDto extends AuthorizationDto {
 
 	@NotNull
-	private Integer comissionId;
+	private final Integer comissionId;
 	
 	public RegistrationDto(String personLogin,
 						   String personPassword,

@@ -10,5 +10,6 @@ import lombok.RequiredArgsConstructor;
 public class StatusDto implements Serializable {
 	
 	private final int status;
+	
 	private final String message;
 }

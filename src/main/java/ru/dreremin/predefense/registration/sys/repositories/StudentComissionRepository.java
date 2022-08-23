@@ -15,4 +15,5 @@ public interface StudentComissionRepository
 	List<StudentComission> findByComissionId(int comissionId);
 	
 	Optional<StudentComission> findByStudentId(long studentId);
+	
 }

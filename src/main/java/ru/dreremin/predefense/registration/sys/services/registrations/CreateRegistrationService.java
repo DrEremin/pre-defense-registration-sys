@@ -19,46 +19,35 @@ import ru.dreremin.predefense.registration.sys.exceptions
 import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
-import ru.dreremin.predefense.registration.sys.models.Authorization;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentComission;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.models.TeacherComission;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthorizationRepository;
-import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .StudentComissionRepository;
-import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherComissionRepository;
-import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
+import ru.dreremin.predefense.registration.sys.services.authentication
+		 .AuthenticationService;
 
 @Service
-@RequiredArgsConstructor
-public class CreateRegistrationService {
+public class CreateRegistrationService extends Registration {
 	
-	private final StudentComissionRepository studentComissionRepo;
-	
-	private final TeacherComissionRepository teacherComissionRepo;
-	
-	private final AuthorizationRepository authorizationRepo;
-	
-	private final StudentRepository studentRepo;
-	
-	private final TeacherRepository teacherRepo;
-	
-	private final ComissionRepository comissionRepo;
-	
-	private Optional<Authorization> authorizationOpt;
-	
-	private Optional<Student> studentOpt;
-	
-	private Optional<Teacher> teacherOpt;
-	
-	private Optional<Comission> comissionOpt;
+	public CreateRegistrationService(
+			AuthenticationService authenticationService,
+			StudentComissionRepository studentComissionRepo,
+			TeacherComissionRepository teacherComissionRepo,
+			ComissionRepository comissionRepo) {
+		
+		super(
+				authenticationService, 
+				studentComissionRepo, 
+				teacherComissionRepo, 
+				comissionRepo);
+	}
 	
 	@Transactional(
 			isolation = Isolation.SERIALIZABLE,
@@ -75,12 +64,11 @@ public class CreateRegistrationService {
 			UniquenessViolationException,
 			FailedAuthenticationException {
 		
-		setAuthorizationOpt(dto);
+		student = authenticationService.studentAuthentication(dto);
 		setComissionOpt(dto.getComissionId());
-		setStudentOpt();
 		checkingPossibilityOfStudentRegistration();
 		studentComissionRepo.save(new StudentComission(
-				studentOpt.get().getId(), 
+				student.getId(), 
 				dto.getComissionId()));
 	}
 	
@@ -94,62 +82,19 @@ public class CreateRegistrationService {
 			throws FailedAuthenticationException, 
 			EntityNotFoundException, 
 			UniquenessViolationException {
-		setAuthorizationOpt(dto);
+		teacher = authenticationService.teacherAuthentication(dto);
 		setComissionOpt(dto.getComissionId());
-		setTeacherOpt();
 		checkingPossibilityOfTeacherRegistration();
 		teacherComissionRepo.save(new TeacherComission(
-				teacherOpt.get().getId(), 
+				teacher.getId(), 
 				dto.getComissionId()));
-	}
-	
-	private void setAuthorizationOpt(RegistrationDto dto ) 
-			throws EntityNotFoundException, FailedAuthenticationException {
-		authorizationOpt = authorizationRepo.findByLogin(dto.getPersonLogin());
-		if (!authorizationOpt.isPresent()) {
-			throw new EntityNotFoundException(
-					"There is not exists person with this login");
-		}
-		if (!authorizationOpt.get().getPassword().equals(
-				dto.getPersonPassword())) {
-			throw new FailedAuthenticationException(
-					"Сlient is not authenticated");
-		}
-	}
-	
-	private void setComissionOpt(int comissionId) 
-			throws EntityNotFoundException {
-		comissionOpt = comissionRepo.findById(comissionId);
-		if(!comissionOpt.isPresent()) {
-			throw new EntityNotFoundException(
-					"There is not exists comission with this Id");
-		}
-	}
-	
-	private void setStudentOpt() 
-			throws EntityNotFoundException, EntitiesMismatchException {
-		studentOpt = studentRepo.findByPersonId(
-				authorizationOpt.get().getPersonId());
-		if(!studentOpt.isPresent()) {
-			throw new EntityNotFoundException(
-					"There is not exists student with this login");
-		}
-	}
-	
-	private void setTeacherOpt() throws EntityNotFoundException {
-		teacherOpt = teacherRepo.findByPersonId(
-				authorizationOpt.get().getPersonId());
-		if (!teacherOpt.isPresent()) {
-			throw new EntityNotFoundException(
-					"There is not exists teacher with this login");
-		}
 	}
 	
 	private void checkingPossibilityOfStudentRegistration() 
 			throws EntitiesMismatchException, 
 			OverLimitException, 
 			UniquenessViolationException {
-		if (!studentOpt.get().getStudyDirection().equals(
+		if (!student.getStudyDirection().equals(
 				comissionOpt.get().getStudyDirection())) {
 			throw new EntitiesMismatchException(
 					"The study direction of the commission and the"
@@ -166,7 +111,7 @@ public class CreateRegistrationService {
 					+ " in this commission has been reached");
 		}
 		for (StudentComission registration : registrations) {
-			if (registration.getStudentId() == studentOpt.get().getId()) {
+			if (registration.getStudentId() == student.getId()) {
 				throw new UniquenessViolationException(
 						"Such a student is already"
 						+ " registered for this commission");
@@ -180,7 +125,7 @@ public class CreateRegistrationService {
 				teacherComissionRepo.findByComissionId(
 						comissionOpt.get().getId());
 		for (TeacherComission registration : registrations) {
-			if (registration.getTeacherId() == teacherOpt.get().getId()) {
+			if (registration.getTeacherId() == teacher.getId()) {
 				throw new UniquenessViolationException(
 						"Such a teacher is already"
 						+ " registered for this commission");

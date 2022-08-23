@@ -2,6 +2,7 @@ package ru.dreremin.predefense.registration.sys.controllers.create;
 
 import javax.validation.Valid;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +29,7 @@ public class CreatePersonController {
 	private final CreateStudentService studentService;
 	private final CreateTeacherService teacherService;
 	
-	@PutMapping(value = "/teacher", consumes = "application/json")
+	@PutMapping(value = "/teacher", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public StatusDto createTeacher(@Valid @RequestBody TeacherDto teacher) 
 			throws UniquenessViolationException,
 				   MethodArgumentNotValidException {
@@ -37,13 +38,12 @@ public class CreatePersonController {
 		return new StatusDto(200, "Ok");
 	}
 	
-	@PutMapping(value = "/student", consumes = "application/json")
+	@PutMapping(value = "/student", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public StatusDto createStudent(@Valid @RequestBody StudentDto student) 
 			throws UniquenessViolationException {
 		studentService.createStudent(student);
 		log.info("CreatePersonController.createStudent() success");
 		return new StatusDto(200, "Ok");
 	}
-	
 }
 
