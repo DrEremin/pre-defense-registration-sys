@@ -23,7 +23,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .AuthorizationDto;
+		 .AuthenticationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .ComissionDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
@@ -34,7 +34,7 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthorizationRepository;
+		 .AuthenticationRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
@@ -75,7 +75,7 @@ class DeleteRegistrationServiceTest {
 	
 	@Autowired private ComissionRepository comissionRepo;
 	
-	@Autowired private AuthorizationRepository authorizationRepo;
+	@Autowired private AuthenticationRepository authorizationRepo;
 	
 	@Autowired private EmailRepository emailRepo;
 	
@@ -169,7 +169,7 @@ class DeleteRegistrationServiceTest {
 	void deleteStudentRegistration_Success() throws Exception {
 		assertTrue(studentComissionRepo.count() == 2);
 		assertDoesNotThrow(() -> deleteRegistrationService
-				.deleteStudentRegistration(new AuthorizationDto(
+				.deleteStudentRegistration(new AuthenticationDto(
 						logins[1], s)));
 		assertTrue(studentComissionRepo.count() == 1);
 	}
@@ -188,7 +188,7 @@ class DeleteRegistrationServiceTest {
 		assertTrue(studentComissionRepo.count() == 2);
 		try {
 			deleteRegistrationService.deleteStudentRegistration(
-					new AuthorizationDto("non-existent login", s));
+					new AuthenticationDto("non-existent login", s));
 		} catch (EntityNotFoundException | FailedAuthenticationException e) {
 			assertInstanceOf(EntityNotFoundException.class, e);
 			assertEquals("There is not exists person with this login", 
@@ -219,7 +219,7 @@ class DeleteRegistrationServiceTest {
 		assertTrue(studentComissionRepo.count() == 2);
 		try {
 			deleteRegistrationService.deleteStudentRegistration(
-					new AuthorizationDto(logins[0], "invalid password"));
+					new AuthenticationDto(logins[0], "invalid password"));
 		} catch (EntityNotFoundException | FailedAuthenticationException e) {
 			assertInstanceOf(FailedAuthenticationException.class, e);
 			assertEquals("Сlient is not authenticated", 
@@ -251,7 +251,7 @@ class DeleteRegistrationServiceTest {
 		assertTrue(studentComissionRepo.count() == 2);
 		try {
 			deleteRegistrationService.deleteStudentRegistration(
-					new AuthorizationDto(logins[3], s));
+					new AuthenticationDto(logins[3], s));
 		} catch (EntityNotFoundException | FailedAuthenticationException e) {
 			assertInstanceOf(EntityNotFoundException.class, e);
 			assertEquals("There is not exists student with this login", 

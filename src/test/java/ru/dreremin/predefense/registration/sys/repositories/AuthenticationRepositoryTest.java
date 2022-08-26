@@ -21,7 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
 
-import ru.dreremin.predefense.registration.sys.models.Authorization;
+import ru.dreremin.predefense.registration.sys.models.Authentication;
 
 @Slf4j
 @DataJpaTest
@@ -29,10 +29,10 @@ import ru.dreremin.predefense.registration.sys.models.Authorization;
 @ActiveProfiles("test")
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class AuthorizationRepositoryTest {
+class AuthenticationRepositoryTest {
 
 	@Autowired
-	private AuthorizationRepository repo;
+	private AuthenticationRepository repo;
 	private String login, password;
 	private long personId;
 	private Instant time;
@@ -42,7 +42,7 @@ class AuthorizationRepositoryTest {
 		login = "login";
 		password = "password";
 		personId = 1;
-		repo.save(new Authorization(login, password, personId));
+		repo.save(new Authentication(login, password, personId));
 	}
 	
 	@BeforeEach

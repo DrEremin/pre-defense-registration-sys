@@ -19,10 +19,10 @@ public class StudentComission {
 	@Column(name = "id_sc")
 	private long id;
 	
-	@Column(name = "id_s_tcfk")
+	@Column(name = "id_s_scfk")
 	private long studentId;
 	
-	@Column(name = "id_c_tcfk")
+	@Column(name = "id_c_scfk")
 	private int comissionId;
 	
 	public StudentComission() {}

@@ -3,15 +3,19 @@ package ru.dreremin.predefense.registration.sys.services.registrations;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
-
 import lombok.RequiredArgsConstructor;
+
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
-import ru.dreremin.predefense.registration.sys.repositories.ComissionRepository;
-import ru.dreremin.predefense.registration.sys.repositories.StudentComissionRepository;
-import ru.dreremin.predefense.registration.sys.repositories.TeacherComissionRepository;
-import ru.dreremin.predefense.registration.sys.services.authentication.AuthenticationService;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .ComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .StudentComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .TeacherComissionRepository;
+import ru.dreremin.predefense.registration.sys.services.authentication
+		 .AuthenticationService;
 
 @RequiredArgsConstructor
 public abstract class Registration {

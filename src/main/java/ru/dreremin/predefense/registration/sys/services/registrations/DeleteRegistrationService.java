@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .AuthorizationDto;
+		 .AuthenticationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .RegistrationDto;
 import ru.dreremin.predefense.registration.sys.exceptions.EntitiesMismatchException;
@@ -18,14 +18,14 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
 import ru.dreremin.predefense.registration.sys.exceptions.UniquenessViolationException;
-import ru.dreremin.predefense.registration.sys.models.Authorization;
+import ru.dreremin.predefense.registration.sys.models.Authentication;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentComission;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.models.TeacherComission;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthorizationRepository;
+		 .AuthenticationRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories
@@ -61,7 +61,7 @@ public class DeleteRegistrationService extends Registration {
             rollbackFor = { 
             		EntityNotFoundException.class,
             		FailedAuthenticationException.class })
-	public void deleteStudentRegistration(AuthorizationDto dto) 
+	public void deleteStudentRegistration(AuthenticationDto dto) 
 			throws EntityNotFoundException, 
 			FailedAuthenticationException {
 		student = authenticationService.studentAuthentication(dto);

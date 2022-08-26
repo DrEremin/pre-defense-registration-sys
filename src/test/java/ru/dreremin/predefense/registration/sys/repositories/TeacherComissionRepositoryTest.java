@@ -45,7 +45,7 @@ class TeacherComissionRepositoryTest {
 	
 	@Autowired private EmailRepository emailRepo;
 	
-	@Autowired private AuthorizationRepository authorizationRepo;
+	@Autowired private AuthenticationRepository authorizationRepo;
 	
 	@Autowired private ComissionRepository comissionRepo;
 	

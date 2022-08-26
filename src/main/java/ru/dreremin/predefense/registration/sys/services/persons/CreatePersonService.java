@@ -9,11 +9,11 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.PersonDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.factories.EntitiesFactory;
-import ru.dreremin.predefense.registration.sys.models.Authorization;
+import ru.dreremin.predefense.registration.sys.models.Authentication;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthorizationRepository;
+		 .AuthenticationRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 
@@ -23,7 +23,7 @@ import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 public class CreatePersonService {
 	
 	private final PersonRepository personRepo;
-	private final AuthorizationRepository authorRepo;
+	private final AuthenticationRepository authorRepo;
 	private final EmailRepository emailRepo;
 	
 	public Person createPerson(PersonDto dto) 
@@ -45,7 +45,7 @@ public class CreatePersonService {
 		
 		Person person = personRepo.save(EntitiesFactory.createPerson(dto));
 		
-		authorRepo.save(new Authorization(dto.getLogin(), 
+		authorRepo.save(new Authentication(dto.getLogin(), 
 										  dto.getPassword(), 
 										  person.getId()));
 		emailRepo.save(new Email(dto.getEmail(), person.getId()));

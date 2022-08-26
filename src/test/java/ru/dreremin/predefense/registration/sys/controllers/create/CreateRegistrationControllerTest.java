@@ -51,7 +51,7 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthorizationRepository;
+		 .AuthenticationRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
@@ -91,7 +91,7 @@ class CreateRegistrationControllerTest {
 	
 	@Autowired private ComissionRepository comissionRepo;
 	
-	@Autowired private AuthorizationRepository authorizationRepo;
+	@Autowired private AuthenticationRepository authorizationRepo;
 	
 	@Autowired private EmailRepository emailRepo;
 	

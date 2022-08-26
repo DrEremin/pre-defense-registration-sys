@@ -4,7 +4,7 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.PersonDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .ComissionDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
-import ru.dreremin.predefense.registration.sys.models.Authorization;
+import ru.dreremin.predefense.registration.sys.models.Authentication;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.models.Student;
@@ -18,9 +18,9 @@ public class EntitiesFactory {
 						  dto.getPatronymic());
 	}
 	
-	public static Authorization createAuthorization(PersonDto dto, 
+	public static Authentication createAuthorization(PersonDto dto, 
 													long personId) {
-		return new Authorization(dto.getLogin(), dto.getPassword(), personId);
+		return new Authentication(dto.getLogin(), dto.getPassword(), personId);
 	}
 	
 	public static Student createStudent(StudentDto dto, long personId) {

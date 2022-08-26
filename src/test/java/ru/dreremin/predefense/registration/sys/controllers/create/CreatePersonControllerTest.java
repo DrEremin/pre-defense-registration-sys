@@ -33,7 +33,7 @@ import ru.dreremin.predefense.registration.sys.factories.EntitiesFactory;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthorizationRepository;
+		 .AuthenticationRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 
@@ -47,7 +47,7 @@ class CreatePersonControllerTest {
 	
 	@Autowired private PersonRepository personRepo;
 	
-	@Autowired private AuthorizationRepository authorRepo;
+	@Autowired private AuthenticationRepository authorRepo;
 	
 	@Autowired private EmailRepository boxRepo;
 	

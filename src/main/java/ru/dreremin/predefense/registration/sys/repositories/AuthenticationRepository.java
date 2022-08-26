@@ -5,16 +5,17 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import ru.dreremin.predefense.registration.sys.models.Authorization;
+import ru.dreremin.predefense.registration.sys.models.Authentication;
 
 @Repository
-public interface AuthorizationRepository 
-		extends JpaRepository<Authorization, String>{
+public interface AuthenticationRepository 
+		extends JpaRepository<Authentication, String>{
 	
-	Optional<Authorization> findByLogin(String login);
+	Optional<Authentication> findByLogin(String login);
 	
 	default boolean existsByLogin(String login) {
 		return findByLogin(login).isPresent();
 	}
 }
 
+ 

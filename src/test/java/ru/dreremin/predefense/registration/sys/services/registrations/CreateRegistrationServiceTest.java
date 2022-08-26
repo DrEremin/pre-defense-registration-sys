@@ -35,7 +35,7 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthorizationRepository;
+		 .AuthenticationRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
@@ -43,7 +43,8 @@ import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .StudentComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
-import ru.dreremin.predefense.registration.sys.repositories.TeacherComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .TeacherComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.services.comissions
 		 .CreateComissionService;
@@ -73,7 +74,7 @@ class CreateRegistrationServiceTest {
 	
 	@Autowired private ComissionRepository comissionRepo;
 	
-	@Autowired private AuthorizationRepository authorizationRepo;
+	@Autowired private AuthenticationRepository authorizationRepo;
 	
 	@Autowired private EmailRepository emailRepo;
 	

@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class RegistrationDto extends AuthorizationDto {
+public class RegistrationDto extends AuthenticationDto {
 
 	@NotNull
 	private final Integer comissionId;

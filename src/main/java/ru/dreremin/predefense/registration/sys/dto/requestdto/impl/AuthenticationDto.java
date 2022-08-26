@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class AuthorizationDto {
+public class AuthenticationDto {
 
 	@NotNull
 	@NotEmpty
@@ -19,7 +19,7 @@ public class AuthorizationDto {
 	@Size(min = 2, max = 20)
 	protected final String personPassword;
 	
-	public AuthorizationDto(String personLogin,
+	public AuthenticationDto(String personLogin,
 			   String personPassword) {
 			this.personLogin = personLogin;
 			this.personPassword = personPassword;

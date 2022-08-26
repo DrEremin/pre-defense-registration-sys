@@ -11,8 +11,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Entity
-@Table(name = "_authorization")
-public class Authorization {
+@Table(name = "authentication")
+public class Authentication {
 	
 	@Id
 	@Column(length = 20)
@@ -24,6 +24,6 @@ public class Authorization {
 	@Column(name = "id_p_aufk", length = 20)
 	private long personId;
 	
-	public Authorization() {}
-}
+	public Authentication() {}
+} 
  

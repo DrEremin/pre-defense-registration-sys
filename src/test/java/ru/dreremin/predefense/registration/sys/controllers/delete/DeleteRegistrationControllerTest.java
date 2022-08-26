@@ -2,11 +2,14 @@ package ru.dreremin.predefense.registration.sys.controllers.delete;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request
+				 .MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result
+				 .MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result
+				 .MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result
+				 .MockMvcResultMatchers.status;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -23,7 +26,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet
+		  .AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -35,28 +39,37 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.AuthorizationDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.ComissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.RegistrationDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
+		 .AuthenticationDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
+		 .ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
+		 .RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
-import ru.dreremin.predefense.registration.sys.exceptions.EntitiesMismatchException;
-import ru.dreremin.predefense.registration.sys.exceptions.FailedAuthenticationException;
-import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
-import ru.dreremin.predefense.registration.sys.exceptions.UniquenessViolationException;
+import ru.dreremin.predefense.registration.sys.exceptions
+		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.models.Comission;
-import ru.dreremin.predefense.registration.sys.repositories.AuthorizationRepository;
-import ru.dreremin.predefense.registration.sys.repositories.ComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .AuthenticationRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .ComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
-import ru.dreremin.predefense.registration.sys.repositories.StudentComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .StudentComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
-import ru.dreremin.predefense.registration.sys.repositories.TeacherComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .TeacherComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
-import ru.dreremin.predefense.registration.sys.services.comissions.CreateComissionService;
-import ru.dreremin.predefense.registration.sys.services.registrations.CreateRegistrationService;
-import ru.dreremin.predefense.registration.sys.services.students.CreateStudentService;
-import ru.dreremin.predefense.registration.sys.services.teachers.CreateTeacherService;
+import ru.dreremin.predefense.registration.sys.services.comissions
+		 .CreateComissionService;
+import ru.dreremin.predefense.registration.sys.services.registrations
+		 .CreateRegistrationService;
+import ru.dreremin.predefense.registration.sys.services.students
+		 .CreateStudentService;
+import ru.dreremin.predefense.registration.sys.services.teachers
+		 .CreateTeacherService;
 
 @Slf4j
 @SpringBootTest
@@ -78,7 +91,7 @@ class DeleteRegistrationControllerTest {
 	
 	@Autowired private ComissionRepository comissionRepo;
 	
-	@Autowired private AuthorizationRepository authorizationRepo;
+	@Autowired private AuthenticationRepository authorizationRepo;
 	
 	@Autowired private EmailRepository emailRepo;
 	
@@ -176,7 +189,7 @@ class DeleteRegistrationControllerTest {
 	@Test
 	void deleteStudentRegistration_Success() throws Exception {
 		
-		AuthorizationDto dto = new AuthorizationDto(logins[0], s);
+		AuthenticationDto dto = new AuthenticationDto(logins[0], s);
 		
 		assertTrue(studentComissionRepo.count() == 3);
 		assertDoesNotThrow(() -> 
@@ -215,7 +228,7 @@ class DeleteRegistrationControllerTest {
 	void deleteStudentRegistration_RequestBodyIsMissingField() 
 			throws Exception {
 		
-		AuthorizationDto dto = new AuthorizationDto(logins[0], s);
+		AuthenticationDto dto = new AuthenticationDto(logins[0], s);
 		String json = objectMapper.writeValueAsString(dto)
 				.replace("\"personLogin\":\"" + logins[0] + "\",", "");
 		
@@ -268,7 +281,7 @@ class DeleteRegistrationControllerTest {
 	void deleteStudentRegistration_InvalidRequestBodySyntax() 
 			throws Exception {
 		
-		AuthorizationDto dto = new AuthorizationDto(logins[0], s);
+		AuthenticationDto dto = new AuthenticationDto(logins[0], s);
 		String json = objectMapper.writeValueAsString(dto)
 				.replaceFirst("\\{", "");
 		
@@ -320,7 +333,7 @@ class DeleteRegistrationControllerTest {
 	@Test
 	void deleteStudentRegistration_PersonDoesNotExists() throws Exception {
 		
-		AuthorizationDto dto = new AuthorizationDto("non-existent login", s);
+		AuthenticationDto dto = new AuthenticationDto("non-existent login", s);
 		
 		assertTrue(studentComissionRepo.count() == 3);
 		assertDoesNotThrow(() -> 
@@ -368,7 +381,7 @@ class DeleteRegistrationControllerTest {
 	void deleteStudentRegistration_PasswordDoesNotMatchLogin() 
 			throws Exception {
 		
-		AuthorizationDto dto = new AuthorizationDto(logins[0], 
+		AuthenticationDto dto = new AuthenticationDto(logins[0], 
 													"other password");
 		
 		assertTrue(studentComissionRepo.count() == 3);
@@ -417,7 +430,7 @@ class DeleteRegistrationControllerTest {
 	@Test
 	void deleteStudentRegistration_StudentDoesNotExist() throws Exception {
 		
-		AuthorizationDto dto = new AuthorizationDto(logins[3], s);
+		AuthenticationDto dto = new AuthenticationDto(logins[3], s);
 		
 		assertTrue(studentComissionRepo.count() == 3);
 		assertDoesNotThrow(() -> 

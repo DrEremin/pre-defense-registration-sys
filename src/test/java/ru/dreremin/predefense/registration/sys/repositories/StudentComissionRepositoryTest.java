@@ -50,7 +50,7 @@ class StudentComissionRepositoryTest {
 	private EmailRepository emailRepo;
 	
 	@Autowired
-	private AuthorizationRepository authorizationRepo;
+	private AuthenticationRepository authorizationRepo;
 	
 	@Autowired
 	private PersonRepository personRepo;

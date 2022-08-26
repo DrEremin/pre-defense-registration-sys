@@ -22,7 +22,7 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthorizationRepository;
+		 .AuthenticationRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 
@@ -34,7 +34,7 @@ import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 class CreateStudentServiceTest {
 
 	@Autowired private CreateStudentService service;
-	@Autowired private AuthorizationRepository author;
+	@Autowired private AuthenticationRepository author;
 	@Autowired private EmailRepository box;
 	@Autowired private PersonRepository person;
 	private StudentDto currentDto;

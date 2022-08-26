@@ -21,7 +21,7 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthorizationRepository;
+		 .AuthenticationRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 
@@ -36,7 +36,7 @@ class CreatePersonServiceTest {
 	@Autowired
 	private CreatePersonService service;
 	@Autowired
-	private AuthorizationRepository autor;
+	private AuthenticationRepository autor;
 	@Autowired
 	private EmailRepository box;
 	@Autowired
