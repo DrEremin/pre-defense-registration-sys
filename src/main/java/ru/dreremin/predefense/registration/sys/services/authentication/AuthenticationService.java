@@ -11,9 +11,12 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .AuthenticationDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
+import ru.dreremin.predefense.registration.sys.models.Administrator;
 import ru.dreremin.predefense.registration.sys.models.Authentication;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .AdministratorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .AuthenticationRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
@@ -23,13 +26,17 @@ import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 @Service
 public class AuthenticationService {
 	
-	private final AuthenticationRepository authorizationRepo;
+	private final AuthenticationRepository authenticationRepo;
+	
+	private final AdministratorRepository administratorRepo;
 
 	private final StudentRepository studentRepo;
 	
 	private final TeacherRepository teacherRepo;
 	
-	private Optional<Authentication> authorizationOpt;
+	private Optional<Authentication> authenticationOpt;
+	
+	private Optional<Administrator> administratorOpt;
 	
 	private Optional<Student> studentOpt;
 	
@@ -37,7 +44,7 @@ public class AuthenticationService {
 	
 	public Student studentAuthentication(AuthenticationDto dto) 
 			throws EntityNotFoundException, FailedAuthenticationException {
-		setAuthorizationOpt(dto);
+		setAuthenticationOpt(dto);
 		setStudentOpt();
 		return studentOpt.get();
 	}
@@ -45,19 +52,28 @@ public class AuthenticationService {
 	public Teacher teacherAuthentication(AuthenticationDto dto) 
 			throws EntityNotFoundException, 
 			FailedAuthenticationException {
-		setAuthorizationOpt(dto);
+		setAuthenticationOpt(dto);
 		setTeacherOpt();
 		return teacherOpt.get();
 	}
 	
-	private void setAuthorizationOpt(AuthenticationDto dto) 
+	public Administrator administratorAuthentication(AuthenticationDto dto) 
+			throws EntityNotFoundException, 
+			FailedAuthenticationException {
+		setAuthenticationOpt(dto);
+		setAdministratorOpt();
+		return administratorOpt.get();
+	}
+	
+	private void setAuthenticationOpt(AuthenticationDto dto) 
 			throws EntityNotFoundException, FailedAuthenticationException {
-		authorizationOpt = authorizationRepo.findByLogin(dto.getPersonLogin());
-		if (!authorizationOpt.isPresent()) {
+		authenticationOpt = authenticationRepo.findByLogin(
+				dto.getPersonLogin());
+		if (!authenticationOpt.isPresent()) {
 			throw new EntityNotFoundException(
 					"There is not exists person with this login");
 		}
-		if (!authorizationOpt.get().getPassword().equals(
+		if (!authenticationOpt.get().getPassword().equals(
 				dto.getPersonPassword())) {
 			throw new FailedAuthenticationException(
 					"Сlient is not authenticated");
@@ -67,7 +83,7 @@ public class AuthenticationService {
 	private void setStudentOpt() 
 			throws EntityNotFoundException {
 		studentOpt = studentRepo.findByPersonId(
-				authorizationOpt.get().getPersonId());
+				authenticationOpt.get().getPersonId());
 		if(!studentOpt.isPresent()) {
 			throw new EntityNotFoundException(
 					"There is not exists student with this login");
@@ -76,10 +92,19 @@ public class AuthenticationService {
 	
 	private void setTeacherOpt() throws EntityNotFoundException {
 		teacherOpt = teacherRepo.findByPersonId(
-				authorizationOpt.get().getPersonId());
+				authenticationOpt.get().getPersonId());
 		if (!teacherOpt.isPresent()) {
 			throw new EntityNotFoundException(
 					"There is not exists teacher with this login");
+		}
+	}
+	
+	private void setAdministratorOpt() {
+		administratorOpt = administratorRepo.findByPersonId(authenticationOpt
+				.get().getPersonId());
+		if (!administratorOpt.isPresent()) {
+			throw new EntityNotFoundException(
+					"There is not exists administrator with this login");
 		}
 	}
 }
