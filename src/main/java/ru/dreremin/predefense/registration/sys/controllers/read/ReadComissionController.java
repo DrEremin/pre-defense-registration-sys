@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .AuthenticationDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .ComissionForStudentDto;
+		 .CurrentComissionOfStudent;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.services.registrations
@@ -27,12 +27,12 @@ public class ReadComissionController {
 	private final ReadRegistrationService service;
 	
 	@PostMapping(value = "/student")
-	public ComissionForStudentDto getComissionForStudent(
+	public CurrentComissionOfStudent getComissionForStudent(
 			@Valid @RequestBody AuthenticationDto dto) 
 					throws EntityNotFoundException, 
 					FailedAuthenticationException {
 		
-		ComissionForStudentDto responseDto = 
+		CurrentComissionOfStudent responseDto = 
 				service.getComissionForStudent(dto);
 		
 		log.info("ReadComissionController.getComissionForStudent() success");

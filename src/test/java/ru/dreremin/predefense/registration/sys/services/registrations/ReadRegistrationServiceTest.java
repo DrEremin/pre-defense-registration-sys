@@ -29,7 +29,7 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .ComissionForStudentDto;
+		 .CurrentComissionOfStudent;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 import ru.dreremin.predefense.registration.sys.repositories
@@ -160,7 +160,7 @@ class ReadRegistrationServiceTest {
 				.getComissionForStudent(new AuthenticationDto(
 						placeholders[0], placeholders[0])));
 		
-		ComissionForStudentDto dto = readRegistrationService
+		CurrentComissionOfStudent dto = readRegistrationService
 				.getComissionForStudent(new AuthenticationDto(
 						placeholders[0], placeholders[0]));
 		
@@ -189,7 +189,7 @@ class ReadRegistrationServiceTest {
 	public void getComissionForStudent_StudentDontRegistered() 
 			throws Exception {
 		
-		ComissionForStudentDto dto = null;
+		CurrentComissionOfStudent dto = null;
 		
 		try {
 			dto = readRegistrationService

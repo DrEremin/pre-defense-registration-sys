@@ -21,17 +21,19 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.ComissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.RegistrationDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
+		 .ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
+		 .RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
 import ru.dreremin.predefense.registration.sys.models.Comission;
-import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
-import ru.dreremin.predefense.registration.sys.services.comissions.CreateComissionService;
-import ru.dreremin.predefense.registration.sys.services.registrations.CreateRegistrationService;
-import ru.dreremin.predefense.registration.sys.services.students.CreateStudentService;
-import ru.dreremin.predefense.registration.sys.services.teachers.CreateTeacherService;
+import ru.dreremin.predefense.registration.sys.services.comissions
+		 .CreateComissionService;
+import ru.dreremin.predefense.registration.sys.services.registrations
+		 .CreateRegistrationService;
+import ru.dreremin.predefense.registration.sys.services.teachers
+		 .CreateTeacherService;
 
 @Slf4j
 @SpringBootTest
@@ -147,7 +149,8 @@ class TeacherEntryRepositoryTest {
 	@Test
 	void findByComissionId_Success() {
 		List<TeacherEntry> entries = teacherEntryRepo.findByComissionId(
-				comissions.get(0).getId(), Sort.by(Sort.Order.desc("p.lastName")));
+				comissions.get(0).getId(), Sort.by(
+						Sort.Order.desc("p.lastName")));
 		assertTrue(entries.size() == 3);
 	}
 }

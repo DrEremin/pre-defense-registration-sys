@@ -7,33 +7,32 @@ import java.util.List;
 import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
-
 import ru.dreremin.predefense.registration.sys.models.Comission;
-import ru.dreremin.predefense.registration.sys.models.StudentEntry;
+import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
 
 @RequiredArgsConstructor
-public class ComissionForStudentDto implements Serializable {
-
-	private final String studyDirection;
+public class ActualComissionForStudentDto implements Serializable {
 	
-	private final LocalDate date;
+	protected final LocalDate date;
 	
-	private final LocalTime startTime;
+	protected final LocalTime startTime;
 	
-	private final LocalTime endTime;
+	protected final LocalTime endTime;
 	
-	private final String location;
+	protected final String studyDirection;
 	
-	private final List<StudentEntry> students;
+	protected final String location;
 	
-	public ComissionForStudentDto(Comission comission,
-								  List<StudentEntry> students) {
-		this.studyDirection = comission.getStudyDirection();
+	protected final List<TeacherEntry> teachers;
+	
+	public ActualComissionForStudentDto(Comission comission,
+			  							List<TeacherEntry> teachers) {
 		this.date = comission.getStartDateTime().toLocalDate();
 		this.startTime = comission.getStartDateTime().toLocalTime();
 		this.endTime = comission.getEndDateTime().toLocalTime();
+		this.studyDirection = comission.getStudyDirection();
 		this.location = comission.getLocation();
-		this.students = students;
+		this.teachers = teachers;
 	}
 	
 	public String getStudyDirection() { return studyDirection; }
@@ -46,7 +45,7 @@ public class ComissionForStudentDto implements Serializable {
 	
 	public String getLocation() { return location; }
 	
-	public List<StudentEntry> getStudents() { return List.copyOf(students); }
+	public List<TeacherEntry> getTeachers() { return List.copyOf(teachers); }
 	
 	@Override
 	public boolean equals(Object other) {
@@ -55,13 +54,13 @@ public class ComissionForStudentDto implements Serializable {
 		if (other == null || this.getClass() != other.getClass()) { 
 			return false;
 		}
-		ComissionForStudentDto o = (ComissionForStudentDto) other;
+		ActualComissionForStudentDto o = (ActualComissionForStudentDto) other;
 		return this.studyDirection.equals(o.getStudyDirection()) 
 				&& this.date.equals(o.getDate())
 				&& this.startTime.equals(o.getStartTime())
 				&& this.endTime.equals(o.getEndTime())
 				&& this.location.equals(o.getLocation())
-				&& this.students.equals(o.getStudents());
+				&& this.teachers.equals(o.getTeachers());
 	}
 	
 	@Override
@@ -71,6 +70,6 @@ public class ComissionForStudentDto implements Serializable {
 							startTime, 
 							endTime, 
 							location, 
-							students);
+							teachers);
 	}
 }
