@@ -19,34 +19,32 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import lombok.extern.slf4j.Slf4j;
 
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .ComissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .RegistrationDto;
+import lombok.extern.slf4j.Slf4j;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.StudentEntry;
-import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateComissionService;
-import ru.dreremin.predefense.registration.sys.services.registrations
-		 .CreateRegistrationService;
-import ru.dreremin.predefense.registration.sys.services.students
-		 .CreateStudentService;
+import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
+import ru.dreremin.predefense.registration.sys.services.comissions.CreateComissionService;
+import ru.dreremin.predefense.registration.sys.services.registrations.CreateRegistrationService;
+import ru.dreremin.predefense.registration.sys.services.students.CreateStudentService;
+import ru.dreremin.predefense.registration.sys.services.teachers.CreateTeacherService;
 
 @Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class StudentEntryRepositoryTest {
+class TeacherEntryRepositoryTest {
 
 	@Autowired
-	private StudentEntryRepository studentEntryRepo;
+	private TeacherEntryRepository teacherEntryRepo;
 	
 	@Autowired
-	private CreateStudentService createStudentService; 
+	private CreateTeacherService createTeacherService; 
 	
 	@Autowired
 	private CreateComissionService createComissionService; 
@@ -58,10 +56,10 @@ class StudentEntryRepositoryTest {
 	private ComissionRepository comissionRepo;
 	
 	@Autowired
-	private StudentComissionRepository studentComissionRepo;
+	private TeacherComissionRepository teacherComissionRepo;
 	
 	@Autowired
-	private StudentRepository studentRepo;
+	private TeacherRepository studentRepo;
 	
 	@Autowired
 	private AuthenticationRepository authorizationRepo;
@@ -105,27 +103,25 @@ class StudentEntryRepositoryTest {
 		
 		for (int i = 0; i < SIZE; i++) {
 			placeholders[i] = builder.append(placeholder).append(i).toString();
-			createStudentService.createStudent(new StudentDto(
+			createTeacherService.createTeacher(new TeacherDto(
 					placeholders[i],
 					placeholders[i],
 					placeholders[i],
 					placeholders[i] + "@mail.ru",
 					placeholders[i],
 					placeholders[i],
-					placeholder,
-					placeholder,
-					"ЗИ98" + i));
+					placeholder));
 			createComissionService.createComission(dto);
 			builder.delete(0, builder.length());
 		}
 		comissions = comissionRepo.findAll();
 		for (int i = 0; i < SIZE - 1; i++) {
-			createRegistrationService.createStudentRegistration(
+			createRegistrationService.createTeacherRegistration(
 					new RegistrationDto(placeholders[i], 
 										placeholders[i], 
 										comissions.get(0).getId()));
 		}
-		createRegistrationService.createStudentRegistration(
+		createRegistrationService.createTeacherRegistration(
 				new RegistrationDto(placeholders[SIZE - 1], 
 									placeholders[SIZE - 1], 
 									comissions.get(1).getId()));
@@ -140,7 +136,7 @@ class StudentEntryRepositoryTest {
 	}
 	@AfterAll
 	public void afterAll() {
-		studentComissionRepo.deleteAll();
+		teacherComissionRepo.deleteAll();
 		comissionRepo.deleteAll();
 		studentRepo.deleteAll();
 		authorizationRepo.deleteAll();
@@ -150,7 +146,7 @@ class StudentEntryRepositoryTest {
 	
 	@Test
 	void findByComissionId_Success() {
-		List<StudentEntry> entries = studentEntryRepo.findByComissionId(
+		List<TeacherEntry> entries = teacherEntryRepo.findByComissionId(
 				comissions.get(0).getId(), Sort.by(Sort.Order.desc("p.lastName")));
 		assertTrue(entries.size() == 3);
 	}

@@ -3,6 +3,7 @@ package ru.dreremin.predefense.registration.sys.models;
 import java.util.Objects;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 import lombok.Getter;
 
 @Getter
+@Entity
 public class TeacherEntry implements Comparable<TeacherEntry>{
 
 	@Id
