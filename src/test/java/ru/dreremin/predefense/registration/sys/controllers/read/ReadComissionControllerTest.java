@@ -52,8 +52,6 @@ import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .StudentComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
-import ru.dreremin.predefense.registration.sys.services.authentication
-		 .AuthenticationService;
 import ru.dreremin.predefense.registration.sys.services.comissions
 		 .CreateComissionService;
 import ru.dreremin.predefense.registration.sys.services.registrations
@@ -74,8 +72,6 @@ class ReadComissionControllerTest {
 	@Autowired private CreateComissionService createComissionService; 
 	
 	@Autowired private CreateRegistrationService createRegistrationService;
-	
-	@Autowired private AuthenticationService authenticationService;
 	
 	@Autowired private ComissionRepository comissionRepo;
 	

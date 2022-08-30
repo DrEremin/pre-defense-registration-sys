@@ -29,7 +29,7 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .CurrentComissionOfStudent;
+		 .CurrentComissionOfStudentDto;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 import ru.dreremin.predefense.registration.sys.repositories
@@ -157,11 +157,11 @@ class ReadRegistrationServiceTest {
 	public void getComissionForStudent_Success() throws Exception {
 		
 		assertDoesNotThrow(() -> readRegistrationService
-				.getComissionForStudent(new AuthenticationDto(
+				.getCurrentComissionOfStudent(new AuthenticationDto(
 						placeholders[0], placeholders[0])));
 		
-		CurrentComissionOfStudent dto = readRegistrationService
-				.getComissionForStudent(new AuthenticationDto(
+		CurrentComissionOfStudentDto dto = readRegistrationService
+				.getCurrentComissionOfStudent(new AuthenticationDto(
 						placeholders[0], placeholders[0]));
 		
 		assertTrue(comissions.get(0).getStudyDirection().equals(
@@ -189,11 +189,11 @@ class ReadRegistrationServiceTest {
 	public void getComissionForStudent_StudentDontRegistered() 
 			throws Exception {
 		
-		CurrentComissionOfStudent dto = null;
+		CurrentComissionOfStudentDto dto = null;
 		
 		try {
 			dto = readRegistrationService
-					.getComissionForStudent(new AuthenticationDto(
+					.getCurrentComissionOfStudent(new AuthenticationDto(
 							placeholders[SIZE - 1], placeholders[SIZE - 1]));
 		} catch (EntityNotFoundException e) {
 			assertEquals(e.getMessage(), "This student is not "

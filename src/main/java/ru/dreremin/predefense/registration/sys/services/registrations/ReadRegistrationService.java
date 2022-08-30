@@ -14,8 +14,9 @@ import lombok.RequiredArgsConstructor;
 
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .AuthenticationDto;
+import ru.dreremin.predefense.registration.sys.dto.responsedto.ActualComissionForStudentDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .CurrentComissionOfStudent;
+		 .CurrentComissionOfStudentDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.models.Comission;
@@ -52,8 +53,10 @@ public class ReadRegistrationService {
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class, 
 			FailedAuthenticationException.class})
-	public CurrentComissionOfStudent getComissionForStudent(AuthenticationDto dto) 
-			throws EntityNotFoundException, FailedAuthenticationException {
+	public CurrentComissionOfStudentDto getCurrentComissionOfStudent(
+			AuthenticationDto dto) 
+					throws EntityNotFoundException, 
+					FailedAuthenticationException {
 		
 		student = authenticationService.studentAuthentication(dto);
 		studentComissionOpt = 
@@ -69,6 +72,14 @@ public class ReadRegistrationService {
 				comission.getId(), Sort.by(Sort.Order.asc("p.lastName")));
 		
 		Collections.sort(students);
-		return new CurrentComissionOfStudent(comission, students);
+		return new CurrentComissionOfStudentDto(comission, students);
 	} 
+	
+	public List<ActualComissionForStudentDto> getActualComissionsListForStudent(
+			AuthenticationDto dto) throws Exception {
+		
+		student = authenticationService.studentAuthentication(dto);
+		
+		return null;
+	}
 }  

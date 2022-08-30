@@ -12,7 +12,7 @@ import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 
 @RequiredArgsConstructor
-public class CurrentComissionOfStudent implements Serializable {
+public class CurrentComissionOfStudentDto implements Serializable {
 
 	private final String studyDirection;
 	
@@ -26,7 +26,7 @@ public class CurrentComissionOfStudent implements Serializable {
 	
 	private final List<StudentEntry> students;
 	
-	public CurrentComissionOfStudent(Comission comission,
+	public CurrentComissionOfStudentDto(Comission comission,
 								  List<StudentEntry> students) {
 		this.studyDirection = comission.getStudyDirection();
 		this.date = comission.getStartDateTime().toLocalDate();
@@ -55,7 +55,7 @@ public class CurrentComissionOfStudent implements Serializable {
 		if (other == null || this.getClass() != other.getClass()) { 
 			return false;
 		}
-		CurrentComissionOfStudent o = (CurrentComissionOfStudent) other;
+		CurrentComissionOfStudentDto o = (CurrentComissionOfStudentDto) other;
 		return this.studyDirection.equals(o.getStudyDirection()) 
 				&& this.date.equals(o.getDate())
 				&& this.startTime.equals(o.getStartTime())

@@ -1,7 +1,6 @@
 package ru.dreremin.predefense.registration.sys.services.registrations;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .RegistrationDto;
 import ru.dreremin.predefense.registration.sys.exceptions
@@ -19,10 +17,7 @@ import ru.dreremin.predefense.registration.sys.exceptions
 import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
-import ru.dreremin.predefense.registration.sys.models.Comission;
-import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentComission;
-import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.models.TeacherComission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
