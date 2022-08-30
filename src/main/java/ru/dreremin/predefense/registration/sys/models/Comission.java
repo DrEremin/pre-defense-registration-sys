@@ -14,7 +14,7 @@ import lombok.Getter;
 @Getter
 @Entity
 @Table(name = "comission")
-public class Comission {
+public class Comission implements Comparable<Comission>{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,5 +53,11 @@ public class Comission {
 		this.studyDirection = studyDirection;
 		this.location = location;
 		this.studentLimit = studentLimit;
+	}
+	
+	@Override
+	public int compareTo(Comission other) {
+		return this.startDateTime.toLocalDateTime().compareTo(
+				other.getStartDateTime().toLocalDateTime());
 	}
 }

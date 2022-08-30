@@ -12,6 +12,6 @@ import ru.dreremin.predefense.registration.sys.models.Comission;
 public interface ComissionRepository 
 		extends JpaRepository<Comission, Integer> {
 	
-	List<Comission> findByStartDateTimeGreaterThan(
+	List<Comission> findByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
 			ZonedDateTime currentTimestamp);
 }

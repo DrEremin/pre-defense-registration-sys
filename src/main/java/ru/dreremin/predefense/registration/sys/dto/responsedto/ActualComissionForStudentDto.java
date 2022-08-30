@@ -13,6 +13,8 @@ import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
 @RequiredArgsConstructor
 public class ActualComissionForStudentDto implements Serializable {
 	
+	protected final int id;
+	
 	protected final LocalDate date;
 	
 	protected final LocalTime startTime;
@@ -27,6 +29,7 @@ public class ActualComissionForStudentDto implements Serializable {
 	
 	public ActualComissionForStudentDto(Comission comission,
 			  							List<TeacherEntry> teachers) {
+		this.id = comission.getId();
 		this.date = comission.getStartDateTime().toLocalDate();
 		this.startTime = comission.getStartDateTime().toLocalTime();
 		this.endTime = comission.getEndDateTime().toLocalTime();
@@ -35,13 +38,16 @@ public class ActualComissionForStudentDto implements Serializable {
 		this.teachers = teachers;
 	}
 	
-	public String getStudyDirection() { return studyDirection; }
+	
+	public int getId() { return id; }
 	
 	public LocalDate getDate() { return date; }
 	
 	public LocalTime getStartTime() { return startTime; }
 	
 	public LocalTime getEndTime() { return endTime; }
+	
+	public String getStudyDirection() { return studyDirection; }
 	
 	public String getLocation() { return location; }
 	
@@ -60,12 +66,14 @@ public class ActualComissionForStudentDto implements Serializable {
 				&& this.startTime.equals(o.getStartTime())
 				&& this.endTime.equals(o.getEndTime())
 				&& this.location.equals(o.getLocation())
-				&& this.teachers.equals(o.getTeachers());
+				&& this.teachers.equals(o.getTeachers())
+				&& this.id == o.getId();
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(studyDirection, 
+		return Objects.hash(id,
+							studyDirection, 
 							date, 
 							startTime, 
 							endTime, 

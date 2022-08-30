@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
@@ -28,10 +27,14 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.responsedto
+		 .ActualComissionForStudentDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
 		 .CurrentComissionOfStudentDto;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.StudentEntry;
+import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .AuthenticationRepository;
 import ru.dreremin.predefense.registration.sys.repositories
@@ -45,6 +48,8 @@ import ru.dreremin.predefense.registration.sys.services.comissions
 		 .CreateComissionService;
 import ru.dreremin.predefense.registration.sys.services.students
 		 .CreateStudentService;
+import ru.dreremin.predefense.registration.sys.services.teachers
+		 .CreateTeacherService;
 
 @Slf4j
 @SpringBootTest
@@ -55,7 +60,9 @@ class ReadRegistrationServiceTest {
 
 	@Autowired private ReadRegistrationService readRegistrationService;
 	
-	@Autowired private CreateStudentService createStudentService; 
+	@Autowired private CreateStudentService createStudentService;
+	
+	@Autowired private CreateTeacherService createTeacherService;
 	
 	@Autowired private CreateComissionService createComissionService; 
 	
@@ -86,53 +93,79 @@ class ReadRegistrationServiceTest {
 	private String[] patronymics = 
 		{ "Михайлович", "Александрович", "Петрович", "Сергеевич" };
 	
-	private String[] placeholders;
+	private String[][] placeholders;
 	
 	private List<Comission> comissions;
 	
-	private static final int SIZE;
+	private static final int SIZE = 4;
 	
-	static {
-		SIZE = 4;
-	}
+	private ZonedDateTime[] timestamps;
 	
 	@BeforeAll
 	public void beforeAll() throws Exception {
 		
 		placeholder = "placeholder";
-		placeholders = new String[SIZE];
-		ComissionDto dto = new ComissionDto(
-				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
-						DateTimeFormatter.ISO_ZONED_DATE_TIME),
-				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
-						DateTimeFormatter.ISO_ZONED_DATE_TIME),
-				true,
-				placeholder,
-				"Аудитория №7",
-				(short)10);
+		placeholders = new String[2][SIZE];
+		timestamps = new ZonedDateTime[SIZE];
+		
+		ZonedDateTime timestamp = ZonedDateTime.now().plusMonths(1);
+		ComissionDto dto;
 		StringBuilder builder = new StringBuilder();
 		
 		for (int i = 0; i < SIZE; i++) {
-			placeholders[i] = builder.append(placeholder).append(i).toString();
+			placeholders[0][i] = builder
+					.append(placeholder)
+					.append(i)
+					.toString();
 			createStudentService.createStudent(new StudentDto(
 					lastNames[i],
 					firstNames[i],
 					patronymics[i],
-					placeholders[i] + "@mail.ru",
-					placeholders[i],
-					placeholders[i],
+					placeholders[0][i] + "@mail.ru",
+					placeholders[0][i],
+					placeholders[0][i],
 					placeholder,
 					placeholder,
 					"ЗИ98" + i));
+			builder.delete(0, builder.length());
+			placeholders[1][i] = builder
+					.append(placeholder)
+					.append(i + SIZE)
+					.toString();
+			createTeacherService.createTeacher(new TeacherDto(
+					lastNames[i],
+					firstNames[i],
+					patronymics[i],
+					placeholders[1][i] + "@mail.ru",
+					placeholders[1][i],
+					placeholders[1][i],
+					placeholder));
+			timestamp = timestamp.minusDays(i);
+			timestamps[i] = timestamp;
+			dto = new ComissionDto(
+					timestamp,
+					timestamp.plusHours(2),
+					true,
+					(i % 2 == 1) ? placeholder + "1234" : placeholder,
+					"Аудитория №7",
+					(short)10);
 			createComissionService.createComission(dto);
 			builder.delete(0, builder.length());
 		}
 		comissions = comissionRepo.findAll();
 		for (int i = 0; i < SIZE - 1; i++) {
 			createRegistrationService.createStudentRegistration(
-					new RegistrationDto(placeholders[i], 
-										placeholders[i], 
+					new RegistrationDto(placeholders[0][i], 
+										placeholders[0][i], 
 										comissions.get(0).getId()));
+		}
+		for (int i = 0, k = 0; i < SIZE; i++, k++) {
+			for (int j = 0; j < SIZE - k; j++) {
+				createRegistrationService.createTeacherRegistration(
+						new RegistrationDto(placeholders[1][j], 
+											placeholders[1][j], 
+											comissions.get(i).getId()));
+			}
 		}
 	}
 	
@@ -154,15 +187,15 @@ class ReadRegistrationServiceTest {
 	}
 	
 	@Test
-	public void getComissionForStudent_Success() throws Exception {
+	public void getCurrentComissionOfStudent_Success() throws Exception {
 		
 		assertDoesNotThrow(() -> readRegistrationService
 				.getCurrentComissionOfStudent(new AuthenticationDto(
-						placeholders[0], placeholders[0])));
+						placeholders[0][0], placeholders[0][0])));
 		
 		CurrentComissionOfStudentDto dto = readRegistrationService
 				.getCurrentComissionOfStudent(new AuthenticationDto(
-						placeholders[0], placeholders[0]));
+						placeholders[0][0], placeholders[0][0]));
 		
 		assertTrue(comissions.get(0).getStudyDirection().equals(
 				dto.getStudyDirection()));
@@ -186,7 +219,38 @@ class ReadRegistrationServiceTest {
 	}   
 	
 	@Test
-	public void getComissionForStudent_StudentDontRegistered() 
+	public void getActualComissionsListForStudent_Success() throws Exception {
+		assertDoesNotThrow(() -> readRegistrationService
+				.getActualComissionsListForStudent(new AuthenticationDto(
+						placeholders[0][0], placeholders[0][0])));
+		
+		List<ActualComissionForStudentDto> dtoList = readRegistrationService
+				.getActualComissionsListForStudent(new AuthenticationDto(
+						placeholders[0][0], placeholders[0][0]));
+		
+		int i = SIZE / 2 + SIZE % 2, j = 0;
+		
+		assertTrue(dtoList.size() == i);
+		
+		List<TeacherEntry> teachers;
+		String[] s = {"Иванов С.А. Казаков В.М. ", 
+				"Бурлаков И.С. Иванов С.А. Игнатьев А.П. Казаков В.М. "};
+		StringBuilder builder;
+		
+		for (ActualComissionForStudentDto dto : dtoList) {
+			assertTrue(dto.getDate().equals(timestamps[i].toLocalDate()));
+			i -= 2;
+			teachers = dto.getTeachers();
+			builder = new StringBuilder();
+			for (TeacherEntry teacher : teachers) {
+				builder.append(teacher.getFullName()).append(" ");
+			}
+			assertEquals(s[j++], builder.toString());
+		}
+	}
+	
+	@Test
+	public void getCurrentComissionOfStudent_StudentDontRegistered() 
 			throws Exception {
 		
 		CurrentComissionOfStudentDto dto = null;
@@ -194,7 +258,8 @@ class ReadRegistrationServiceTest {
 		try {
 			dto = readRegistrationService
 					.getCurrentComissionOfStudent(new AuthenticationDto(
-							placeholders[SIZE - 1], placeholders[SIZE - 1]));
+							placeholders[0][SIZE - 1], 
+							placeholders[0][SIZE - 1]));
 		} catch (EntityNotFoundException e) {
 			assertEquals(e.getMessage(), "This student is not "
 					+ "registered for any commission");

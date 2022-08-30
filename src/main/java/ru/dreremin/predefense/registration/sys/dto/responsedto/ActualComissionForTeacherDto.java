@@ -27,19 +27,23 @@ public class ActualComissionForTeacherDto
 		if (other == null || this.getClass() != other.getClass()) { 
 			return false;
 		}
+		
 		ActualComissionForTeacherDto o = (ActualComissionForTeacherDto) other;
+		
 		return this.studyDirection.equals(o.getStudyDirection()) 
 				&& this.date.equals(o.getDate())
 				&& this.startTime.equals(o.getStartTime())
 				&& this.endTime.equals(o.getEndTime())
 				&& this.location.equals(o.getLocation())
 				&& this.teachers.equals(o.getTeachers())
-				&& this.note.equals(o.getNote());
+				&& this.note.equals(o.getNote())
+				&& this.id == o.getId();
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(studyDirection, 
+		return Objects.hash(id,
+							studyDirection, 
 							date, 
 							startTime, 
 							endTime, 

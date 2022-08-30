@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -47,8 +48,8 @@ class ComissionRepositoryTest {
 		
 		for (int i = 0; i < SIZE; i++) {
 			timestamp = (i % 2 == 0) 
-					? ZonedDateTime.now().plusMonths(1) 
-					: ZonedDateTime.now().minusMonths(1);
+					? ZonedDateTime.now().minusMinutes(i * 10).plusMonths(1) 
+					: ZonedDateTime.now().minusMinutes(i * 10).minusMonths(1);
 				
 			repository.save(new Comission(timestamp, 
 										  timestamp.plusHours(1), 
@@ -73,11 +74,19 @@ class ComissionRepositoryTest {
 	}
 	
 	@Test
-	void findByStartDateTimeGreaterThan_Success() {
+	void findByStartDateTimeGreaterThanOrderByStartDateTimeAsc_Success() {
 		assertTrue(repository.count() == SIZE);
-		assertDoesNotThrow(() -> repository.findByStartDateTimeGreaterThan(
+		assertDoesNotThrow(() -> repository
+				.findByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
 				ZonedDateTime.now()));
-		assertTrue(repository.findByStartDateTimeGreaterThan(
-				ZonedDateTime.now()).size() == SIZE / 2 + SIZE % 2);
+		
+		List<Comission> comissions = repository
+				.findByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
+				ZonedDateTime.now());
+		
+		assertTrue(comissions.size() == SIZE / 2 + SIZE % 2);
+		for (int i = 1, j = 0; i < comissions.size(); i++, j++) {
+			assertTrue(comissions.get(j).compareTo(comissions.get(i)) < 0);
+		}
 	}
 }
