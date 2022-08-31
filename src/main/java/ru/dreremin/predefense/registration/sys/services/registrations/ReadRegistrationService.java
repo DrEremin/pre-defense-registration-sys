@@ -20,16 +20,20 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 import ru.dreremin.predefense.registration.sys.dto.responsedto
 		 .ActualComissionForStudentDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
+		 .ActualComissionForTeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.responsedto
 		 .CurrentComissionOfStudentDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentComission;
 import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories.NoteRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .StudentComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories
@@ -53,9 +57,7 @@ public class ReadRegistrationService {
 	
 	private final ComissionRepository comissionRepo;
 	
-	private Optional<StudentComission> studentComissionOpt;
-	
-	private Comission comission;
+	private final NoteRepository noteRepo;
 	
 	private Student student;
 	
@@ -68,13 +70,16 @@ public class ReadRegistrationService {
 					FailedAuthenticationException {
 		
 		student = authenticationService.studentAuthentication(dto);
-		studentComissionOpt = 
+		
+		Optional<StudentComission> studentComissionOpt = 
 				studentComissionRepo.findByStudentId(student.getId());
+		
 		if (studentComissionOpt.isEmpty()) {
 			throw new EntityNotFoundException("This student is not "
 					+ "registered for any commission");
 		}
-		comission = comissionRepo.findById(studentComissionOpt.get()
+		
+		Comission comission = comissionRepo.findById(studentComissionOpt.get()
 				.getComissionId()).get();
 		
 		List<StudentEntry> students = studentEntryRepo.findByComissionId(
@@ -108,14 +113,57 @@ public class ReadRegistrationService {
 
 		List<ActualComissionForStudentDto> resultDto = new ArrayList<>(
 				actualComissions.size());
-		List<TeacherEntry> teachers;
 		
 		for (Comission actualComission : actualComissions) {
-			teachers = teacherEntryRepo.findByComissionId(actualComission
-					.getId(), Sort.by(Sort.Order.asc("p.lastName")));
+			
+			List<TeacherEntry> teachers = teacherEntryRepo.findByComissionId(
+					actualComission.getId(), 
+					Sort.by(Sort.Order.asc("p.lastName")));
 			Collections.sort(teachers);
 			resultDto.add(new ActualComissionForStudentDto(actualComission, 
 					teachers));
+		}
+		return resultDto;
+	}
+	
+	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
+			EntityNotFoundException.class, 
+			FailedAuthenticationException.class})
+	public List<ActualComissionForTeacherDto> getActualComissionsListForTeacher(
+			AuthenticationDto dto) 
+					throws EntityNotFoundException, 
+					FailedAuthenticationException  {
+		
+		authenticationService.teacherAuthentication(dto);
+		
+		List<Comission> actualComissions = comissionRepo
+				.findByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
+						ZonedDateTime.now());
+		
+		if (actualComissions.size() == 0) {
+			throw new EntityNotFoundException("Аctual commissions not found");
+		}
+
+		List<ActualComissionForTeacherDto> resultDto = new ArrayList<>(
+				actualComissions.size());
+		
+		for (Comission actualComission : actualComissions) {
+			
+			List<TeacherEntry> teachers = teacherEntryRepo.findByComissionId(
+					actualComission.getId(), 
+					Sort.by(Sort.Order.asc("p.lastName")));
+			
+			Collections.sort(teachers);
+			
+			Optional<Note> noteOpt = noteRepo.findByComissionId(
+					actualComission.getId());
+			String note = noteOpt.isPresent() 
+					? noteOpt.get().getNoteContent() : "";
+			
+			resultDto.add(new ActualComissionForTeacherDto(
+					actualComission, 
+					teachers, 
+					note));
 		}
 		return resultDto;
 	}

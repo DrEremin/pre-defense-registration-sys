@@ -3,12 +3,15 @@ package ru.dreremin.predefense.registration.sys.dto.responsedto;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
 
 public class ActualComissionForTeacherDto 
 		extends ActualComissionForStudentDto {
-
+	
+	@JsonProperty(value = "note")
 	protected final String note;
 	
 	public ActualComissionForTeacherDto(Comission comission, 

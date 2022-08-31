@@ -8,17 +8,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 
 @Getter
 @Entity
 public class TeacherEntry implements Comparable<TeacherEntry>{
 
+	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
 	private long teacherComissionId;
 	
+	@JsonProperty(value = "fullName")
 	@Column
 	private String fullName;
 	

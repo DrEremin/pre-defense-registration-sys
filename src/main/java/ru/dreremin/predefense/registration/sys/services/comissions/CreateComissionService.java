@@ -21,5 +21,5 @@ public class CreateComissionService {
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public void createComission(ComissionDto dto) {
 		repository.save(EntitiesFactory.createComission(dto));
-	}
+	} 
 }

@@ -5,26 +5,35 @@ import java.time.ZonedDateTime;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import ru.dreremin.predefense.registration.sys.exceptions.NegativeTimePeriodException;
 
 public class ComissionDto {
 	
+	@JsonProperty(value = "startTimestamp")
 	@NotNull
 	private final ZonedDateTime startTimestamp;
+	
+	@JsonProperty(value = "endTimestamp")
 	@NotNull
 	private final ZonedDateTime endTimestamp;
 	
+	@JsonProperty(value = "presenceFormat")
 	@NotNull
 	private final Boolean presenceFormat;
 	
+	@JsonProperty(value = "studyDirection")
 	@NotEmpty
 	@NotNull
 	private final String studyDirection;
 	
+	@JsonProperty(value = "location")
 	@NotEmpty
 	@NotNull
 	private final String location;
 	
+	@JsonProperty(value = "studentLimit")
 	@NotNull
 	private final Short studentLimit;
 	

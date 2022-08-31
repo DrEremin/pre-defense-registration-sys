@@ -44,6 +44,9 @@ import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .StudentComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .TeacherComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.services.comissions
 		 .CreateComissionService;
 import ru.dreremin.predefense.registration.sys.services.students
@@ -72,9 +75,13 @@ class ReadRegistrationServiceTest {
 	
 	@Autowired private StudentComissionRepository studentComissionRepo;
 	
+	@Autowired private TeacherComissionRepository teacherComissionRepo;
+	
 	@Autowired private StudentRepository studentRepo;
 	
-	@Autowired private AuthenticationRepository authorizationRepo;
+	@Autowired private TeacherRepository teacherRepo;
+	
+	@Autowired private AuthenticationRepository authenticationRepo;
 	
 	@Autowired private PersonRepository personRepo;
 	
@@ -179,9 +186,11 @@ class ReadRegistrationServiceTest {
 	@AfterAll
 	public void afterAll() {
 		studentComissionRepo.deleteAll();
+		teacherComissionRepo.deleteAll();
 		comissionRepo.deleteAll();
 		studentRepo.deleteAll();
-		authorizationRepo.deleteAll();
+		teacherRepo.deleteAll();
+		authenticationRepo.deleteAll();
 		emailRepo.deleteAll();
 		personRepo.deleteAll();
 	}

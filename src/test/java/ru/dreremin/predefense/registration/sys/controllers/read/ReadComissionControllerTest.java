@@ -42,6 +42,9 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
+import ru.dreremin.predefense.registration.sys.exceptions
+		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .AuthenticationRepository;
@@ -52,12 +55,17 @@ import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .StudentComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .TeacherComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.services.comissions
 		 .CreateComissionService;
 import ru.dreremin.predefense.registration.sys.services.registrations
 		 .CreateRegistrationService;
 import ru.dreremin.predefense.registration.sys.services.students
 		 .CreateStudentService;
+import ru.dreremin.predefense.registration.sys.services.teachers
+		 .CreateTeacherService;
 
 @Slf4j
 @SpringBootTest
@@ -67,7 +75,9 @@ import ru.dreremin.predefense.registration.sys.services.students
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ReadComissionControllerTest {
 	
-	@Autowired private CreateStudentService createStudentService; 
+	@Autowired private CreateStudentService createStudentService;
+	
+	@Autowired private CreateTeacherService createTeacherService;
 	
 	@Autowired private CreateComissionService createComissionService; 
 	
@@ -77,7 +87,11 @@ class ReadComissionControllerTest {
 	
 	@Autowired private StudentComissionRepository studentComissionRepo;
 	
+	@Autowired private TeacherComissionRepository teacherComissionRepo;
+	
 	@Autowired private StudentRepository studentRepo;
+	
+	@Autowired private TeacherRepository teacherRepo;
 	
 	@Autowired private AuthenticationRepository authenticationRepo;
 	
@@ -91,9 +105,7 @@ class ReadComissionControllerTest {
 	
 	private Instant time;
 	
-	private String placeholder;
-	
-	private String[] lastNames = 
+	private String[] lastNames =
 		{ "Казаков", "Иванов", "Игнатьев", "Бурлаков" };
 	
 	private String[] firstNames = 
@@ -102,53 +114,75 @@ class ReadComissionControllerTest {
 	private String[] patronymics = 
 		{ "Михайлович", "Александрович", "Петрович", "Сергеевич" };
 	
-	private String[] placeholders;
+	private String[][] emails;
+	
+	private final String[][] logins = {
+			{ "kazakovStud", "ivanovStud", "ignatStud", "burlakStud" },
+			{ "kazakovTeach", "ivanovTeach", "ignatTeach", "burlakTeach" }};
+	
+	private final String pswd = "passw1234";
+	
+	private ZonedDateTime[] timestamps;
 	
 	private List<Comission> comissions;
 	
-	private static final int SIZE;
-	
-	static {
-		SIZE = 4;
-	}
+	private static final int SIZE = 4;
 	
 	@BeforeAll
 	void beforeAll() throws Exception {
 		
-		placeholder = "placeholder";
-		placeholders = new String[SIZE];
-		ComissionDto dto = new ComissionDto(
-				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
-						DateTimeFormatter.ISO_ZONED_DATE_TIME),
-				ZonedDateTime.parse("2022-08-03T12:15:30+03:00[Europe/Moscow]", 
-						DateTimeFormatter.ISO_ZONED_DATE_TIME),
-				true,
-				placeholder,
-				"Аудитория №7",
-				(short)10);
-		StringBuilder builder = new StringBuilder();
+		emails = new String[2][SIZE];
+		timestamps = new ZonedDateTime[SIZE];
+		
+		ZonedDateTime timestamp = ZonedDateTime.now().plusMonths(1);
+		ComissionDto dto;
 		
 		for (int i = 0; i < SIZE; i++) {
-			placeholders[i] = builder.append(placeholder).append(i).toString();
+			emails[0][i] = logins[0][i] + "@mail.ru";
+			emails[1][i] = logins[1][i] + "@mail.ru";
 			createStudentService.createStudent(new StudentDto(
 					lastNames[i],
 					firstNames[i],
 					patronymics[i],
-					placeholders[i] + "@mail.ru",
-					placeholders[i],
-					placeholders[i],
-					placeholder,
-					placeholder,
+					emails[0][i],
+					logins[0][i],
+					pswd,
+					"ПИ",
+					"очное",
 					"ЗИ98" + i));
+			createTeacherService.createTeacher(new TeacherDto(
+					lastNames[i],
+					firstNames[i],
+					patronymics[i],
+					emails[1][i],
+					logins[1][i],
+					pswd,
+					"Преподаватель"));
+			timestamp = timestamp.minusDays(i);
+			timestamps[i] = timestamp;
+			dto = new ComissionDto(
+					timestamp,
+					timestamp.plusHours(2),
+					true,
+					(i % 2 == 1) ? "ИСИТ" : "ПИ",
+					"Аудитория №7",
+					(short)10);
 			createComissionService.createComission(dto);
-			builder.delete(0, builder.length());
 		}
 		comissions = comissionRepo.findAll();
 		for (int i = 0; i < SIZE - 1; i++) {
 			createRegistrationService.createStudentRegistration(
-					new RegistrationDto(placeholders[i], 
-										placeholders[i], 
+					new RegistrationDto(logins[0][i], 
+										pswd, 
 										comissions.get(0).getId()));
+		}
+		for (int i = 0, k = 0; i < SIZE; i++, k++) {
+			for (int j = 0; j < SIZE - k; j++) {
+				createRegistrationService.createTeacherRegistration(
+						new RegistrationDto(logins[1][j], 
+											pswd, 
+											comissions.get(i).getId()));
+			}
 		}
 	}
 	
@@ -165,31 +199,41 @@ class ReadComissionControllerTest {
 	@AfterAll
 	void afterAll() {
 		studentComissionRepo.deleteAll();
+		teacherComissionRepo.deleteAll();
 		comissionRepo.deleteAll();
 		studentRepo.deleteAll();
+		teacherRepo.deleteAll();
 		authenticationRepo.deleteAll();
 		emailRepo.deleteAll();
 		personRepo.deleteAll();
 	}
-
+	
 	@Test
-	void getComissionForStudent_Success() throws Exception {
+	void getCurrentComissionOfStudent_Success() throws Exception {
 		
 		AuthenticationDto authenticationDto = new AuthenticationDto(
-				placeholders[1], 
-				placeholders[1]);
+				logins[0][1], 
+				pswd);
+		
 		String requestBody = mapper.writeValueAsString(authenticationDto);
 		
-		mockMvc.perform(post("/comissions-read/student")
+		mockMvc.perform(post("/comissions-read/current/student")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(jsonPath("$.studyDirection", is("placeholder")))
-				.andExpect(jsonPath("$.date", is("2022-08-03")))
-				.andExpect(jsonPath("$.startTime", is("10:15:30")))
-				.andExpect(jsonPath("$.endTime", is("12:15:30")))
+				.andExpect(jsonPath("$.studyDirection", is("ПИ")))
+				.andExpect(jsonPath("$.date", is(timestamps[0]
+						.toLocalDate()
+						.format(DateTimeFormatter.ISO_LOCAL_DATE))))
+				.andExpect(jsonPath("$.startTime", is(timestamps[0]
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$.endTime", is(timestamps[0]
+						.plusHours(2)
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
 				.andExpect(jsonPath("$.location", is("Аудитория №7")))
 				.andExpect(jsonPath("$.students[0].fullName", 
 						is("Иванов Сергей Александрович")))
@@ -202,16 +246,162 @@ class ReadComissionControllerTest {
 				.andExpect(jsonPath("$.students[2].groupNumber", is("ЗИ980")))
 				.andExpect(r -> assertNull(r.getResolvedException()));
 	}
-	
+
 	@Test
-	void getComissionForStudent_StudentDontRegistered() throws Exception {
+	void getActualComissionsListForStudent_Success() throws Exception {
 		
 		AuthenticationDto authenticationDto = new AuthenticationDto(
-				placeholders[SIZE - 1], 
-				placeholders[SIZE - 1]);
+				logins[0][1], 
+				pswd);
+		
 		String requestBody = mapper.writeValueAsString(authenticationDto);
 		
-		mockMvc.perform(post("/comissions-read/student")
+		mockMvc.perform(post("/comissions-read/actual/student")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$[0].id", is(comissions.get(2).getId())))
+				.andExpect(jsonPath("$[0].date", is(timestamps[2]
+						.toLocalDate()
+						.format(DateTimeFormatter.ISO_LOCAL_DATE))))
+				.andExpect(jsonPath("$[0].startTime", is(timestamps[2]
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$[0].endTime", is(timestamps[2]
+						.plusHours(2)
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$[0].location", is("Аудитория №7")))
+				.andExpect(jsonPath("$[0].teachers[0].fullName", 
+						is("Иванов С.А.")))
+				.andExpect(jsonPath("$[0].teachers[1].fullName", 
+						is("Казаков В.М.")))
+				.andExpect(jsonPath("$[1].id", is(comissions.get(0).getId())))
+				.andExpect(jsonPath("$[1].date", is(timestamps[0]
+						.toLocalDate()
+						.format(DateTimeFormatter.ISO_LOCAL_DATE))))
+				.andExpect(jsonPath("$[1].startTime", is(timestamps[0]
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$[1].endTime", is(timestamps[0]
+						.plusHours(2)
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$[1].location", is("Аудитория №7")))
+				.andExpect(jsonPath("$[1].teachers[0].fullName", 
+						is("Бурлаков И.С.")))
+				.andExpect(jsonPath("$[1].teachers[1].fullName", 
+						is("Иванов С.А.")))
+				.andExpect(jsonPath("$[1].teachers[2].fullName", 
+						is("Игнатьев А.П.")))
+				.andExpect(jsonPath("$[1].teachers[3].fullName", 
+						is("Казаков В.М.")))
+				.andExpect(r -> assertNull(r.getResolvedException()));
+	}
+	
+	@Test
+	void getActualComissionsListForTeacher_Success() throws Exception {
+		
+		AuthenticationDto authenticationDto = new AuthenticationDto(
+				logins[1][1], 
+				pswd);
+		
+		String requestBody = mapper.writeValueAsString(authenticationDto);
+		
+		mockMvc.perform(post("/comissions-read/actual/teacher")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$[3].id", is(comissions.get(0).getId())))
+				.andExpect(jsonPath("$[3].date", is(timestamps[0]
+						.toLocalDate()
+						.format(DateTimeFormatter.ISO_LOCAL_DATE))))
+				.andExpect(jsonPath("$[3].startTime", is(timestamps[0]
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$[3].endTime", is(timestamps[0]
+						.plusHours(2)
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$[3].location", is("Аудитория №7")))
+				.andExpect(jsonPath("$[3].teachers[0].fullName", 
+						is("Бурлаков И.С.")))
+				.andExpect(jsonPath("$[3].teachers[1].fullName", 
+						is("Иванов С.А.")))
+				.andExpect(jsonPath("$[3].teachers[2].fullName", 
+						is("Игнатьев А.П.")))
+				.andExpect(jsonPath("$[3].teachers[3].fullName", 
+						is("Казаков В.М.")))
+				.andExpect(jsonPath("$[3].note", is("")))
+				.andExpect(jsonPath("$[2].id", is(comissions.get(1).getId())))
+				.andExpect(jsonPath("$[2].date", is(timestamps[1]
+						.toLocalDate()
+						.format(DateTimeFormatter.ISO_LOCAL_DATE))))
+				.andExpect(jsonPath("$[2].startTime", is(timestamps[1]
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$[2].endTime", is(timestamps[1]
+						.plusHours(2)
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$[2].location", is("Аудитория №7")))
+				.andExpect(jsonPath("$[2].teachers[0].fullName", 
+						is("Иванов С.А.")))
+				.andExpect(jsonPath("$[2].teachers[1].fullName", 
+						is("Игнатьев А.П.")))
+				.andExpect(jsonPath("$[2].teachers[2].fullName", 
+						is("Казаков В.М.")))
+				.andExpect(jsonPath("$[2].note", is("")))
+				
+				.andExpect(jsonPath("$[1].id", is(comissions.get(2).getId())))
+				.andExpect(jsonPath("$[1].date", is(timestamps[2]
+						.toLocalDate()
+						.format(DateTimeFormatter.ISO_LOCAL_DATE))))
+				.andExpect(jsonPath("$[1].startTime", is(timestamps[2]
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$[1].endTime", is(timestamps[2]
+						.plusHours(2)
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$[1].location", is("Аудитория №7")))
+				.andExpect(jsonPath("$[1].teachers[0].fullName", 
+						is("Иванов С.А.")))
+				.andExpect(jsonPath("$[1].teachers[1].fullName", 
+						is("Казаков В.М.")))
+				.andExpect(jsonPath("$[1].note", is("")))
+				.andExpect(jsonPath("$[0].id", is(comissions.get(3).getId())))
+				.andExpect(jsonPath("$[0].date", is(timestamps[3]
+						.toLocalDate()
+						.format(DateTimeFormatter.ISO_LOCAL_DATE))))
+				.andExpect(jsonPath("$[0].startTime", is(timestamps[3]
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$[0].endTime", is(timestamps[3]
+						.plusHours(2)
+						.toLocalTime()
+						.format(DateTimeFormatter.ISO_LOCAL_TIME))))
+				.andExpect(jsonPath("$[0].location", is("Аудитория №7")))
+				.andExpect(jsonPath("$[0].teachers[0].fullName", 
+						is("Казаков В.М.")))
+				.andExpect(jsonPath("$[0].note", is("")))
+				.andExpect(r -> assertNull(r.getResolvedException()));
+	}
+	
+	@Test
+	void getCurrentComissionOfStudent_StudentDontRegistered() 
+			throws Exception {
+		
+		AuthenticationDto authenticationDto = new AuthenticationDto(
+				logins[0][SIZE - 1], 
+				pswd);
+		String requestBody = mapper.writeValueAsString(authenticationDto);
+		
+		mockMvc.perform(post("/comissions-read/current/student")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody)
 						.accept(MediaType.APPLICATION_JSON))
@@ -222,6 +412,207 @@ class ReadComissionControllerTest {
 						is("This student is not "
 								+ "registered for any commission")))
 				.andExpect(r -> assertInstanceOf(EntityNotFoundException.class, 
+						r.getResolvedException()));
+	}
+	
+	@Test
+	void getCurrentComissionOfStudent_StudentDoesNotExists() 
+			throws Exception {
+		
+		AuthenticationDto authenticationDto = new AuthenticationDto(
+				logins[1][SIZE - 1], 
+				pswd);
+		String requestBody = mapper.writeValueAsString(authenticationDto);
+		
+		mockMvc.perform(post("/comissions-read/current/student")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.status", is(409)))
+				.andExpect(jsonPath("$.message", 
+						is("There is not exists student with this login")))
+				.andExpect(r -> assertInstanceOf(EntityNotFoundException.class, 
+						r.getResolvedException()));
+	}
+	
+	@Test
+	void getActualComissionsListForStudent_StudentDoesNotExists() 
+			throws Exception {
+		
+		AuthenticationDto authenticationDto = new AuthenticationDto(
+				logins[1][SIZE - 1], 
+				pswd);
+		String requestBody = mapper.writeValueAsString(authenticationDto);
+		
+		mockMvc.perform(post("/comissions-read/actual/student")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.status", is(409)))
+				.andExpect(jsonPath("$.message", 
+						is("There is not exists student with this login")))
+				.andExpect(r -> assertInstanceOf(EntityNotFoundException.class, 
+						r.getResolvedException()));
+	}
+	
+	@Test
+	void getActualComissionsListForTeacher_TeacherDoesNotExists() 
+			throws Exception {
+		
+		AuthenticationDto authenticationDto = new AuthenticationDto(
+				logins[0][SIZE - 1], 
+				pswd);
+		String requestBody = mapper.writeValueAsString(authenticationDto);
+		
+		mockMvc.perform(post("/comissions-read/actual/teacher")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.status", is(409)))
+				.andExpect(jsonPath("$.message", 
+						is("There is not exists teacher with this login")))
+				.andExpect(r -> assertInstanceOf(EntityNotFoundException.class, 
+						r.getResolvedException()));
+	}
+	
+	@Test
+	void getCurrentComissionOfStudent_PersonDoesNotExists() 
+			throws Exception {
+		
+		AuthenticationDto authenticationDto = new AuthenticationDto(
+				"other login", 
+				pswd);
+		String requestBody = mapper.writeValueAsString(authenticationDto);
+		
+		mockMvc.perform(post("/comissions-read/current/student")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.status", is(409)))
+				.andExpect(jsonPath("$.message", 
+						is("There is not exists person with this login")))
+				.andExpect(r -> assertInstanceOf(EntityNotFoundException.class, 
+						r.getResolvedException()));
+	}
+	
+	@Test
+	void getActualComissionsListForStudent_PersonDoesNotExists() 
+			throws Exception {
+		
+		AuthenticationDto authenticationDto = new AuthenticationDto(
+				"other login", 
+				pswd);
+		String requestBody = mapper.writeValueAsString(authenticationDto);
+		
+		mockMvc.perform(post("/comissions-read/actual/student")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.status", is(409)))
+				.andExpect(jsonPath("$.message", 
+						is("There is not exists person with this login")))
+				.andExpect(r -> assertInstanceOf(EntityNotFoundException.class, 
+						r.getResolvedException()));
+	}
+	
+	@Test
+	void getActualComissionsListForTeacher_PersonDoesNotExists() 
+			throws Exception {
+		
+		AuthenticationDto authenticationDto = new AuthenticationDto(
+				"other login", 
+				pswd);
+		String requestBody = mapper.writeValueAsString(authenticationDto);
+		
+		mockMvc.perform(post("/comissions-read/actual/teacher")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.status", is(409)))
+				.andExpect(jsonPath("$.message", 
+						is("There is not exists person with this login")))
+				.andExpect(r -> assertInstanceOf(EntityNotFoundException.class, 
+						r.getResolvedException()));
+	}
+	
+	@Test
+	void getCurrentComissionOfStudent_InvalidPassword() 
+			throws Exception {
+		
+		AuthenticationDto authenticationDto = new AuthenticationDto(
+				logins[0][SIZE - 1], 
+				"other password");
+		String requestBody = mapper.writeValueAsString(authenticationDto);
+		
+		mockMvc.perform(post("/comissions-read/current/student")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.status", is(409)))
+				.andExpect(jsonPath("$.message", 
+						is("Сlient is not authenticated")))
+				.andExpect(r -> assertInstanceOf(
+						FailedAuthenticationException.class, 
+						r.getResolvedException()));
+	}
+	
+	@Test
+	void getActualComissionsListForStudent_InvalidPassword() 
+			throws Exception {
+		
+		AuthenticationDto authenticationDto = new AuthenticationDto(
+				logins[0][SIZE - 1], 
+				"other password");
+		String requestBody = mapper.writeValueAsString(authenticationDto);
+		
+		mockMvc.perform(post("/comissions-read/actual/student")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.status", is(409)))
+				.andExpect(jsonPath("$.message", 
+						is("Сlient is not authenticated")))
+				.andExpect(r -> assertInstanceOf(
+						FailedAuthenticationException.class, 
+						r.getResolvedException()));
+	}
+	
+	@Test
+	void getActualComissionsListForTeacher_InvalidPassword() 
+			throws Exception {
+		
+		AuthenticationDto authenticationDto = new AuthenticationDto(
+				logins[1][SIZE - 1], 
+				"other password");
+		String requestBody = mapper.writeValueAsString(authenticationDto);
+		
+		mockMvc.perform(post("/comissions-read/actual/teacher")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.status", is(409)))
+				.andExpect(jsonPath("$.message", 
+						is("Сlient is not authenticated")))
+				.andExpect(r -> assertInstanceOf(
+						FailedAuthenticationException.class, 
 						r.getResolvedException()));
 	}
 }

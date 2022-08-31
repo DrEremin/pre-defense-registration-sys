@@ -6,6 +6,8 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.RequiredArgsConstructor;
 
 import ru.dreremin.predefense.registration.sys.models.Comission;
@@ -14,16 +16,22 @@ import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 @RequiredArgsConstructor
 public class CurrentComissionOfStudentDto implements Serializable {
 
+	@JsonProperty(value = "studyDirection")
 	private final String studyDirection;
 	
+	@JsonProperty(value = "date")
 	private final LocalDate date;
 	
+	@JsonProperty(value = "startTime")
 	private final LocalTime startTime;
 	
+	@JsonProperty(value = "endTime")
 	private final LocalTime endTime;
 	
+	@JsonProperty(value = "location")
 	private final String location;
 	
+	@JsonProperty(value = "students")
 	private final List<StudentEntry> students;
 	
 	public CurrentComissionOfStudentDto(Comission comission,
