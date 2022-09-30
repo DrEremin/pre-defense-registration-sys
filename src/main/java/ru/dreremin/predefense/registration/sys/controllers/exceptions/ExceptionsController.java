@@ -5,6 +5,7 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -78,5 +79,12 @@ public class ExceptionsController {
 			FailedAuthenticationException e) {
 		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
 									HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(MailException.class)
+	public ResponseEntity<StatusDto> handleMailException(
+			MailException e) {
+		return new ResponseEntity<>(new StatusDto(500, "Error sending email"), 
+									HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

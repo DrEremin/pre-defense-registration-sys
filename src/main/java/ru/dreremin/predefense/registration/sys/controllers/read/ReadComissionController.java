@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ import ru.dreremin.predefense.registration.sys.exceptions
 import ru.dreremin.predefense.registration.sys.services.registrations
 		 .ReadRegistrationService;
 
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 @RequiredArgsConstructor
 @Slf4j
 @RestController

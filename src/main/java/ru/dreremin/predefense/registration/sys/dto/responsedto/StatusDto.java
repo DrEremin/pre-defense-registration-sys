@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 public class StatusDto implements Serializable {
 	
 	@JsonProperty(value = "status")
-	private final int status;
+	protected final int status;
 	
 	@JsonProperty(value = "message")
-	private final String message;
+	protected final String message;
 }
