@@ -16,9 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
 import ru.dreremin.predefense.registration.sys.services.students
 		 .CreateStudentService;
 import ru.dreremin.predefense.registration.sys.services.teachers
@@ -37,7 +36,7 @@ class EmailRepositoryTest {
 	
 	@Autowired private TeacherRepository teacherRepo;
 	
-	@Autowired private AuthenticationRepository authenticationRepo;
+	@Autowired private ActorRepository authenticationRepo;
 	
 	@Autowired private PersonRepository personRepo;	
 	

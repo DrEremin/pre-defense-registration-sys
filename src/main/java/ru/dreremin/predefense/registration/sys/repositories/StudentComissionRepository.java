@@ -16,4 +16,5 @@ public interface StudentComissionRepository
 	
 	Optional<StudentComission> findByStudentId(long studentId);
 	
+	void deleteAllByStudentId(long studentId);
 }

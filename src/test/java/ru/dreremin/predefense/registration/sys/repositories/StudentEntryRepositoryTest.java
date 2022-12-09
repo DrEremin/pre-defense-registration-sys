@@ -20,12 +20,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .ComissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .RegistrationDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 import ru.dreremin.predefense.registration.sys.services.comissions
@@ -64,7 +61,7 @@ class StudentEntryRepositoryTest {
 	private StudentRepository studentRepo;
 	
 	@Autowired
-	private AuthenticationRepository authorizationRepo;
+	private ActorRepository authorizationRepo;
 	
 	@Autowired
 	private PersonRepository personRepo;

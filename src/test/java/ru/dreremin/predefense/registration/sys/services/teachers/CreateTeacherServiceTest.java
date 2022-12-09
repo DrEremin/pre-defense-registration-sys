@@ -16,13 +16,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthenticationRepository;
+		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 
@@ -35,7 +34,7 @@ import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 class CreateTeacherServiceTest {
 	
 	@Autowired private CreateTeacherService service;
-	@Autowired private AuthenticationRepository author;
+	@Autowired private ActorRepository author;
 	@Autowired private EmailRepository box;
 	@Autowired private PersonRepository person;
 	private TeacherDto currentDto;

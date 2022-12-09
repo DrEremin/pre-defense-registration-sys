@@ -19,15 +19,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-
+import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .AuthenticationDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .ComissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .RegistrationDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
 		 .ActualComissionForStudentDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
@@ -36,7 +33,7 @@ import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthenticationRepository;
+		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
@@ -81,7 +78,7 @@ class ReadRegistrationServiceTest {
 	
 	@Autowired private TeacherRepository teacherRepo;
 	
-	@Autowired private AuthenticationRepository authenticationRepo;
+	@Autowired private ActorRepository authenticationRepo;
 	
 	@Autowired private PersonRepository personRepo;
 	

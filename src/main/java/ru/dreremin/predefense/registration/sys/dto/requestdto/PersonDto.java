@@ -4,43 +4,47 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
-public abstract class PersonDto {
+public class PersonDto extends AuthenticationDto{
 	
 	@JsonProperty(value = "lastName")
 	@NotEmpty
 	@Size(min = 2, max = 20)
-	private final String lastName;
+	protected final String lastName;
 	
 	@JsonProperty(value = "firstName")
 	@NotEmpty
 	@Size(min = 2, max = 20)
-	private final String firstName;
+	protected final String firstName;
 	
 	@JsonProperty(value = "patronymic")
 	@NotEmpty
 	@Size(min = 2, max = 20)
-	private final String patronymic;
+	protected final String patronymic;
 	
 	@JsonProperty(value = "email")
 	@NotEmpty
 	@Email(message = "Invalid format email")
 	@Size(max = 40)
-	private final String email;
+	protected final String email;
 	
-	@JsonProperty(value = "login")
-	@NotEmpty
-	@Size(min = 2, max = 20)
-	private final String login;
-	
-	@JsonProperty(value = "password")
-	@NotEmpty
-	@Size(min = 2, max = 20)
-	private final String password;
+	@JsonCreator
+	public PersonDto(
+			String login,
+			String password,
+			String lastName, 
+			String firstName, 
+			String patronymic, 
+			String email) {
+		super (login, password);
+		this.lastName = lastName;
+		this.firstName = firstName;
+		this.patronymic = patronymic;
+		this.email = email;
+	}
 } 

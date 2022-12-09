@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .RegistrationDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .EntitiesMismatchException;

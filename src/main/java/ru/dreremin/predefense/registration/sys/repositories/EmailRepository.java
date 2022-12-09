@@ -23,5 +23,7 @@ public interface EmailRepository extends JpaRepository<Email, String>{
 	
 	@Query("select e from Email e join Teacher t on e.personId = t.personId")
 	List<Email> findAllByTeacher();
+	
+	Optional<Email> findByPersonId(long personId);
 }
 

@@ -10,7 +10,6 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
 @Entity
 @Table(name = "administrator")
@@ -21,8 +20,10 @@ public class Administrator {
 	@Column(name = "id_a")
 	private int id;
 	
-	@Column(name = "id_p_afk")
-	private long personId;
+	@Column(name = "id_auth_afk")
+	private long actorId;
 	
 	public Administrator() {}
+	
+	public Administrator(long actorId) { this.actorId = actorId; }
 }

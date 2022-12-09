@@ -17,11 +17,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
 
 import ru.dreremin.predefense.registration.sys.dto.requestdto.PersonDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthenticationRepository;
+		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 
@@ -36,7 +36,7 @@ class CreatePersonServiceTest {
 	@Autowired
 	private CreatePersonService service;
 	@Autowired
-	private AuthenticationRepository autor;
+	private ActorRepository autor;
 	@Autowired
 	private EmailRepository box;
 	@Autowired

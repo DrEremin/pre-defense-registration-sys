@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.dto.requestdto.impl;
+package ru.dreremin.predefense.registration.sys.dto.requestdto;
 
 import java.time.ZonedDateTime;
 

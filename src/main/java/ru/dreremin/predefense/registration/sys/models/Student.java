@@ -36,10 +36,25 @@ public class Student {
 	
 	public Student() {}
 	
-	public Student(long personId, 
-				   String groupNumber, 
-				   String studyDirection, 
-				   String studyType) {
+	public Student(
+			long personId, 
+			String groupNumber, 
+			String studyDirection, 
+			String studyType) {
+		this.personId = personId;
+		this.groupNumber = groupNumber;
+		this.studyDirection = studyDirection;
+		this.studyType = studyType;
+		this.grade = 1;	
+	}
+	
+	public Student(
+			long id,
+			long personId, 
+			String groupNumber, 
+			String studyDirection, 
+			String studyType) {
+		this.id = id;
 		this.personId = personId;
 		this.groupNumber = groupNumber;
 		this.studyDirection = studyDirection;

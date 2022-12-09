@@ -25,15 +25,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.factories.EntitiesFactory;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthenticationRepository;
+		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 
@@ -47,7 +46,7 @@ class CreatePersonControllerTest {
 	
 	@Autowired private PersonRepository personRepo;
 	
-	@Autowired private AuthenticationRepository authorRepo;
+	@Autowired private ActorRepository authorRepo;
 	
 	@Autowired private EmailRepository boxRepo;
 	

@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.dto.requestdto.impl;
+package ru.dreremin.predefense.registration.sys.dto.requestdto;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -6,7 +6,6 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.PersonDto;
 
 
 @Getter
@@ -26,16 +25,17 @@ public class StudentDto extends PersonDto {
 	@Size(max = 10)
 	private final String groupNumber;
 	
-	public StudentDto (String lastName,
-			   		   String firstName,
-			   		   String patronymic,
-			   		   String email,
-			   		   String login,
-			   		   String password,
-			   		   String studyDirection,
-			   		   String studyType,
-			   		   String groupNumber) {
-		super(lastName, firstName, patronymic, email, login, password);
+	public StudentDto (
+			String login,
+			String password,
+			String lastName,
+			String firstName,
+			String patronymic,
+			String email,
+			String studyDirection,
+			String studyType,
+			String groupNumber) {
+		super(login, password, lastName, firstName, patronymic, email);
 		this.studyDirection = studyDirection;
 		this.studyType = studyType;
 		this.groupNumber = groupNumber;

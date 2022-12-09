@@ -2,6 +2,9 @@ package ru.dreremin.predefense.registration.sys.dto.responsedto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+
+@Getter
 public class MailingReportDto extends StatusDto {
 	
 	@JsonProperty(value = "email")

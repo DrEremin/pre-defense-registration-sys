@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mail.MailException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +16,7 @@ import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .EntitiesMismatchException;
 import ru.dreremin.predefense.registration.sys.exceptions.FailedAuthenticationException;
+import ru.dreremin.predefense.registration.sys.exceptions.InvalidJwtTokenException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .NegativeTimePeriodException;
 import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
@@ -86,5 +89,27 @@ public class ExceptionsController {
 			MailException e) {
 		return new ResponseEntity<>(new StatusDto(500, "Error sending email"), 
 									HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(UsernameNotFoundException.class)
+	public ResponseEntity<StatusDto> handleUsernameNotFoundException(
+			UsernameNotFoundException e) {
+		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
+									HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(InvalidJwtTokenException.class)
+	public ResponseEntity<StatusDto> handleInvalidJwtTokenException(
+			InvalidJwtTokenException e) {
+		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
+									HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<StatusDto> handleBadCredentialsException(
+			BadCredentialsException e) {
+		return new ResponseEntity<>(new StatusDto(403, 
+						"Incorrect credentials"), 
+				HttpStatus.FORBIDDEN);
 	}
 }

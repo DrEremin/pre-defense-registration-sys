@@ -19,10 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .ComissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.models.TeacherComission;
@@ -45,7 +43,7 @@ class TeacherComissionRepositoryTest {
 	
 	@Autowired private EmailRepository emailRepo;
 	
-	@Autowired private AuthenticationRepository authorizationRepo;
+	@Autowired private ActorRepository authorizationRepo;
 	
 	@Autowired private ComissionRepository comissionRepo;
 	

@@ -19,13 +19,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .ComissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .RegistrationDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .EntitiesMismatchException;
 import ru.dreremin.predefense.registration.sys.exceptions
@@ -35,7 +32,7 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthenticationRepository;
+		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
@@ -74,7 +71,7 @@ class CreateRegistrationServiceTest {
 	
 	@Autowired private ComissionRepository comissionRepo;
 	
-	@Autowired private AuthenticationRepository authorizationRepo;
+	@Autowired private ActorRepository authorizationRepo;
 	
 	@Autowired private EmailRepository emailRepo;
 	

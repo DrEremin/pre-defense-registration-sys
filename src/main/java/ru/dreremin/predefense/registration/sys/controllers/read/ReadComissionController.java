@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .AuthenticationDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.AuthenticationDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
 		 .ActualComissionForStudentDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto

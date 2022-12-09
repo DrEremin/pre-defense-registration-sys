@@ -34,20 +34,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-
+import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .AuthenticationDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .ComissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .RegistrationDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.StudentDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.TeacherDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthenticationRepository;
+		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
@@ -93,7 +90,7 @@ class ReadComissionControllerTest {
 	
 	@Autowired private TeacherRepository teacherRepo;
 	
-	@Autowired private AuthenticationRepository authenticationRepo;
+	@Autowired private ActorRepository authenticationRepo;
 	
 	@Autowired private PersonRepository personRepo;
 	

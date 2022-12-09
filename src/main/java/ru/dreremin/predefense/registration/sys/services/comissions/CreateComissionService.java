@@ -5,9 +5,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
-		 .ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
 import ru.dreremin.predefense.registration.sys.factories.EntitiesFactory;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;

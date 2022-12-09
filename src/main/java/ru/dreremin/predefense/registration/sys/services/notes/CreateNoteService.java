@@ -7,8 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-
-import ru.dreremin.predefense.registration.sys.dto.requestdto.impl.NoteDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.NoteDto;
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.repositories

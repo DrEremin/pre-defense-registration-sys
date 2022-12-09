@@ -8,11 +8,13 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import ru.dreremin.predefense.registration.sys.models.Comission;
 import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 
+@Getter
 @RequiredArgsConstructor
 public class CurrentComissionOfStudentDto implements Serializable {
 

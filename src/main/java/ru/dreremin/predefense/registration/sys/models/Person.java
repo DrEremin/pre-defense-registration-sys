@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.models;
+	package ru.dreremin.predefense.registration.sys.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,15 +25,23 @@ public class Person {
 	@Column(name = "firstname", length = 20)
 	private String firstName;
 	
-	@Column(length = 20)
+	@Column(name = "patronymic", length = 20)
 	private String patronymic;
+	
+	@Column(name = "id_auth_pfk")
+	private long actorId;
 	
 	public Person() {}
 	
-	public Person(String lastName, String firstName, String patronymic) {
+	public Person(
+			String lastName, 
+			String firstName, 
+			String patronymic, 
+			long actorId) {
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.patronymic = patronymic;
+		this.actorId = actorId;
 	}
 	
 	@Override

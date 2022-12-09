@@ -1,5 +1,6 @@
 package ru.dreremin.predefense.registration.sys.services.persons;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -9,11 +10,11 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.PersonDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.factories.EntitiesFactory;
-import ru.dreremin.predefense.registration.sys.models.Authentication;
+import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .AuthenticationRepository;
+		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 
@@ -23,14 +24,15 @@ import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 public class CreatePersonService {
 	
 	private final PersonRepository personRepo;
-	private final AuthenticationRepository authorRepo;
+	private final ActorRepository actorRepo;
 	private final EmailRepository emailRepo;
+	private final PasswordEncoder passwordEncoder;
 	
-	public Person createPerson(PersonDto dto) 
+	public Person createPerson(PersonDto dto, String role) 
 			throws UniquenessViolationException {
 		
 		try{
-			if (authorRepo.existsByLogin(dto.getLogin())) {
+			if (actorRepo.existsByLogin(dto.getLogin())) {
 				throw new UniquenessViolationException(
 						"The user with this login already exists");
 			}
@@ -42,12 +44,15 @@ public class CreatePersonService {
 			log.warn(e.getMessage());
 			throw e;
 		}
-		
-		Person person = personRepo.save(EntitiesFactory.createPerson(dto));
-		
-		authorRepo.save(new Authentication(dto.getLogin(), 
-										  dto.getPassword(), 
-										  person.getId()));
+		String encodedPassword = passwordEncoder.encode(dto.getPassword());
+		log.debug("raw password" + dto.getPassword());
+		log.debug("encodedPassword" + encodedPassword);
+		Actor actor = actorRepo.save(new Actor(
+				dto.getLogin(), 
+				encodedPassword, 
+				role));
+		Person person = personRepo.save(EntitiesFactory
+				.createPerson(dto, actor.getId()));
 		emailRepo.save(new Email(dto.getEmail(), person.getId()));
 		return person;
 	}
