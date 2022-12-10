@@ -50,5 +50,6 @@ public class DeleteStudentService {
 		studentComissionRepo.deleteAllByStudentId(studentOpt.get().getId());
 		studentRepo.delete(studentOpt.get());
 		deletePersonService.deletePersonAndEmail(actorOpt.get().getId());
+		actorRepo.delete(actorOpt.get());
 	}
 }

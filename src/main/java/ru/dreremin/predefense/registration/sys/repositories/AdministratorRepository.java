@@ -10,4 +10,6 @@ import ru.dreremin.predefense.registration.sys.models.Administrator;
 @Repository
 public interface AdministratorRepository 
 		extends JpaRepository<Administrator, Integer> {
+	
+	Optional<Administrator> findByActorId(long actorId);
 }

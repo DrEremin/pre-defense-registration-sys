@@ -18,4 +18,6 @@ public interface TeacherComissionRepository
 	
 	Optional<TeacherComission> findByTeacherIdAndComissionId(long teacherId, 
 															 int comissionId);
+	
+	void deleteAllByTeacherId(int teacherId);
 }

@@ -28,7 +28,7 @@ import ru.dreremin.predefense.registration.sys.services.registrations
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/registration")
+@RequestMapping("/registrations")
 public class CreateRegistrationController {
 
 	private final CreateRegistrationService service;

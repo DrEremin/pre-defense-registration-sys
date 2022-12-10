@@ -27,6 +27,12 @@ public class Teacher {
 	
 	public Teacher() {}
 	
+	public Teacher(int id, long personId, String jobTitle) {
+		this.id = id;
+		this.personId = personId;
+		this.jobTitle = jobTitle;
+	}
+	
 	public Teacher(long personId, String jobTitle) {
 		this.personId = personId;
 		this.jobTitle = jobTitle;

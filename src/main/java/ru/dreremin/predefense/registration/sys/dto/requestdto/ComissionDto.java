@@ -7,8 +7,10 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
 import ru.dreremin.predefense.registration.sys.exceptions.NegativeTimePeriodException;
 
+@Getter
 public class ComissionDto {
 	
 	@JsonProperty(value = "startTimestamp")
@@ -50,7 +52,7 @@ public class ComissionDto {
 		this.location = location;
 		this.studentLimit = studentLimit;
 	}
-	 
+	/*
 	public ZonedDateTime getStartTimestamp() { return this.startTimestamp; }
 	
 	public ZonedDateTime getEndTimestamp() { return this.endTimestamp; }
@@ -61,7 +63,7 @@ public class ComissionDto {
 	
 	public String getLocation() { return this.location; }
 	
-	public Short getStudentLimit() { return this.studentLimit; }
+	public Short getStudentLimit() { return this.studentLimit; }*/
 	
 	public void periodValidation() throws NegativeTimePeriodException {
 		if (this.endTimestamp.toLocalDateTime().compareTo(

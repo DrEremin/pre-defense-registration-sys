@@ -42,7 +42,7 @@ import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 @ActiveProfiles("test")
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CreatePersonControllerTest {
+class CreateUserControllerTest {
 	
 	@Autowired private PersonRepository personRepo;
 	

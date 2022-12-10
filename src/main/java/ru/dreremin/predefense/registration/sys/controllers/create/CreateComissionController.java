@@ -24,7 +24,7 @@ public class CreateComissionController {
 	
 	private final CreateComissionService service;
 	
-	@PutMapping(value = "/comission-create", consumes = "application/json")
+	@PutMapping(value = "/comissions/create", consumes = "application/json")
 	public StatusDto createComission(@Valid @RequestBody ComissionDto dto) 
 			throws NegativeTimePeriodException, 
 			MethodArgumentNotValidException,

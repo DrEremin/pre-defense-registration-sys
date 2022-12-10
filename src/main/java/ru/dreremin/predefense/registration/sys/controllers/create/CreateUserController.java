@@ -28,8 +28,8 @@ import ru.dreremin.predefense.registration.sys
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/persons/create")
-public class CreatePersonController {
+@RequestMapping("/users/create")
+public class CreateUserController {
 	
 	private final CreateStudentService studentService;
 	private final CreateTeacherService teacherService;

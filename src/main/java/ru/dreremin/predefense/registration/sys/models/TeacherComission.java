@@ -20,14 +20,14 @@ public class TeacherComission {
 	private long id;
 	
 	@Column(name = "id_t_tcfk")
-	private long teacherId;
+	private int teacherId;
 	
 	@Column(name = "id_c_tcfk")
 	private int comissionId;
 	
 	public TeacherComission() {}
 	
-	public TeacherComission(long teacherId, int comissionId) {
+	public TeacherComission(int teacherId, int comissionId) {
 		this.teacherId = teacherId;
 		this.comissionId = comissionId;
 	}
