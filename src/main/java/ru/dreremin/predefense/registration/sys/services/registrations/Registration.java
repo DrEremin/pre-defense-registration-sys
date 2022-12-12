@@ -5,16 +5,16 @@ import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .ComissionRepository;
+		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .StudentComissionRepository;
+		 .StudentCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .TeacherComissionRepository;
+		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 
 @RequiredArgsConstructor
@@ -22,17 +22,17 @@ public abstract class Registration {
 	
 	//protected final AuthenticationService authenticationService;
 	
-	protected final StudentComissionRepository studentComissionRepo;
+	protected final StudentCommissionRepository studentComissionRepo;
 	
-	protected final TeacherComissionRepository teacherComissionRepo;
+	protected final TeacherCommissionRepository teacherComissionRepo;
 	
-	protected final ComissionRepository comissionRepo;
+	protected final CommissionRepository comissionRepo;
 	
 	protected final StudentRepository studentRepo;
 	
 	protected final TeacherRepository teacherRepo;
 	
-	protected Optional<Comission> comissionOpt;
+	protected Optional<Commission> comissionOpt;
 	
 	protected Student student;
 	

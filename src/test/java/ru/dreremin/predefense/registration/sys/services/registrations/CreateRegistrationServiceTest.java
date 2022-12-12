@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
@@ -30,21 +30,21 @@ import ru.dreremin.predefense.registration.sys.exceptions
 import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .ComissionRepository;
+		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .StudentComissionRepository;
+		 .StudentCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .TeacherComissionRepository;
+		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateComissionService;
+		 .CreateCommissionService;
 import ru.dreremin.predefense.registration.sys.services.students
 		 .CreateStudentService;
 import ru.dreremin.predefense.registration.sys.services.teachers
@@ -61,15 +61,15 @@ class CreateRegistrationServiceTest {
 	
 	@Autowired private CreateStudentService studentService;
 	
-	@Autowired private CreateComissionService comissionService;
+	@Autowired private CreateCommissionService comissionService;
 	
 	@Autowired private CreateTeacherService teacherService;
 	
-	@Autowired private StudentComissionRepository studentComissionRepo;
+	@Autowired private StudentCommissionRepository studentComissionRepo;
 	
-	@Autowired private TeacherComissionRepository teacherComissionRepo;
+	@Autowired private TeacherCommissionRepository teacherComissionRepo;
 	
-	@Autowired private ComissionRepository comissionRepo;
+	@Autowired private CommissionRepository comissionRepo;
 	
 	@Autowired private ActorRepository authorizationRepo;
 	
@@ -85,9 +85,9 @@ class CreateRegistrationServiceTest {
 	
 	private TeacherDto teacherDto;
 	
-	private ComissionDto comissionDto;
+	private CommissionDto commissionDto;
 	
-	private Comission comission;
+	private Commission commission;
 	
 	private String s;
 	
@@ -117,7 +117,7 @@ class CreateRegistrationServiceTest {
 			studentService.createStudent(studentDto);
 			teacherService.createTeacher(teacherDto);
 		}
-		comissionDto = new ComissionDto(
+		commissionDto = new CommissionDto(
 				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
 				ZonedDateTime.parse("2022-08-03T12:15:30+03:00[Europe/Moscow]", 
@@ -126,8 +126,8 @@ class CreateRegistrationServiceTest {
 				s,
 				"Аудитория №7",
 				(short)2);
-		comissionService.createComission(comissionDto);
-		comission = comissionRepo.findAll().get(0);
+		comissionService.createComission(commissionDto);
+		commission = comissionRepo.findAll().get(0);
 	}
 	
 	@BeforeEach
@@ -154,7 +154,7 @@ class CreateRegistrationServiceTest {
 	void createStudentRegistration_Success() throws Exception {
 		for (int i = 0; i < 2; i++) {
 			RegistrationDto dto =  new RegistrationDto(
-					logins[i], s, comission.getId());
+					logins[i], s, commission.getId());
 			assertDoesNotThrow(
 					() -> registrationService.createStudentRegistration(dto));
 		}
@@ -165,7 +165,7 @@ class CreateRegistrationServiceTest {
 	void createTeacherRegistration_Success() throws Exception {
 		for (int i = 3; i < 5; i++) {
 			RegistrationDto dto =  new RegistrationDto(
-					logins[i], s, comission.getId());
+					logins[i], s, commission.getId());
 			assertDoesNotThrow(
 					() -> registrationService.createTeacherRegistration(dto));
 		}
@@ -175,7 +175,7 @@ class CreateRegistrationServiceTest {
 	@Test
 	void createStudentRegistration_PersonDoesNotExist() {
 		RegistrationDto dto =  new RegistrationDto(
-				"non-existent login", s, comission.getId());
+				"non-existent login", s, commission.getId());
 		try {
 			registrationService.createStudentRegistration(dto);
 		} catch (EntityNotFoundException 
@@ -193,7 +193,7 @@ class CreateRegistrationServiceTest {
 	@Test
 	void createTeacherRegistration_PersonDoesNotExist() {
 		RegistrationDto dto =  new RegistrationDto(
-				"non-existent login", s, comission.getId());
+				"non-existent login", s, commission.getId());
 		try {
 			registrationService.createTeacherRegistration(dto);
 		} catch (EntityNotFoundException 
@@ -210,7 +210,7 @@ class CreateRegistrationServiceTest {
 	void createStudentRegistration_PasswordDoesNotMatchLogin() 
 			throws Exception {
 		RegistrationDto dto =  new RegistrationDto(
-				logins[0], "other password", comission.getId());
+				logins[0], "other password", commission.getId());
 		assertThrows(FailedAuthenticationException.class, 
 				() -> registrationService.createStudentRegistration(dto));
 		assertTrue(studentComissionRepo.count() == 0);
@@ -220,7 +220,7 @@ class CreateRegistrationServiceTest {
 	void createTeacherRegistration_PasswordDoesNotMatchLogin() 
 			throws Exception {
 		RegistrationDto dto =  new RegistrationDto(
-				logins[3], "other password", comission.getId());
+				logins[3], "other password", commission.getId());
 		assertThrows(FailedAuthenticationException.class, 
 				() -> registrationService.createTeacherRegistration(dto));
 		assertTrue(teacherComissionRepo.count() == 0);
@@ -229,7 +229,7 @@ class CreateRegistrationServiceTest {
 	@Test
 	void createStudentRegistration_StudentDoesNotExist() {
 		RegistrationDto dto =  new RegistrationDto(
-				logins[3], s, comission.getId());
+				logins[3], s, commission.getId());
 		
 		try {
 			registrationService.createStudentRegistration(dto);
@@ -248,7 +248,7 @@ class CreateRegistrationServiceTest {
 	@Test
 	void createTeacherRegistration_TeacherDoesNotExist() {
 		RegistrationDto dto =  new RegistrationDto(
-				logins[0], s, comission.getId());
+				logins[0], s, commission.getId());
 		
 		try {
 			registrationService.createTeacherRegistration(dto);
@@ -265,7 +265,7 @@ class CreateRegistrationServiceTest {
 	@Test
 	void createStudentRegistration_СomissionDoesNotExist() {
 		RegistrationDto dto =  new RegistrationDto(
-				logins[0], s, comission.getId() + 1);
+				logins[0], s, commission.getId() + 1);
 		
 		try {
 			registrationService.createStudentRegistration(dto);
@@ -284,7 +284,7 @@ class CreateRegistrationServiceTest {
 	@Test
 	void createTeacherRegistration_СomissionDoesNotExist() {
 		RegistrationDto dto =  new RegistrationDto(
-				logins[3], s, comission.getId() + 1);
+				logins[3], s, commission.getId() + 1);
 		
 		try {
 			registrationService.createTeacherRegistration(dto);
@@ -301,7 +301,7 @@ class CreateRegistrationServiceTest {
 	@Test
 	void createStudentRegistration_MismatchedStudyDirections() 
 			throws Exception {
-		ComissionDto otherComissionDto = new ComissionDto(
+		CommissionDto otherComissionDto = new CommissionDto(
 				ZonedDateTime.parse("2022-08-03T10:45:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
 				ZonedDateTime.parse("2022-08-03T12:45:30+03:00[Europe/Moscow]", 
@@ -311,7 +311,7 @@ class CreateRegistrationServiceTest {
 				"Аудитория №7",
 				(short)2);
 		comissionService.createComission(otherComissionDto);
-		Comission otherComission = comissionRepo.findAll().get(1);
+		Commission otherComission = comissionRepo.findAll().get(1);
 		
 		RegistrationDto dto =  new RegistrationDto(
 				logins[0], s, otherComission.getId());
@@ -327,12 +327,12 @@ class CreateRegistrationServiceTest {
 		RegistrationDto dto;
 		
 		for (int i = 0; i < 2; i++) {
-			dto =  new RegistrationDto(logins[i], s, comission.getId());
+			dto =  new RegistrationDto(logins[i], s, commission.getId());
 			registrationService.createStudentRegistration(dto);
 		}
 		assertThrows(OverLimitException.class, 
 				() -> registrationService.createStudentRegistration(
-						new RegistrationDto(logins[2], s, comission.getId())));
+						new RegistrationDto(logins[2], s, commission.getId())));
 		assertTrue(studentComissionRepo.count() == 2);
 	}
 	
@@ -340,7 +340,7 @@ class CreateRegistrationServiceTest {
 	void createStudentRegistration_SuchRegistrationAlreadyExist() 
 			throws Exception {
 		RegistrationDto dto =  new RegistrationDto(
-				logins[0], s, comission.getId());
+				logins[0], s, commission.getId());
 		registrationService.createStudentRegistration(dto);
 		assertThrows(UniquenessViolationException.class, 
 				() -> registrationService.createStudentRegistration(dto));
@@ -351,7 +351,7 @@ class CreateRegistrationServiceTest {
 	void createTeacherRegistration_SuchRegistrationAlreadyExist() 
 			throws Exception {
 		RegistrationDto dto =  new RegistrationDto(
-				logins[3], s, comission.getId());
+				logins[3], s, commission.getId());
 		registrationService.createTeacherRegistration(dto);
 		assertThrows(UniquenessViolationException.class, 
 				() -> registrationService.createTeacherRegistration(dto));

@@ -22,7 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
 
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 
 @Slf4j
 @DataJpaTest
@@ -30,10 +30,10 @@ import ru.dreremin.predefense.registration.sys.models.Comission;
 @ActiveProfiles("test")
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ComissionRepositoryTest {
+class CommissionRepositoryTest {
 
 	@Autowired
-	private ComissionRepository repository;
+	private CommissionRepository repository;
 	
 	private final int SIZE = 5;
 	
@@ -51,7 +51,7 @@ class ComissionRepositoryTest {
 					? ZonedDateTime.now().minusMinutes(i * 10).plusMonths(1) 
 					: ZonedDateTime.now().minusMinutes(i * 10).minusMonths(1);
 				
-			repository.save(new Comission(timestamp, 
+			repository.save(new Commission(timestamp, 
 										  timestamp.plusHours(1), 
 										  true, 
 										  s, 
@@ -80,13 +80,13 @@ class ComissionRepositoryTest {
 				.findByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
 				ZonedDateTime.now()));
 		
-		List<Comission> comissions = repository
+		List<Commission> commissions = repository
 				.findByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
 				ZonedDateTime.now());
 		
-		assertTrue(comissions.size() == SIZE / 2 + SIZE % 2);
-		for (int i = 1, j = 0; i < comissions.size(); i++, j++) {
-			assertTrue(comissions.get(j).compareTo(comissions.get(i)) < 0);
+		assertTrue(commissions.size() == SIZE / 2 + SIZE % 2);
+		for (int i = 1, j = 0; i < commissions.size(); i++, j++) {
+			assertTrue(commissions.get(j).compareTo(commissions.get(i)) < 0);
 		}
 	}
 }

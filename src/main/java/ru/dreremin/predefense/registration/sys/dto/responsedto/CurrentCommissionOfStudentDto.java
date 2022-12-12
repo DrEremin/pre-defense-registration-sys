@@ -11,12 +11,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 
 @Getter
 @RequiredArgsConstructor
-public class CurrentComissionOfStudentDto implements Serializable {
+public class CurrentCommissionOfStudentDto implements Serializable {
 
 	@JsonProperty(value = "studyDirection")
 	private final String studyDirection;
@@ -36,13 +36,13 @@ public class CurrentComissionOfStudentDto implements Serializable {
 	@JsonProperty(value = "students")
 	private final List<StudentEntry> students;
 	
-	public CurrentComissionOfStudentDto(Comission comission,
+	public CurrentCommissionOfStudentDto(Commission commission,
 								  List<StudentEntry> students) {
-		this.studyDirection = comission.getStudyDirection();
-		this.date = comission.getStartDateTime().toLocalDate();
-		this.startTime = comission.getStartDateTime().toLocalTime();
-		this.endTime = comission.getEndDateTime().toLocalTime();
-		this.location = comission.getLocation();
+		this.studyDirection = commission.getStudyDirection();
+		this.date = commission.getStartDateTime().toLocalDate();
+		this.startTime = commission.getStartDateTime().toLocalTime();
+		this.endTime = commission.getEndDateTime().toLocalTime();
+		this.location = commission.getLocation();
 		this.students = students;
 	}
 	
@@ -65,7 +65,7 @@ public class CurrentComissionOfStudentDto implements Serializable {
 		if (other == null || this.getClass() != other.getClass()) { 
 			return false;
 		}
-		CurrentComissionOfStudentDto o = (CurrentComissionOfStudentDto) other;
+		CurrentCommissionOfStudentDto o = (CurrentCommissionOfStudentDto) other;
 		return this.studyDirection.equals(o.getStudyDirection()) 
 				&& this.date.equals(o.getDate())
 				&& this.startTime.equals(o.getStartTime())

@@ -5,19 +5,19 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
 
 public class ActualComissionForTeacherDto 
-		extends ActualComissionForStudentDto {
+		extends ActualCommissionForStudentDto {
 	
 	@JsonProperty(value = "note")
 	protected final String note;
 	
-	public ActualComissionForTeacherDto(Comission comission, 
+	public ActualComissionForTeacherDto(Commission commission, 
 										List<TeacherEntry> teachers,
 										String note) {
-		super(comission, teachers);
+		super(commission, teachers);
 		this.note = note;
 	}
 	

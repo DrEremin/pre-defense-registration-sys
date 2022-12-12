@@ -20,10 +20,10 @@ public interface StudentEntryRepository
 				"p.firstName, " +
 				"p.patronymic, " +
 				"s.groupNumber) " +
-			"from StudentComission sc " +
+			"from StudentCommission sc " +
 				"join Student s on sc.studentId = s.id " +
 				"join Person p on s.personId = p.id " +
 			"where sc.comissionId = :comId")
-	List<StudentEntry> findByComissionId(
+	List<StudentEntry> findAllByComissionId(
 			@Param("comId") int comissionId, Sort sort);
 }

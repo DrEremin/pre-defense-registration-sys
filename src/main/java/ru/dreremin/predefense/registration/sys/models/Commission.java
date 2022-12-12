@@ -14,7 +14,7 @@ import lombok.Getter;
 @Getter
 @Entity
 @Table(name = "comission")
-public class Comission implements Comparable<Comission>{
+public class Commission implements Comparable<Commission>{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,9 +39,9 @@ public class Comission implements Comparable<Comission>{
 	@Column(name = "student_limit")
 	private short studentLimit;
 	
-	public Comission() {}
+	public Commission() {}
 	
-	public Comission(ZonedDateTime startDateTime,
+	public Commission(ZonedDateTime startDateTime,
 					 ZonedDateTime endDateTime,
 					 boolean presenceFormat,
 					 String studyDirection,
@@ -56,7 +56,7 @@ public class Comission implements Comparable<Comission>{
 	}
 	
 	@Override
-	public int compareTo(Comission other) {
+	public int compareTo(Commission other) {
 		return this.startDateTime.toLocalDateTime().compareTo(
 				other.getStartDateTime().toLocalDateTime());
 	}

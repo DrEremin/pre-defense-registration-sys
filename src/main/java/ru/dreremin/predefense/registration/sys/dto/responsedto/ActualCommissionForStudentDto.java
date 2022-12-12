@@ -9,11 +9,11 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
 
 @RequiredArgsConstructor
-public class ActualComissionForStudentDto implements Serializable {
+public class ActualCommissionForStudentDto implements Serializable {
 	
 	@JsonProperty(value = "id")
 	protected final int id;
@@ -36,14 +36,14 @@ public class ActualComissionForStudentDto implements Serializable {
 	@JsonProperty(value = "teachers")
 	protected final List<TeacherEntry> teachers;
 	
-	public ActualComissionForStudentDto(Comission comission,
+	public ActualCommissionForStudentDto(Commission commission,
 			  							List<TeacherEntry> teachers) {
-		this.id = comission.getId();
-		this.date = comission.getStartDateTime().toLocalDate();
-		this.startTime = comission.getStartDateTime().toLocalTime();
-		this.endTime = comission.getEndDateTime().toLocalTime();
-		this.studyDirection = comission.getStudyDirection();
-		this.location = comission.getLocation();
+		this.id = commission.getId();
+		this.date = commission.getStartDateTime().toLocalDate();
+		this.startTime = commission.getStartDateTime().toLocalTime();
+		this.endTime = commission.getEndDateTime().toLocalTime();
+		this.studyDirection = commission.getStudyDirection();
+		this.location = commission.getLocation();
 		this.teachers = teachers;
 	}
 	
@@ -69,7 +69,7 @@ public class ActualComissionForStudentDto implements Serializable {
 		if (other == null || this.getClass() != other.getClass()) { 
 			return false;
 		}
-		ActualComissionForStudentDto o = (ActualComissionForStudentDto) other;
+		ActualCommissionForStudentDto o = (ActualCommissionForStudentDto) other;
 		return this.studyDirection.equals(o.getStudyDirection()) 
 				&& this.date.equals(o.getDate())
 				&& this.startTime.equals(o.getStartTime())

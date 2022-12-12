@@ -15,14 +15,14 @@ public interface TeacherEntryRepository
 		extends JpaRepository<TeacherEntry, Long> {
 	
 	@Query("select new TeacherEntry(" +
-			"tc.id, " +
-			"p.lastName, " +
-			"p.firstName, " +
-			"p.patronymic) " +
-		"from TeacherComission tc " +
+				"tc.id, " +
+				"p.lastName, " +
+				"p.firstName, " +
+				"p.patronymic) " +
+			"from TeacherCommission tc " +
 			"join Teacher t on tc.teacherId = t.id " +
 			"join Person p on t.personId = p.id " +
-		"where tc.comissionId = :comId")
-	List<TeacherEntry> findByComissionId(
+			"where tc.comissionId = :comId")
+	List<TeacherEntry> findAllByComissionId(
 		@Param("comId") int comissionId, Sort sort);
 }

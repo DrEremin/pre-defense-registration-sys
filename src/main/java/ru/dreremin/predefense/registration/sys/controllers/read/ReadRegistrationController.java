@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,71 +17,56 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.AuthenticationDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .ActualComissionForStudentDto;
+		 .ActualCommissionForStudentDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
 		 .ActualComissionForTeacherDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .CurrentComissionOfStudentDto;
+		 .CurrentCommissionOfStudentDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.services.registrations
 		 .ReadRegistrationService;
 
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
+//@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 @RequiredArgsConstructor
 @Slf4j
 @RestController
-@RequestMapping(value = "/comissions-read")
-public class ReadComissionController {
-	/*
+@RequestMapping(value = "/comissions/read")
+public class ReadRegistrationController {
+	
 	private final ReadRegistrationService service;
 	
-	@PostMapping(value = "/current/student")
-	public CurrentComissionOfStudentDto getCurrentComissionOfStudent(
-			@Valid @RequestBody AuthenticationDto dto) 
-					throws EntityNotFoundException, 
-					FailedAuthenticationException,
-					MethodArgumentNotValidException,
-					HttpMessageNotReadableException {
+	@GetMapping(value = "/student/current")
+	public CurrentCommissionOfStudentDto getCurrentComissionOfStudent() {
 		
-		CurrentComissionOfStudentDto responseDto = 
-				service.getCurrentComissionOfStudent(dto);
+		CurrentCommissionOfStudentDto responseDto = 
+				service.getCurrentComissionOfStudent();
 		
-		log.info("ReadComissionController.getComissionForStudent() success");
+		log.info("ReadComissionController.getComissionForStudent() is success");
 		return responseDto;
 	}
 	
-	@PostMapping(value = "/actual/student")
-	public List<ActualComissionForStudentDto> 
-			getActualComissionsListForStudent(
-					@Valid @RequestBody AuthenticationDto dto) 
-							throws EntityNotFoundException, 
-							FailedAuthenticationException,
-							MethodArgumentNotValidException,
-							HttpMessageNotReadableException {
+	@GetMapping(value = "/student/actual-list")
+	public List<ActualCommissionForStudentDto> 
+			getActualComissionsListForStudent() {
 		
-		List<ActualComissionForStudentDto> actualComissions = service
-				.getActualComissionsListForStudent(dto);
+		List<ActualCommissionForStudentDto> actualComissions = service
+				.getActualComissionsListForStudent();
 		
 		log.info("ReadComissionController.getActualComissionsListForStudent()"
-				+ " success");
+				+ "is success");
 		return actualComissions;
 	}
 
-	@PostMapping(value = "/actual/teacher")
+	@GetMapping(value = "/teacher/actual-list")
 	public List<ActualComissionForTeacherDto> 
-			getActualComissionsListForTeacher(
-					@Valid @RequestBody AuthenticationDto dto) 
-							throws EntityNotFoundException, 
-							FailedAuthenticationException,
-							MethodArgumentNotValidException,
-							HttpMessageNotReadableException {
+			getActualComissionsListForTeacher() {
 		
 		List<ActualComissionForTeacherDto> actualComissions = service
-				.getActualComissionsListForTeacher(dto);
+				.getActualComissionsListForTeacher();
 		
 		log.info("ReadComissionController.getActualComissionsListForTeacher()"
-				+ " success");
+				+ "is success");
 		return actualComissions;
-	}*/
+	}
 }

@@ -5,19 +5,19 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.factories.EntitiesFactory;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .ComissionRepository;
+		 .CommissionRepository;
 
 @RequiredArgsConstructor
 @Service
-public class CreateComissionService {
+public class CreateCommissionService {
 
-	private final ComissionRepository repository;
+	private final CommissionRepository repository;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE)
-	public void createComission(ComissionDto dto) {
+	public void createComission(CommissionDto dto) {
 		repository.save(EntitiesFactory.createComission(dto));
 	} 
 }

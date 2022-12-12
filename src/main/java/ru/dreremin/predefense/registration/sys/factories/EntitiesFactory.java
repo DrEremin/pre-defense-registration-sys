@@ -1,9 +1,9 @@
 package ru.dreremin.predefense.registration.sys.factories;
 
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.PersonDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.models.Student;
 
@@ -23,8 +23,8 @@ public class EntitiesFactory {
 						   dto.getStudyType());
 	}
 	
-	public static Comission createComission(ComissionDto dto) {
-		return new Comission(dto.getStartTimestamp(), 
+	public static Commission createComission(CommissionDto dto) {
+		return new Commission(dto.getStartTimestamp(), 
 							 dto.getEndTimestamp(), 
 							 dto.getPresenceFormat(), 
 							 dto.getStudyDirection(), 

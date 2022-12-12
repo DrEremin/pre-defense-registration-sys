@@ -20,13 +20,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateComissionService;
+		 .CreateCommissionService;
 import ru.dreremin.predefense.registration.sys.services.registrations
 		 .CreateRegistrationService;
 import ru.dreremin.predefense.registration.sys.services.students
@@ -46,16 +46,16 @@ class StudentEntryRepositoryTest {
 	private CreateStudentService createStudentService; 
 	
 	@Autowired
-	private CreateComissionService createComissionService; 
+	private CreateCommissionService createCommissionService; 
 	
 	@Autowired
 	private CreateRegistrationService createRegistrationService;
 	
 	@Autowired
-	private ComissionRepository comissionRepo;
+	private CommissionRepository comissionRepo;
 	
 	@Autowired
-	private StudentComissionRepository studentComissionRepo;
+	private StudentCommissionRepository studentComissionRepo;
 	
 	@Autowired
 	private StudentRepository studentRepo;
@@ -75,7 +75,7 @@ class StudentEntryRepositoryTest {
 	
 	private String[] placeholders;
 	
-	private List<Comission> comissions;
+	private List<Commission> commissions;
 	
 	private static final int SIZE;
 	
@@ -89,7 +89,7 @@ class StudentEntryRepositoryTest {
 		placeholder = "placeholder";
 		placeholders = new String[SIZE];
 		
-		ComissionDto dto = new ComissionDto(
+		CommissionDto dto = new CommissionDto(
 				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
 				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
@@ -112,20 +112,20 @@ class StudentEntryRepositoryTest {
 					placeholder,
 					placeholder,
 					"ЗИ98" + i));
-			createComissionService.createComission(dto);
+			createCommissionService.createComission(dto);
 			builder.delete(0, builder.length());
 		}
-		comissions = comissionRepo.findAll();
+		commissions = comissionRepo.findAll();
 		for (int i = 0; i < SIZE - 1; i++) {
 			createRegistrationService.createStudentRegistration(
 					new RegistrationDto(placeholders[i], 
 										placeholders[i], 
-										comissions.get(0).getId()));
+										commissions.get(0).getId()));
 		}
 		createRegistrationService.createStudentRegistration(
 				new RegistrationDto(placeholders[SIZE - 1], 
 									placeholders[SIZE - 1], 
-									comissions.get(1).getId()));
+									commissions.get(1).getId()));
 	}
 	
 	@BeforeEach
@@ -148,7 +148,7 @@ class StudentEntryRepositoryTest {
 	@Test
 	void findByComissionId_Success() {
 		List<StudentEntry> entries = studentEntryRepo.findByComissionId(
-				comissions.get(0).getId(), Sort.by(Sort.Order.desc("p.lastName")));
+				commissions.get(0).getId(), Sort.by(Sort.Order.desc("p.lastName")));
 		assertTrue(entries.size() == 3);
 	}
 }

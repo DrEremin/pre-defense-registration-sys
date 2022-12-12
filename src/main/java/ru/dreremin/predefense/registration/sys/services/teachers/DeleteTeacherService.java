@@ -15,7 +15,7 @@ import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.repositories.ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
-import ru.dreremin.predefense.registration.sys.repositories.TeacherComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories.TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.services.persons.DeletePersonService;
 
@@ -25,7 +25,7 @@ public class DeleteTeacherService {
 
 	private final ActorRepository actorRepo;
 	private final TeacherRepository teacherRepo;
-	private final TeacherComissionRepository teacherComissionRepo;
+	private final TeacherCommissionRepository teacherComissionRepo;
 	private final DeletePersonService deletePersonService;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, 

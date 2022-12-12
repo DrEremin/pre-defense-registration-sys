@@ -19,33 +19,33 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .AuthenticationDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .ActualComissionForStudentDto;
+		 .ActualCommissionForStudentDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .CurrentComissionOfStudentDto;
-import ru.dreremin.predefense.registration.sys.models.Comission;
+		 .CurrentCommissionOfStudentDto;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .ComissionRepository;
+		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .StudentComissionRepository;
+		 .StudentCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .TeacherComissionRepository;
+		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateComissionService;
+		 .CreateCommissionService;
 import ru.dreremin.predefense.registration.sys.services.students
 		 .CreateStudentService;
 import ru.dreremin.predefense.registration.sys.services.teachers
@@ -64,15 +64,15 @@ class ReadRegistrationServiceTest {
 	
 	@Autowired private CreateTeacherService createTeacherService;
 	
-	@Autowired private CreateComissionService createComissionService; 
+	@Autowired private CreateCommissionService createCommissionService; 
 	
 	@Autowired private CreateRegistrationService createRegistrationService;
 	
-	@Autowired private ComissionRepository comissionRepo;
+	@Autowired private CommissionRepository comissionRepo;
 	
-	@Autowired private StudentComissionRepository studentComissionRepo;
+	@Autowired private StudentCommissionRepository studentComissionRepo;
 	
-	@Autowired private TeacherComissionRepository teacherComissionRepo;
+	@Autowired private TeacherCommissionRepository teacherComissionRepo;
 	
 	@Autowired private StudentRepository studentRepo;
 	
@@ -99,7 +99,7 @@ class ReadRegistrationServiceTest {
 	
 	private String[][] placeholders;
 	
-	private List<Comission> comissions;
+	private List<Commission> commissions;
 	
 	private static final int SIZE = 4;
 	
@@ -113,7 +113,7 @@ class ReadRegistrationServiceTest {
 		timestamps = new ZonedDateTime[SIZE];
 		
 		ZonedDateTime timestamp = ZonedDateTime.now().plusMonths(1);
-		ComissionDto dto;
+		CommissionDto dto;
 		StringBuilder builder = new StringBuilder();
 		
 		for (int i = 0; i < SIZE; i++) {
@@ -146,29 +146,29 @@ class ReadRegistrationServiceTest {
 					placeholder));
 			timestamp = timestamp.minusDays(i);
 			timestamps[i] = timestamp;
-			dto = new ComissionDto(
+			dto = new CommissionDto(
 					timestamp,
 					timestamp.plusHours(2),
 					true,
 					(i % 2 == 1) ? placeholder + "1234" : placeholder,
 					"Аудитория №7",
 					(short)10);
-			createComissionService.createComission(dto);
+			createCommissionService.createComission(dto);
 			builder.delete(0, builder.length());
 		}
-		comissions = comissionRepo.findAll();
+		commissions = comissionRepo.findAll();
 		for (int i = 0; i < SIZE - 1; i++) {
 			createRegistrationService.createStudentRegistration(
 					new RegistrationDto(placeholders[0][i], 
 										placeholders[0][i], 
-										comissions.get(0).getId()));
+										commissions.get(0).getId()));
 		}
 		for (int i = 0, k = 0; i < SIZE; i++, k++) {
 			for (int j = 0; j < SIZE - k; j++) {
 				createRegistrationService.createTeacherRegistration(
 						new RegistrationDto(placeholders[1][j], 
 											placeholders[1][j], 
-											comissions.get(i).getId()));
+											commissions.get(i).getId()));
 			}
 		}
 	}
@@ -199,19 +199,19 @@ class ReadRegistrationServiceTest {
 				.getCurrentComissionOfStudent(new AuthenticationDto(
 						placeholders[0][0], placeholders[0][0])));
 		
-		CurrentComissionOfStudentDto dto = readRegistrationService
+		CurrentCommissionOfStudentDto dto = readRegistrationService
 				.getCurrentComissionOfStudent(new AuthenticationDto(
 						placeholders[0][0], placeholders[0][0]));
 		
-		assertTrue(comissions.get(0).getStudyDirection().equals(
+		assertTrue(commissions.get(0).getStudyDirection().equals(
 				dto.getStudyDirection()));
-		assertTrue(comissions.get(0).getStartDateTime().toLocalDate().equals(
+		assertTrue(commissions.get(0).getStartDateTime().toLocalDate().equals(
 				dto.getDate()));
-		assertTrue(comissions.get(0).getStartDateTime().toLocalTime().equals(
+		assertTrue(commissions.get(0).getStartDateTime().toLocalTime().equals(
 				dto.getStartTime()));
-		assertTrue(comissions.get(0).getEndDateTime().toLocalTime().equals(
+		assertTrue(commissions.get(0).getEndDateTime().toLocalTime().equals(
 				dto.getEndTime()));
-		assertTrue(comissions.get(0).getLocation().equals(
+		assertTrue(commissions.get(0).getLocation().equals(
 				dto.getLocation()));
 		
 		List<StudentEntry> students = dto.getStudents();
@@ -230,7 +230,7 @@ class ReadRegistrationServiceTest {
 				.getActualComissionsListForStudent(new AuthenticationDto(
 						placeholders[0][0], placeholders[0][0])));
 		
-		List<ActualComissionForStudentDto> dtoList = readRegistrationService
+		List<ActualCommissionForStudentDto> dtoList = readRegistrationService
 				.getActualComissionsListForStudent(new AuthenticationDto(
 						placeholders[0][0], placeholders[0][0]));
 		
@@ -243,7 +243,7 @@ class ReadRegistrationServiceTest {
 				"Бурлаков И.С. Иванов С.А. Игнатьев А.П. Казаков В.М. "};
 		StringBuilder builder;
 		
-		for (ActualComissionForStudentDto dto : dtoList) {
+		for (ActualCommissionForStudentDto dto : dtoList) {
 			assertTrue(dto.getDate().equals(timestamps[i].toLocalDate()));
 			i -= 2;
 			teachers = dto.getTeachers();
@@ -259,7 +259,7 @@ class ReadRegistrationServiceTest {
 	public void getCurrentComissionOfStudent_StudentDontRegistered() 
 			throws Exception {
 		
-		CurrentComissionOfStudentDto dto = null;
+		CurrentCommissionOfStudentDto dto = null;
 		
 		try {
 			dto = readRegistrationService

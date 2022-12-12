@@ -10,22 +10,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .NegativeTimePeriodException;
 import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateComissionService;
+		 .CreateCommissionService;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class CreateComissionController {
+public class CreateCommissionController {
 	
-	private final CreateComissionService service;
+	private final CreateCommissionService service;
 	
 	@PutMapping(value = "/comissions/create", consumes = "application/json")
-	public StatusDto createComission(@Valid @RequestBody ComissionDto dto) 
+	public StatusDto createComission(@Valid @RequestBody CommissionDto dto) 
 			throws NegativeTimePeriodException, 
 			MethodArgumentNotValidException,
 			HttpMessageNotReadableException {

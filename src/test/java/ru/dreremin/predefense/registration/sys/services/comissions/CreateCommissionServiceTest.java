@@ -17,30 +17,30 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .ComissionRepository;
+		 .CommissionRepository;
 
 @Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CreateComissionServiceTest {
+class CreateCommissionServiceTest {
 	
 	@Autowired
-	private CreateComissionService service;
+	private CreateCommissionService service;
 	
 	@Autowired
-	private ComissionRepository repository;
+	private CommissionRepository repository;
 	
-	private ComissionDto dto;
+	private CommissionDto dto;
 	
 	private Instant time;
 
 	@BeforeAll
 	void beforeAll() {
-		dto = new ComissionDto(
+		dto = new CommissionDto(
 				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
 				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 

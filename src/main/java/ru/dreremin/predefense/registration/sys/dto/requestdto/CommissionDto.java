@@ -11,7 +11,7 @@ import lombok.Getter;
 import ru.dreremin.predefense.registration.sys.exceptions.NegativeTimePeriodException;
 
 @Getter
-public class ComissionDto {
+public class CommissionDto {
 	
 	@JsonProperty(value = "startTimestamp")
 	@NotNull
@@ -39,7 +39,7 @@ public class ComissionDto {
 	@NotNull
 	private final Short studentLimit;
 	
-	public ComissionDto(ZonedDateTime startDateTime, 
+	public CommissionDto(ZonedDateTime startDateTime, 
 						ZonedDateTime endDateTime, 
 						Boolean presenceFormat, 
 						String studyDirection, 

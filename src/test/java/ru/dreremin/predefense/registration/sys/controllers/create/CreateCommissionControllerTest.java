@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import ru.dreremin.predefense.registration.sys.exceptions.NegativeTimePeriodException;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .ComissionRepository;
+		 .CommissionRepository;
 
 @Slf4j
 @SpringBootTest
@@ -41,9 +41,9 @@ import ru.dreremin.predefense.registration.sys.repositories
 @ActiveProfiles("test")
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CreateComissionControllerTest {
+class CreateCommissionControllerTest {
 	
-	@Autowired private ComissionRepository repository;
+	@Autowired private CommissionRepository repository;
 	
 	@Autowired private MockMvc mockMvc;
 	

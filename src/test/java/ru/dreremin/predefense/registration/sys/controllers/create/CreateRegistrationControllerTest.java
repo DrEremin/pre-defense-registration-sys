@@ -35,7 +35,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
@@ -46,21 +46,21 @@ import ru.dreremin.predefense.registration.sys.exceptions
 import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .ComissionRepository;
+		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .StudentComissionRepository;
+		 .StudentCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .TeacherComissionRepository;
+		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateComissionService;
+		 .CreateCommissionService;
 import ru.dreremin.predefense.registration.sys.services.registrations
 		 .CreateRegistrationService;
 import ru.dreremin.predefense.registration.sys.services.students
@@ -84,9 +84,9 @@ class CreateRegistrationControllerTest {
 	
 	@Autowired private CreateStudentService studentService;
 	
-	@Autowired private CreateComissionService comissionService;
+	@Autowired private CreateCommissionService comissionService;
 	
-	@Autowired private ComissionRepository comissionRepo;
+	@Autowired private CommissionRepository comissionRepo;
 	
 	@Autowired private ActorRepository authorizationRepo;
 	
@@ -98,9 +98,9 @@ class CreateRegistrationControllerTest {
 	
 	@Autowired private StudentRepository studentRepo;
 	
-	@Autowired StudentComissionRepository studentComissionRepo;
+	@Autowired StudentCommissionRepository studentComissionRepo;
 	
-	@Autowired TeacherComissionRepository teacherComissionRepo;
+	@Autowired TeacherCommissionRepository teacherComissionRepo;
 	
 	@Autowired private ObjectMapper objectMapper;
 	
@@ -110,9 +110,9 @@ class CreateRegistrationControllerTest {
 	
 	private TeacherDto teacherDto;
 	
-	private ComissionDto comissionDto;
+	private CommissionDto commissionDto;
 	
-	private Comission comission;
+	private Commission commission;
 	
 	private String s;
 	
@@ -140,7 +140,7 @@ class CreateRegistrationControllerTest {
 			studentService.createStudent(studentDto);
 			teacherService.createTeacher(teacherDto);
 		}
-		comissionDto = new ComissionDto(
+		commissionDto = new CommissionDto(
 				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
 				ZonedDateTime.parse("2022-08-03T12:15:30+03:00[Europe/Moscow]", 
@@ -149,8 +149,8 @@ class CreateRegistrationControllerTest {
 				s,
 				"Аудитория №7",
 				(short)2);
-		comissionService.createComission(comissionDto);
-		comission = comissionRepo.findAll().get(0);
+		comissionService.createComission(commissionDto);
+		commission = comissionRepo.findAll().get(0);
 	}
 	
 	@BeforeEach
@@ -177,7 +177,7 @@ class CreateRegistrationControllerTest {
 	void studentRegistration_Success() throws Exception {
 		
 		RegistrationDto dto = new RegistrationDto(
-				logins[0], s, comission.getId());
+				logins[0], s, commission.getId());
 		
 		assertDoesNotThrow(() -> 
 			mockMvc.perform(put("/registration/student")
@@ -196,7 +196,7 @@ class CreateRegistrationControllerTest {
 	void teacherRegistration_Success() throws Exception {
 		
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], s, comission.getId());
+				logins[3], s, commission.getId());
 		
 		assertDoesNotThrow(() -> 
 			mockMvc.perform(put("/registration/teacher")
@@ -215,7 +215,7 @@ class CreateRegistrationControllerTest {
 	void studentRegistration_RequestBodyIsMissingField() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				logins[0], s, comission.getId());
+				logins[0], s, commission.getId());
 		String json = objectMapper.writeValueAsString(dto)
 				.replace("\"personLogin\":\"" + logins[0] + "\",", "");
 		
@@ -239,7 +239,7 @@ class CreateRegistrationControllerTest {
 	void teacherRegistration_RequestBodyIsMissingField() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], s, comission.getId());
+				logins[3], s, commission.getId());
 		String json = objectMapper.writeValueAsString(dto)
 				.replace("\"personLogin\":\"" + logins[3] + "\",", "");
 		
@@ -263,7 +263,7 @@ class CreateRegistrationControllerTest {
 	void studentRegistration_invalidRequestBodySyntax() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				logins[0], s, comission.getId());
+				logins[0], s, commission.getId());
 		String json = objectMapper.writeValueAsString(dto)
 				.replaceFirst("\\{", "");
 		
@@ -287,7 +287,7 @@ class CreateRegistrationControllerTest {
 	void teacherRegistration_invalidRequestBodySyntax() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], s, comission.getId());
+				logins[3], s, commission.getId());
 		String json = objectMapper.writeValueAsString(dto)
 				.replaceFirst("\\{", "");
 		
@@ -311,7 +311,7 @@ class CreateRegistrationControllerTest {
 	void studentRegistration_PersonDoesNotExist() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				"non-existent login", s, comission.getId());
+				"non-existent login", s, commission.getId());
 		
 		mockMvc.perform(put("/registration/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -333,7 +333,7 @@ class CreateRegistrationControllerTest {
 	void teacherRegistration_PersonDoesNotExist() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				"non-existent login", s, comission.getId());
+				"non-existent login", s, commission.getId());
 		
 		mockMvc.perform(put("/registration/teacher")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -355,7 +355,7 @@ class CreateRegistrationControllerTest {
 	void studentRegistration_PasswordDoesNotMatchLogin() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				logins[0], "other password", comission.getId());
+				logins[0], "other password", commission.getId());
 		
 		mockMvc.perform(put("/registration/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -377,7 +377,7 @@ class CreateRegistrationControllerTest {
 	void teacerRegistration_PasswordDoesNotMatchLogin() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], "other password", comission.getId());
+				logins[3], "other password", commission.getId());
 		
 		mockMvc.perform(put("/registration/teacher")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -399,7 +399,7 @@ class CreateRegistrationControllerTest {
 	void studentRegistration_StudentDoesNotExist() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], s, comission.getId());
+				logins[3], s, commission.getId());
 		
 		mockMvc.perform(put("/registration/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -421,7 +421,7 @@ class CreateRegistrationControllerTest {
 	void teacherRegistration_TeacherDoesNotExist() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				logins[0], s, comission.getId());
+				logins[0], s, commission.getId());
 		
 		mockMvc.perform(put("/registration/teacher")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -443,7 +443,7 @@ class CreateRegistrationControllerTest {
 	void studentRegistration_ComissionDoesNotExist() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				logins[0], s, comission.getId() + 100);
+				logins[0], s, commission.getId() + 100);
 		
 		mockMvc.perform(put("/registration/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -465,7 +465,7 @@ class CreateRegistrationControllerTest {
 	void teacherRegistration_ComissionDoesNotExist() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], s, comission.getId() + 100);
+				logins[3], s, commission.getId() + 100);
 		
 		mockMvc.perform(put("/registration/teacher")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -486,7 +486,7 @@ class CreateRegistrationControllerTest {
 	@Test
 	void studentRegistration_MismatchedStudyDirections() throws Exception {
 	
-		ComissionDto otherComissionDto = new ComissionDto(
+		CommissionDto otherComissionDto = new CommissionDto(
 				ZonedDateTime.parse("2022-08-03T10:45:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
 				ZonedDateTime.parse("2022-08-03T12:45:30+03:00[Europe/Moscow]", 
@@ -496,7 +496,7 @@ class CreateRegistrationControllerTest {
 				"Аудитория №7",
 				(short)2);
 		comissionService.createComission(otherComissionDto);
-		Comission otherComission = comissionRepo.findAll().get(1);
+		Commission otherComission = comissionRepo.findAll().get(1);
 		RegistrationDto dto = new RegistrationDto(
 				logins[0], s, otherComission.getId());
 		
@@ -524,11 +524,11 @@ class CreateRegistrationControllerTest {
 		RegistrationDto dto;
 		
 		for (int i = 0; i < 2; i++) {
-			dto =  new RegistrationDto(logins[i], s, comission.getId());
+			dto =  new RegistrationDto(logins[i], s, commission.getId());
 			registrationService.createStudentRegistration(dto);
 		}
 		dto = new RegistrationDto(
-				logins[2], s, comission.getId());
+				logins[2], s, commission.getId());
 		mockMvc.perform(put("/registration/student")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(dto))
@@ -550,7 +550,7 @@ class CreateRegistrationControllerTest {
 	void studentRegistration_SuchRegistrationAlreadyExist() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				logins[0], s, comission.getId());
+				logins[0], s, commission.getId());
 		registrationService.createStudentRegistration(dto);
 		mockMvc.perform(put("/registration/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -573,7 +573,7 @@ class CreateRegistrationControllerTest {
 	void teacherRegistration_SuchRegistrationAlreadyExist() throws Exception {
 	
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], s, comission.getId());
+				logins[3], s, commission.getId());
 		registrationService.createTeacherRegistration(dto);
 		mockMvc.perform(put("/registration/teacher")
 						.contentType(MediaType.APPLICATION_JSON)

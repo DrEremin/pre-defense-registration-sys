@@ -22,7 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
@@ -30,21 +30,21 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .AuthenticationDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .ComissionRepository;
+		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .StudentComissionRepository;
+		 .StudentCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .TeacherComissionRepository;
+		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateComissionService;
+		 .CreateCommissionService;
 import ru.dreremin.predefense.registration.sys.services.students
 		 .CreateStudentService;
 import ru.dreremin.predefense.registration.sys.services.teachers
@@ -63,15 +63,15 @@ class DeleteRegistrationServiceTest {
 	
 	@Autowired private CreateStudentService studentService;
 	
-	@Autowired private CreateComissionService comissionService;
+	@Autowired private CreateCommissionService comissionService;
 	
 	@Autowired private CreateTeacherService teacherService;
 	
-	@Autowired private StudentComissionRepository studentComissionRepo;
+	@Autowired private StudentCommissionRepository studentComissionRepo;
 	
-	@Autowired private TeacherComissionRepository teacherComissionRepo;
+	@Autowired private TeacherCommissionRepository teacherComissionRepo;
 	
-	@Autowired private ComissionRepository comissionRepo;
+	@Autowired private CommissionRepository comissionRepo;
 	
 	@Autowired private ActorRepository authorizationRepo;
 	
@@ -87,9 +87,9 @@ class DeleteRegistrationServiceTest {
 	
 	private TeacherDto teacherDto;
 	
-	private ComissionDto comissionDto;
+	private CommissionDto commissionDto;
 	
-	private List<Comission> comissions;
+	private List<Commission> commissions;
 	
 	private String s;
 	
@@ -111,7 +111,7 @@ class DeleteRegistrationServiceTest {
 			emails[i] = builder.append("@mail.ru").toString();
 			builder = builder.delete(0, builder.length());
 		}
-		comissionDto = new ComissionDto(
+		commissionDto = new CommissionDto(
 				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
 				ZonedDateTime.parse("2022-08-03T12:15:30+03:00[Europe/Moscow]", 
@@ -127,10 +127,10 @@ class DeleteRegistrationServiceTest {
 					s, s, s, emails[i + 3], logins[i + 3], s, s);
 			studentService.createStudent(studentDto);
 			teacherService.createTeacher(teacherDto);
-			comissionService.createComission(comissionDto);
+			comissionService.createComission(commissionDto);
 		}
 
-		comissions = comissionRepo.findAll();
+		commissions = comissionRepo.findAll();
 	}
 	
 	@BeforeEach
@@ -139,10 +139,10 @@ class DeleteRegistrationServiceTest {
 		for (int i = 0; i < 2; i++) {
 			createRegistrationService.createStudentRegistration(
 					new RegistrationDto(
-							logins[i], s, comissions.get(i).getId()));
+							logins[i], s, commissions.get(i).getId()));
 			createRegistrationService.createTeacherRegistration(
 					new RegistrationDto(
-							logins[i + 3], s, comissions.get(i).getId()));
+							logins[i + 3], s, commissions.get(i).getId()));
 		} 
 	}
 	
@@ -177,7 +177,7 @@ class DeleteRegistrationServiceTest {
 		assertTrue(teacherComissionRepo.count() == 2);
 		assertDoesNotThrow(() -> deleteRegistrationService
 				.deleteTeacherRegistration(new RegistrationDto(
-						logins[3], s, comissions.get(0).getId())));
+						logins[3], s, commissions.get(0).getId())));
 		assertTrue(teacherComissionRepo.count() == 1);
 	}
 	
@@ -202,7 +202,7 @@ class DeleteRegistrationServiceTest {
 			deleteRegistrationService.deleteTeacherRegistration(
 					new RegistrationDto("non-existent login", 
 										s, 
-										comissions.get(0).getId()));
+										commissions.get(0).getId()));
 		} catch (EntityNotFoundException | FailedAuthenticationException e) {
 			assertInstanceOf(EntityNotFoundException.class, e);
 			assertEquals("There is not exists person with this login", 
@@ -234,7 +234,7 @@ class DeleteRegistrationServiceTest {
 			deleteRegistrationService.deleteTeacherRegistration(
 					new RegistrationDto(logins[3], 
 										"invalid password", 
-										comissions.get(0).getId()));
+										commissions.get(0).getId()));
 		} catch (EntityNotFoundException | FailedAuthenticationException e) {
 			assertInstanceOf(FailedAuthenticationException.class, e);
 			assertEquals("Сlient is not authenticated", 
@@ -266,7 +266,7 @@ class DeleteRegistrationServiceTest {
 			deleteRegistrationService.deleteTeacherRegistration(
 					new RegistrationDto(logins[0], 
 										s, 
-										comissions.get(0).getId()));
+										commissions.get(0).getId()));
 		} catch (EntityNotFoundException | FailedAuthenticationException e) {
 			assertInstanceOf(EntityNotFoundException.class, e);
 			assertEquals("There is not exists teacher with this login", 
@@ -283,7 +283,7 @@ class DeleteRegistrationServiceTest {
 			deleteRegistrationService.deleteTeacherRegistration(
 					new RegistrationDto(logins[3], 
 										s, 
-										comissions.get(0).getId() + 10));
+										commissions.get(0).getId() + 10));
 		} catch (EntityNotFoundException | FailedAuthenticationException e) {
 			assertInstanceOf(EntityNotFoundException.class, e);
 			assertEquals("There is not exists comission with this Id", 
@@ -300,7 +300,7 @@ class DeleteRegistrationServiceTest {
 			deleteRegistrationService.deleteTeacherRegistration(
 					new RegistrationDto(logins[3], 
 										s, 
-										comissions.get(1).getId()));
+										commissions.get(1).getId()));
 		} catch (EntityNotFoundException | FailedAuthenticationException e) {
 			assertInstanceOf(EntityNotFoundException.class, e);
 			assertEquals("The registration for this teacher "

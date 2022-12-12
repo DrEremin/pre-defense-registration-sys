@@ -11,24 +11,24 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "student_comission")
-public class StudentComission {
-
+@Table(name = "teacher_comission")
+public class TeacherCommission {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_sc")
+	@Column(name = "id_tc")
 	private long id;
 	
-	@Column(name = "id_s_scfk")
-	private long studentId;
+	@Column(name = "id_t_tcfk")
+	private int teacherId;
 	
-	@Column(name = "id_c_scfk")
+	@Column(name = "id_c_tcfk")
 	private int comissionId;
 	
-	public StudentComission() {}
+	public TeacherCommission() {}
 	
-	public StudentComission(long studentId, int comissionId) {
-		this.studentId = studentId;
+	public TeacherCommission(int teacherId, int comissionId) {
+		this.teacherId = teacherId;
 		this.comissionId = comissionId;
 	}
 }

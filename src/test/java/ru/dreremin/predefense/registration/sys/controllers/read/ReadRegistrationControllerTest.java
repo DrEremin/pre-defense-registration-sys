@@ -34,7 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
@@ -42,21 +42,21 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .AuthenticationDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .ComissionRepository;
+		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .StudentComissionRepository;
+		 .StudentCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .TeacherComissionRepository;
+		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateComissionService;
+		 .CreateCommissionService;
 import ru.dreremin.predefense.registration.sys.services.registrations
 		 .CreateRegistrationService;
 import ru.dreremin.predefense.registration.sys.services.students
@@ -70,21 +70,21 @@ import ru.dreremin.predefense.registration.sys.services.teachers
 @ActiveProfiles("test")
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ReadComissionControllerTest {
+class ReadRegistrationControllerTest {
 	
 	@Autowired private CreateStudentService createStudentService;
 	
 	@Autowired private CreateTeacherService createTeacherService;
 	
-	@Autowired private CreateComissionService createComissionService; 
+	@Autowired private CreateCommissionService createCommissionService; 
 	
 	@Autowired private CreateRegistrationService createRegistrationService;
 	
-	@Autowired private ComissionRepository comissionRepo;
+	@Autowired private CommissionRepository comissionRepo;
 	
-	@Autowired private StudentComissionRepository studentComissionRepo;
+	@Autowired private StudentCommissionRepository studentComissionRepo;
 	
-	@Autowired private TeacherComissionRepository teacherComissionRepo;
+	@Autowired private TeacherCommissionRepository teacherComissionRepo;
 	
 	@Autowired private StudentRepository studentRepo;
 	
@@ -121,7 +121,7 @@ class ReadComissionControllerTest {
 	
 	private ZonedDateTime[] timestamps;
 	
-	private List<Comission> comissions;
+	private List<Commission> commissions;
 	
 	private static final int SIZE = 4;
 	
@@ -132,7 +132,7 @@ class ReadComissionControllerTest {
 		timestamps = new ZonedDateTime[SIZE];
 		
 		ZonedDateTime timestamp = ZonedDateTime.now().plusMonths(1);
-		ComissionDto dto;
+		CommissionDto dto;
 		
 		for (int i = 0; i < SIZE; i++) {
 			emails[0][i] = logins[0][i] + "@mail.ru";
@@ -157,28 +157,28 @@ class ReadComissionControllerTest {
 					"Преподаватель"));
 			timestamp = timestamp.minusDays(i);
 			timestamps[i] = timestamp;
-			dto = new ComissionDto(
+			dto = new CommissionDto(
 					timestamp,
 					timestamp.plusHours(2),
 					true,
 					(i % 2 == 1) ? "ИСИТ" : "ПИ",
 					"Аудитория №7",
 					(short)10);
-			createComissionService.createComission(dto);
+			createCommissionService.createComission(dto);
 		}
-		comissions = comissionRepo.findAll();
+		commissions = comissionRepo.findAll();
 		for (int i = 0; i < SIZE - 1; i++) {
 			createRegistrationService.createStudentRegistration(
 					new RegistrationDto(logins[0][i], 
 										pswd, 
-										comissions.get(0).getId()));
+										commissions.get(0).getId()));
 		}
 		for (int i = 0, k = 0; i < SIZE; i++, k++) {
 			for (int j = 0; j < SIZE - k; j++) {
 				createRegistrationService.createTeacherRegistration(
 						new RegistrationDto(logins[1][j], 
 											pswd, 
-											comissions.get(i).getId()));
+											commissions.get(i).getId()));
 			}
 		}
 	}
@@ -259,7 +259,7 @@ class ReadComissionControllerTest {
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(jsonPath("$[0].id", is(comissions.get(2).getId())))
+				.andExpect(jsonPath("$[0].id", is(commissions.get(2).getId())))
 				.andExpect(jsonPath("$[0].date", is(timestamps[2]
 						.toLocalDate()
 						.format(DateTimeFormatter.ISO_LOCAL_DATE))))
@@ -275,7 +275,7 @@ class ReadComissionControllerTest {
 						is("Иванов С.А.")))
 				.andExpect(jsonPath("$[0].teachers[1].fullName", 
 						is("Казаков В.М.")))
-				.andExpect(jsonPath("$[1].id", is(comissions.get(0).getId())))
+				.andExpect(jsonPath("$[1].id", is(commissions.get(0).getId())))
 				.andExpect(jsonPath("$[1].date", is(timestamps[0]
 						.toLocalDate()
 						.format(DateTimeFormatter.ISO_LOCAL_DATE))))
@@ -313,7 +313,7 @@ class ReadComissionControllerTest {
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(jsonPath("$[3].id", is(comissions.get(0).getId())))
+				.andExpect(jsonPath("$[3].id", is(commissions.get(0).getId())))
 				.andExpect(jsonPath("$[3].date", is(timestamps[0]
 						.toLocalDate()
 						.format(DateTimeFormatter.ISO_LOCAL_DATE))))
@@ -334,7 +334,7 @@ class ReadComissionControllerTest {
 				.andExpect(jsonPath("$[3].teachers[3].fullName", 
 						is("Казаков В.М.")))
 				.andExpect(jsonPath("$[3].note", is("")))
-				.andExpect(jsonPath("$[2].id", is(comissions.get(1).getId())))
+				.andExpect(jsonPath("$[2].id", is(commissions.get(1).getId())))
 				.andExpect(jsonPath("$[2].date", is(timestamps[1]
 						.toLocalDate()
 						.format(DateTimeFormatter.ISO_LOCAL_DATE))))
@@ -354,7 +354,7 @@ class ReadComissionControllerTest {
 						is("Казаков В.М.")))
 				.andExpect(jsonPath("$[2].note", is("")))
 				
-				.andExpect(jsonPath("$[1].id", is(comissions.get(2).getId())))
+				.andExpect(jsonPath("$[1].id", is(commissions.get(2).getId())))
 				.andExpect(jsonPath("$[1].date", is(timestamps[2]
 						.toLocalDate()
 						.format(DateTimeFormatter.ISO_LOCAL_DATE))))
@@ -371,7 +371,7 @@ class ReadComissionControllerTest {
 				.andExpect(jsonPath("$[1].teachers[1].fullName", 
 						is("Казаков В.М.")))
 				.andExpect(jsonPath("$[1].note", is("")))
-				.andExpect(jsonPath("$[0].id", is(comissions.get(3).getId())))
+				.andExpect(jsonPath("$[0].id", is(commissions.get(3).getId())))
 				.andExpect(jsonPath("$[0].date", is(timestamps[3]
 						.toLocalDate()
 						.format(DateTimeFormatter.ISO_LOCAL_DATE))))

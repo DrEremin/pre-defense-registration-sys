@@ -1,5 +1,5 @@
 package ru.dreremin.predefense.registration.sys.services.comissions;
 
-public class ReadComissionService {
+public class DeleteCommissionService {
 
 }

@@ -17,7 +17,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .EntitiesMismatchException;
-import ru.dreremin.predefense.registration.sys.exceptions.ExpiredComissionException;
+import ru.dreremin.predefense.registration.sys.exceptions.ExpiredCommissionException;
 import ru.dreremin.predefense.registration.sys.exceptions.FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.exceptions.InvalidJwtTokenException;
 import ru.dreremin.predefense.registration.sys.exceptions
@@ -123,9 +123,9 @@ public class ExceptionsController {
 				HttpStatus.FORBIDDEN);
 	}
 	
-	@ExceptionHandler(ExpiredComissionException.class)
+	@ExceptionHandler(ExpiredCommissionException.class)
 	public ResponseEntity<StatusDto> handleExpiredComissionException(
-			ExpiredComissionException e) {
+			ExpiredCommissionException e) {
 		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
 				HttpStatus.CONFLICT);
 	}

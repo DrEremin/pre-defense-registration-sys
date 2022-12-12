@@ -18,13 +18,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Student;
-import ru.dreremin.predefense.registration.sys.models.StudentComission;
+import ru.dreremin.predefense.registration.sys.models.StudentCommission;
 import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateComissionService;
+		 .CreateCommissionService;
 import ru.dreremin.predefense.registration.sys.services.students
 		 .CreateStudentService;
 
@@ -33,16 +33,16 @@ import ru.dreremin.predefense.registration.sys.services.students
 @ActiveProfiles("test")
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class StudentComissionRepositoryTest {
+class StudentCommissionRepositoryTest {
 
 	@Autowired
-	private StudentComissionRepository studentComissionRepo;
+	private StudentCommissionRepository studentComissionRepo;
 	
 	@Autowired
 	private StudentRepository studentRepo;
 	
 	@Autowired
-	private ComissionRepository comissionRepo;
+	private CommissionRepository comissionRepo;
 	
 	@Autowired
 	private EmailRepository emailRepo;
@@ -57,13 +57,13 @@ class StudentComissionRepositoryTest {
 	private CreateStudentService studentService;
 	
 	@Autowired
-	private CreateComissionService comissionService;
+	private CreateCommissionService comissionService;
 	
 	private StudentDto studentDto;
 	
-	private ComissionDto comissionDto;
+	private CommissionDto commissionDto;
 	
-	private Comission comission;
+	private Commission commission;
 	
 	private Instant time;
 	
@@ -86,7 +86,7 @@ class StudentComissionRepositoryTest {
 		
 		List<Student> students = studentRepo.findAll();
 		
-		comissionDto = new ComissionDto(
+		commissionDto = new CommissionDto(
 				ZonedDateTime.parse(
 						"2022-08-03T10:15:30+03:00[Europe/Moscow]"),
 				ZonedDateTime.parse(
@@ -95,14 +95,14 @@ class StudentComissionRepositoryTest {
 				s,
 				s,
 				(short)10);
-		comissionService.createComission(comissionDto);
+		comissionService.createComission(commissionDto);
 		
-		comission = comissionRepo.findAll().get(0);
+		commission = comissionRepo.findAll().get(0);
 		
 		for(Student student : students) {
 			studentComissionRepo.save(
-					new StudentComission(
-							student.getId(), comission.getId()));
+					new StudentCommission(
+							student.getId(), commission.getId()));
 		}
 	}
 	
@@ -127,12 +127,12 @@ class StudentComissionRepositoryTest {
 	@Test
 	void findByComissionId_Success() {
 		assertTrue(studentComissionRepo.findByComissionId(
-				comission.getId()).size() == 3);
+				commission.getId()).size() == 3);
 	}
 	
 	@Test
 	void findByComissionId_IdDoesNotExists() {
 		assertTrue(studentComissionRepo.findByComissionId(
-				comission.getId() + 1).size() == 0);
+				commission.getId() + 1).size() == 0);
 	}
 }

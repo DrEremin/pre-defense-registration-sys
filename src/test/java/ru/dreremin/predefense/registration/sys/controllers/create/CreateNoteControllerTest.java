@@ -35,13 +35,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.NoteDto;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .ComissionRepository;
+		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.NoteRepository;
 import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateComissionService;
+		 .CreateCommissionService;
 
 @Slf4j
 @SpringBootTest
@@ -53,11 +53,11 @@ class CreateNoteControllerTest {
 	
 	@Autowired private MockMvc mockMvc;
 	
-	@Autowired private CreateComissionService comissionService;
+	@Autowired private CreateCommissionService comissionService;
 	
 	@Autowired private NoteRepository noteRepo;
 	
-	@Autowired private ComissionRepository comissionRepo;
+	@Autowired private CommissionRepository comissionRepo;
 	
 	@Autowired private ObjectMapper mapper;
 
@@ -70,7 +70,7 @@ class CreateNoteControllerTest {
 	@BeforeAll
 	void beforeAll() throws Exception {
 		str = "placeholder";
-		comissionService.createComission(new ComissionDto(
+		comissionService.createComission(new CommissionDto(
 				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
 				ZonedDateTime.parse("2022-08-03T12:15:30+03:00[Europe/Moscow]", 

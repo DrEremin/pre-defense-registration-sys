@@ -1,8 +1,8 @@
 package ru.dreremin.predefense.registration.sys.exceptions;
 
-public class ExpiredComissionException extends RuntimeException {
+public class ExpiredCommissionException extends RuntimeException {
 
-	public ExpiredComissionException(String message) {
+	public ExpiredCommissionException(String message) {
 		super(message);
 	}
 	

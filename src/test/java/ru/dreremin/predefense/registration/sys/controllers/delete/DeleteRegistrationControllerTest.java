@@ -39,7 +39,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.ComissionDto;
+import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
@@ -47,21 +47,21 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.impl
 		 .AuthenticationDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
-import ru.dreremin.predefense.registration.sys.models.Comission;
+import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .ComissionRepository;
+		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .StudentComissionRepository;
+		 .StudentCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .TeacherComissionRepository;
+		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateComissionService;
+		 .CreateCommissionService;
 import ru.dreremin.predefense.registration.sys.services.registrations
 		 .CreateRegistrationService;
 import ru.dreremin.predefense.registration.sys.services.students
@@ -85,9 +85,9 @@ class DeleteRegistrationControllerTest {
 	
 	@Autowired private CreateStudentService studentService;
 	
-	@Autowired private CreateComissionService comissionService;
+	@Autowired private CreateCommissionService comissionService;
 	
-	@Autowired private ComissionRepository comissionRepo;
+	@Autowired private CommissionRepository comissionRepo;
 	
 	@Autowired private ActorRepository authorizationRepo;
 	
@@ -99,9 +99,9 @@ class DeleteRegistrationControllerTest {
 	
 	@Autowired private StudentRepository studentRepo;
 	
-	@Autowired StudentComissionRepository studentComissionRepo;
+	@Autowired StudentCommissionRepository studentComissionRepo;
 	
-	@Autowired TeacherComissionRepository teacherComissionRepo;
+	@Autowired TeacherCommissionRepository teacherComissionRepo;
 	
 	@Autowired private ObjectMapper objectMapper;
 	
@@ -111,9 +111,9 @@ class DeleteRegistrationControllerTest {
 	
 	private TeacherDto teacherDto;
 	
-	private ComissionDto comissionDto;
+	private CommissionDto commissionDto;
 	
-	private List<Comission> comissions;
+	private List<Commission> commissions;
 	
 	private String s;
 	
@@ -133,7 +133,7 @@ class DeleteRegistrationControllerTest {
 			emails[i] = builder.append("@mail.ru").toString();
 			builder = builder.delete(0, builder.length());
 		}
-		comissionDto = new ComissionDto(
+		commissionDto = new CommissionDto(
 				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
 				ZonedDateTime.parse("2022-08-03T12:15:30+03:00[Europe/Moscow]", 
@@ -149,9 +149,9 @@ class DeleteRegistrationControllerTest {
 					s, s, s, emails[i + 3], logins[i + 3], s, s);
 			studentService.createStudent(studentDto);
 			teacherService.createTeacher(teacherDto);
-			comissionService.createComission(comissionDto);
+			comissionService.createComission(commissionDto);
 		}
-		comissions = comissionRepo.findAll();
+		commissions = comissionRepo.findAll();
 	}
 	
 	@BeforeEach
@@ -160,10 +160,10 @@ class DeleteRegistrationControllerTest {
 		for (int i = 0; i < 3; i++) {
 			createRegistrationService.createStudentRegistration(
 					new RegistrationDto(
-							logins[i], s, comissions.get(i).getId()));
+							logins[i], s, commissions.get(i).getId()));
 			createRegistrationService.createTeacherRegistration(
 					new RegistrationDto(
-							logins[i + 3], s, comissions.get(i).getId()));
+							logins[i + 3], s, commissions.get(i).getId()));
 		} 
 	}
 	
@@ -207,7 +207,7 @@ class DeleteRegistrationControllerTest {
 	void deleteTeacherRegistration_Success() throws Exception {
 		
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], s, comissions.get(0).getId());
+				logins[3], s, commissions.get(0).getId());
 		assertTrue(teacherComissionRepo.count() == 3);
 		assertDoesNotThrow(() -> 
 			mockMvc.perform(delete("/registration-delete/teacher")
@@ -253,7 +253,7 @@ class DeleteRegistrationControllerTest {
 			throws Exception {
 		
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], s, comissions.get(0).getId());
+				logins[3], s, commissions.get(0).getId());
 		String json = objectMapper.writeValueAsString(dto)
 				.replace("\"personLogin\":\"" + logins[3] + "\",", "");
 		
@@ -306,7 +306,7 @@ class DeleteRegistrationControllerTest {
 			throws Exception {
 		
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], s, comissions.get(0).getId());
+				logins[3], s, commissions.get(0).getId());
 		String json = objectMapper.writeValueAsString(dto)
 				.replaceFirst("\\{", "");
 		
@@ -355,7 +355,7 @@ class DeleteRegistrationControllerTest {
 	void deleteTeacherRegistration_PersonDoesNotExists() throws Exception {
 		
 		RegistrationDto dto = new RegistrationDto(
-				"non-existent login", s, comissions.get(0).getId());
+				"non-existent login", s, commissions.get(0).getId());
 		
 		assertTrue(teacherComissionRepo.count() == 3);
 		assertDoesNotThrow(() -> 
@@ -405,7 +405,7 @@ class DeleteRegistrationControllerTest {
 			throws Exception {
 		
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], "other password", comissions.get(0).getId());
+				logins[3], "other password", commissions.get(0).getId());
 		
 		assertTrue(teacherComissionRepo.count() == 3);
 		assertDoesNotThrow(() -> 
@@ -452,7 +452,7 @@ class DeleteRegistrationControllerTest {
 	void deleteTeacherRegistration_TeacherDoesNotExist() throws Exception {
 		
 		RegistrationDto dto = new RegistrationDto(
-				logins[0], s, comissions.get(0).getId());
+				logins[0], s, commissions.get(0).getId());
 		
 		assertTrue(teacherComissionRepo.count() == 3);
 		assertDoesNotThrow(() -> 
@@ -476,7 +476,7 @@ class DeleteRegistrationControllerTest {
 	void deleteTeacherRegistration_ComissionDoesNotExist() throws Exception {
 		
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], s, comissions.get(0).getId() + 10);
+				logins[3], s, commissions.get(0).getId() + 10);
 		
 		assertTrue(teacherComissionRepo.count() == 3);
 		assertDoesNotThrow(() -> 
@@ -500,7 +500,7 @@ class DeleteRegistrationControllerTest {
 	void deleteTeacherRegistration_DoesNotSuchRegistration() throws Exception {
 		
 		RegistrationDto dto = new RegistrationDto(
-				logins[3], s, comissions.get(1).getId());
+				logins[3], s, commissions.get(1).getId());
 		
 		assertTrue(teacherComissionRepo.count() == 3);
 		assertDoesNotThrow(() -> 

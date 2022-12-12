@@ -11,30 +11,30 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.dreremin.predefense.registration.sys.models.Student;
-import ru.dreremin.predefense.registration.sys.models.StudentComission;
+import ru.dreremin.predefense.registration.sys.models.StudentCommission;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
-import ru.dreremin.predefense.registration.sys.models.TeacherComission;
+import ru.dreremin.predefense.registration.sys.models.TeacherCommission;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .ComissionRepository;
+		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .StudentComissionRepository;
+		 .StudentCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
-		 .TeacherComissionRepository;
+		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.security.ActorDetails;
 
 @Service
 public class DeleteRegistrationService extends Registration {
 	
-	private Optional<StudentComission> studentComissinOpt;
+	private Optional<StudentCommission> studentComissinOpt;
 	
-	private Optional<TeacherComission> teacherComissinOpt;
+	private Optional<TeacherCommission> teacherComissinOpt;
 	
 	public DeleteRegistrationService(
-			StudentComissionRepository studentComissionRepo,
-			TeacherComissionRepository teacherComissionRepo,
-			ComissionRepository comissionRepo,
+			StudentCommissionRepository studentComissionRepo,
+			TeacherCommissionRepository teacherComissionRepo,
+			CommissionRepository comissionRepo,
 			StudentRepository studentRepo,
 			TeacherRepository teacherRepo) {
 		
