@@ -12,21 +12,25 @@ import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .StudentComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherComissionRepository;
-import ru.dreremin.predefense.registration.sys.services.authentication
-		 .AuthenticationService;
+import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 
 @RequiredArgsConstructor
 public abstract class Registration {
 	
-	protected final AuthenticationService authenticationService;
+	//protected final AuthenticationService authenticationService;
 	
 	protected final StudentComissionRepository studentComissionRepo;
 	
 	protected final TeacherComissionRepository teacherComissionRepo;
 	
 	protected final ComissionRepository comissionRepo;
+	
+	protected final StudentRepository studentRepo;
+	
+	protected final TeacherRepository teacherRepo;
 	
 	protected Optional<Comission> comissionOpt;
 	

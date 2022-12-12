@@ -1,29 +1,34 @@
 package ru.dreremin.predefense.registration.sys.services.registrations;
 
+import java.time.ZonedDateTime;
 import java.util.List;
-
+import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .EntitiesMismatchException;
-import ru.dreremin.predefense.registration.sys.exceptions
-		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
+import ru.dreremin.predefense.registration.sys.exceptions.ExpiredComissionException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
+import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentComission;
+import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.models.TeacherComission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .StudentComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
+import ru.dreremin.predefense.registration.sys.security.ActorDetails;
 import ru.dreremin.predefense.registration.sys.services.authentication
 		 .AuthenticationService;
 
@@ -31,16 +36,18 @@ import ru.dreremin.predefense.registration.sys.services.authentication
 public class CreateRegistrationService extends Registration {
 	
 	public CreateRegistrationService(
-			AuthenticationService authenticationService,
 			StudentComissionRepository studentComissionRepo,
 			TeacherComissionRepository teacherComissionRepo,
-			ComissionRepository comissionRepo) {
+			ComissionRepository comissionRepo,
+			StudentRepository studentRepo,
+			TeacherRepository teacherRepo) {
 		
-		super(
-				authenticationService, 
+		super( 
 				studentComissionRepo, 
 				teacherComissionRepo, 
-				comissionRepo);
+				comissionRepo,
+				studentRepo,
+				teacherRepo);
 	}
 	
 	@Transactional(
@@ -50,49 +57,63 @@ public class CreateRegistrationService extends Registration {
             		OverLimitException.class,
             		EntitiesMismatchException.class,
             		UniquenessViolationException.class,
-            		FailedAuthenticationException.class })
-	public void createStudentRegistration(RegistrationDto dto) 
-			throws EntityNotFoundException, 
-			OverLimitException, 
-			EntitiesMismatchException,
-			UniquenessViolationException,
-			FailedAuthenticationException {
+            		ExpiredComissionException.class})
+	public void createStudentRegistration(int comissionId) {
 		
-		student = authenticationService.studentAuthentication(dto);
-		setComissionOpt(dto.getComissionId());
+		Authentication authentication = SecurityContextHolder.getContext()
+				.getAuthentication();
+		ActorDetails actorDetails = (ActorDetails) authentication
+				.getPrincipal();
+		Optional<Student> studentOpt = studentRepo.findByActorLogin(
+				actorDetails.getUsername());
+		if (studentOpt.isEmpty()) {
+			throw new EntityNotFoundException(
+					"Student with this login does not exist");
+		}
+		student = studentOpt.get();
+		setComissionOpt(comissionId);
 		checkingPossibilityOfStudentRegistration();
 		studentComissionRepo.save(new StudentComission(
-				student.getId(), 
-				dto.getComissionId()));
+				student.getId(), comissionId));
 	}
 	
 	@Transactional(
 			isolation = Isolation.SERIALIZABLE,
             rollbackFor = { 
-            		FailedAuthenticationException.class,
             		EntityNotFoundException.class,
-            		UniquenessViolationException.class })
-	public void createTeacherRegistration(RegistrationDto dto) 
-			throws FailedAuthenticationException, 
-			EntityNotFoundException, 
-			UniquenessViolationException {
-		teacher = authenticationService.teacherAuthentication(dto);
-		setComissionOpt(dto.getComissionId());
+            		UniquenessViolationException.class,
+            		ExpiredComissionException.class})
+	public void createTeacherRegistration(int comissionId) {
+		
+		Authentication authentication = SecurityContextHolder.getContext()
+				.getAuthentication();
+		ActorDetails actorDetails = (ActorDetails) authentication
+				.getPrincipal();
+		Optional<Teacher> teacherOpt = teacherRepo.findByActorLogin(
+				actorDetails.getUsername());
+		if (teacherOpt.isEmpty()) {
+			throw new EntityNotFoundException(
+					"Teacher with this login does not exist");
+		}
+		teacher = teacherOpt.get();
+		setComissionOpt(comissionId);
 		checkingPossibilityOfTeacherRegistration();
 		teacherComissionRepo.save(new TeacherComission(
 				teacher.getId(), 
-				dto.getComissionId()));
+				comissionId));
 	}
 	
-	private void checkingPossibilityOfStudentRegistration() 
-			throws EntitiesMismatchException, 
-			OverLimitException, 
-			UniquenessViolationException {
+	private void checkingPossibilityOfStudentRegistration() {
 		if (!student.getStudyDirection().equals(
 				comissionOpt.get().getStudyDirection())) {
 			throw new EntitiesMismatchException(
 					"The study direction of the commission and the"
 					+ " student do not correspond to each other");
+		}
+		if (ZonedDateTime.now().plusHours(3).compareTo(
+				comissionOpt.get().getStartDateTime()) > 0) {
+			throw new ExpiredComissionException(
+					"The comission with such Id was expired");
 		}
 		
 		List<StudentComission> registrations = 
@@ -113,8 +134,13 @@ public class CreateRegistrationService extends Registration {
 		}
 	}
 	
-	private void checkingPossibilityOfTeacherRegistration() 
-			throws UniquenessViolationException {
+	private void checkingPossibilityOfTeacherRegistration() {
+		
+		if (ZonedDateTime.now().compareTo(
+				comissionOpt.get().getStartDateTime()) > 0) {
+			throw new ExpiredComissionException(
+					"The comission with such Id was expired");
+		}
 		List<TeacherComission> registrations = 
 				teacherComissionRepo.findByComissionId(
 						comissionOpt.get().getId());

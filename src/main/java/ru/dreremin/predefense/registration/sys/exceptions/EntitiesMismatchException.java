@@ -1,6 +1,6 @@
 package ru.dreremin.predefense.registration.sys.exceptions;
 
-public class EntitiesMismatchException extends Exception {
+public class EntitiesMismatchException extends RuntimeException {
 
 	public EntitiesMismatchException(String message) {
 		super(message);

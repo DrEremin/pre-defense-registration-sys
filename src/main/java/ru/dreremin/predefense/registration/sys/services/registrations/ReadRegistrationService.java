@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,8 +39,10 @@ import ru.dreremin.predefense.registration.sys.repositories
 		 .StudentComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .StudentEntryRepository;
+import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherEntryRepository;
+import ru.dreremin.predefense.registration.sys.security.ActorDetails;
 import ru.dreremin.predefense.registration.sys.services.authentication
 		 .AuthenticationService;
 
@@ -58,6 +62,8 @@ public class ReadRegistrationService {
 	
 	private final NoteRepository noteRepo;
 	
+	private final StudentRepository studentRepo;
+	
 	private Student student;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
@@ -68,7 +74,19 @@ public class ReadRegistrationService {
 					throws EntityNotFoundException, 
 					FailedAuthenticationException {
 		
-		student = authenticationService.studentAuthentication(dto);
+		//student = authenticationService.studentAuthentication(dto);
+		
+		Authentication authentication = SecurityContextHolder.getContext()
+				.getAuthentication();
+		ActorDetails actorDetails = (ActorDetails) authentication
+				.getPrincipal();
+		Optional<Student> studentOpt = studentRepo.findByActorLogin(
+				actorDetails.getUsername());
+		if (studentOpt.isEmpty()) {
+			throw new EntityNotFoundException(
+					"Student with this login does not exist");
+		}
+		student = studentOpt.get();
 		
 		Optional<StudentComission> studentComissionOpt = 
 				studentComissionRepo.findByStudentId(student.getId());
@@ -96,7 +114,19 @@ public class ReadRegistrationService {
 					throws EntityNotFoundException, 
 					FailedAuthenticationException  {
 		
-		student = authenticationService.studentAuthentication(dto);
+		//student = authenticationService.studentAuthentication(dto);
+		
+		Authentication authentication = SecurityContextHolder.getContext()
+				.getAuthentication();
+		ActorDetails actorDetails = (ActorDetails) authentication
+				.getPrincipal();
+		Optional<Student> studentOpt = studentRepo.findByActorLogin(
+				actorDetails.getUsername());
+		if (studentOpt.isEmpty()) {
+			throw new EntityNotFoundException(
+					"Student with this login does not exist");
+		}
+		student = studentOpt.get();
 		
 		List<Comission> actualComissions = comissionRepo
 				.findByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
@@ -133,7 +163,7 @@ public class ReadRegistrationService {
 					throws EntityNotFoundException, 
 					FailedAuthenticationException  {
 		
-		authenticationService.teacherAuthentication(dto);
+		//authenticationService.teacherAuthentication(dto);
 		
 		List<Comission> actualComissions = comissionRepo
 				.findByStartDateTimeGreaterThanOrderByStartDateTimeAsc(

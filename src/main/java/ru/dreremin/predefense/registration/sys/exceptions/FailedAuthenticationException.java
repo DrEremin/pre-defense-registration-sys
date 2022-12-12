@@ -1,6 +1,6 @@
 package ru.dreremin.predefense.registration.sys.exceptions;
 
-public class FailedAuthenticationException extends Exception {
+public class FailedAuthenticationException extends RuntimeException {
 
 	public FailedAuthenticationException(String message) {
 		super(message);

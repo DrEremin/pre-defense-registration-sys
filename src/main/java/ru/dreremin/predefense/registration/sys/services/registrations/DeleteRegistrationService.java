@@ -3,24 +3,26 @@ package ru.dreremin.predefense.registration.sys.services.registrations;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.dreremin.predefense.registration.sys.dto.requestdto.AuthenticationDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
-import ru.dreremin.predefense.registration.sys.exceptions
-		 .FailedAuthenticationException;
+import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentComission;
+import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.models.TeacherComission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ComissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .StudentComissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherComissionRepository;
-import ru.dreremin.predefense.registration.sys.services.authentication
-		 .AuthenticationService;
+import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
+import ru.dreremin.predefense.registration.sys.security.ActorDetails;
 
 @Service
 public class DeleteRegistrationService extends Registration {
@@ -30,27 +32,37 @@ public class DeleteRegistrationService extends Registration {
 	private Optional<TeacherComission> teacherComissinOpt;
 	
 	public DeleteRegistrationService(
-			AuthenticationService authenticationService,
 			StudentComissionRepository studentComissionRepo,
 			TeacherComissionRepository teacherComissionRepo,
-			ComissionRepository comissionRepo) {
+			ComissionRepository comissionRepo,
+			StudentRepository studentRepo,
+			TeacherRepository teacherRepo) {
 		
 		super(
-				authenticationService, 
 				studentComissionRepo, 
 				teacherComissionRepo, 
-				comissionRepo);
+				comissionRepo,
+				studentRepo,
+				teacherRepo);
 	}
 	
 	@Transactional(
 			isolation = Isolation.SERIALIZABLE,
             rollbackFor = { 
-            		EntityNotFoundException.class,
-            		FailedAuthenticationException.class })
-	public void deleteStudentRegistration(AuthenticationDto dto) 
-			throws EntityNotFoundException, 
-			FailedAuthenticationException {
-		student = authenticationService.studentAuthentication(dto);
+            		EntityNotFoundException.class })
+	public void deleteStudentRegistration() {
+		
+		Authentication authentication = SecurityContextHolder.getContext()
+				.getAuthentication();
+		ActorDetails actorDetails = (ActorDetails) authentication
+				.getPrincipal();
+		Optional<Student> studentOpt = studentRepo.findByActorLogin(
+				actorDetails.getUsername());
+		if (studentOpt.isEmpty()) {
+			throw new EntityNotFoundException(
+					"Student with this login does not exist");
+		}
+		student = studentOpt.get();
 		setStudentComissionOpt();
 		studentComissionRepo.delete(studentComissinOpt.get());
 	}
@@ -58,18 +70,26 @@ public class DeleteRegistrationService extends Registration {
 	@Transactional(
 			isolation = Isolation.SERIALIZABLE,
             rollbackFor = { 
-            		EntityNotFoundException.class,
-            		FailedAuthenticationException.class })
-	public void deleteTeacherRegistration(RegistrationDto dto) 
-			throws EntityNotFoundException, 
-			FailedAuthenticationException {
-		teacher = authenticationService.teacherAuthentication(dto);
-		setComissionOpt(dto.getComissionId());
+            		EntityNotFoundException.class })
+	public void deleteTeacherRegistration(int comissionId) {
+		
+		Authentication authentication = SecurityContextHolder.getContext()
+				.getAuthentication();
+		ActorDetails actorDetails = (ActorDetails) authentication
+				.getPrincipal();
+		Optional<Teacher> teacherOpt = teacherRepo.findByActorLogin(
+				actorDetails.getUsername());
+		if (teacherOpt.isEmpty()) {
+			throw new EntityNotFoundException(
+					"Teacher with this login does not exist");
+		}
+		teacher = teacherOpt.get();
+		setComissionOpt(comissionId);
 		setTeacherComissionOpt();
 		teacherComissionRepo.delete(teacherComissinOpt.get());
 	}
 	
-	private void setStudentComissionOpt() throws EntityNotFoundException {
+	private void setStudentComissionOpt() {
 		studentComissinOpt = 
 				studentComissionRepo.findByStudentId(student.getId());
 		if (studentComissinOpt.isEmpty()) {

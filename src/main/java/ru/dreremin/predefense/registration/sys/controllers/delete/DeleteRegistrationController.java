@@ -1,11 +1,6 @@
 package ru.dreremin.predefense.registration.sys.controllers.delete;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,48 +8,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.AuthenticationDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
-import ru.dreremin.predefense.registration.sys.exceptions
-		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.services.registrations
 		 .DeleteRegistrationService;
 
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
+//@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/registration-delete")
+@RequestMapping(value = "/registrations/delete")
 public class DeleteRegistrationController {
 	
 	private final DeleteRegistrationService service;
 	
-	@DeleteMapping(value = "/student", consumes = "application/json")
-	public StatusDto deleteStudentRegistration(
-			@Valid @RequestBody AuthenticationDto dto) 
-					throws EntityNotFoundException, 
-					FailedAuthenticationException, 
-					MethodArgumentNotValidException,
-					HttpMessageNotReadableException {
+	@DeleteMapping(value = "/student")
+	public StatusDto deleteStudentRegistration() {
 		
-		service.deleteStudentRegistration(dto);
+		service.deleteStudentRegistration();
 		log.info("DeleteRegistrationController."
-				+ "deleteStudentRegistration() success");
+				+ "deleteStudentRegistration() is success");
 		return new StatusDto(200, "Ok");
 	}
 	
 	@DeleteMapping(value = "/teacher", consumes = "application/json")
 	public StatusDto deleteTeacherRegistration(
-			@Valid @RequestBody RegistrationDto dto) 
-					throws EntityNotFoundException, 
-					FailedAuthenticationException, 
-					MethodArgumentNotValidException,
-					HttpMessageNotReadableException {
+			@Valid @RequestBody RegistrationDto dto) {
 		
-		service.deleteTeacherRegistration(dto);
+		service.deleteTeacherRegistration(dto.getComissionId());
 		log.info("DeleteRegistrationController."
-				+ "deleteTeacherRegistration() success");
+				+ "deleteTeacherRegistration() is success");
 		return new StatusDto(200, "Ok");
 	}
 }

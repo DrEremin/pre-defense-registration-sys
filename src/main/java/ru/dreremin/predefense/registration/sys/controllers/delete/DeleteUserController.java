@@ -1,13 +1,16 @@
 package ru.dreremin.predefense.registration.sys.controllers.delete;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import javax.validation.Valid;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import ru.dreremin.predefense.registration.sys.dto.requestdto.LoginDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
 import ru.dreremin.predefense.registration.sys.services.admins.DeleteAdministratorService;
 import ru.dreremin.predefense.registration.sys.services.students.DeleteStudentService;
@@ -23,26 +26,29 @@ public class DeleteUserController {
 	private final DeleteTeacherService deleteTeacherService;
 	private final DeleteAdministratorService deleteAdministratorService;
 	
-	@GetMapping("/student")
-	public ResponseEntity<StatusDto> deleteStudent(@RequestParam String login) {
+	@DeleteMapping("/student")
+	public ResponseEntity<StatusDto> deleteStudent(
+			@Valid @RequestBody LoginDto dto) {
 		
-		deleteStudentService.deleteStudent(login);
+		deleteStudentService.deleteStudent(dto.getLogin());
 		log.info("DeletePersonController.deleteStudent() is success");
 		return ResponseEntity.ok(new StatusDto(200, "Ok"));
 	}
 	
-	@GetMapping("/teacher")
-	public ResponseEntity<StatusDto> deleteTeacher(@RequestParam String login) {
+	@DeleteMapping("/teacher")
+	public ResponseEntity<StatusDto> deleteTeacher(
+			@Valid @RequestBody LoginDto dto) {
 		
-		deleteTeacherService.deleteTeacher(login);
+		deleteTeacherService.deleteTeacher(dto.getLogin());
 		log.info("DeletePersonController.deleteTeacher() is success");
 		return ResponseEntity.ok(new StatusDto(200, "Ok"));
 	}
 	
-	@GetMapping("/admin")
-	public ResponseEntity<StatusDto> deleteAdmin(@RequestParam String login) {
+	@DeleteMapping("/admin")
+	public ResponseEntity<StatusDto> deleteAdmin(
+			@Valid @RequestBody LoginDto dto) {
 		
-		deleteAdministratorService.deleteAdmin(login);
+		deleteAdministratorService.deleteAdmin(dto.getLogin());
 		log.info("DeletePersonController.deleteAdmin() is success");
 		return ResponseEntity.ok(new StatusDto(200, "Ok"));
 	}

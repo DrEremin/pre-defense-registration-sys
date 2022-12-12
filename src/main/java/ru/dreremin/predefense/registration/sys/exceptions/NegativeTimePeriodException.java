@@ -1,6 +1,6 @@
 package ru.dreremin.predefense.registration.sys.exceptions;
 
-public class NegativeTimePeriodException extends Exception {
+public class NegativeTimePeriodException extends RuntimeException {
 
 	public NegativeTimePeriodException(String message) {
 		super(message);

@@ -1,6 +1,6 @@
 package ru.dreremin.predefense.registration.sys.exceptions;
 
-public class UniquenessViolationException extends Exception {
+public class UniquenessViolationException extends RuntimeException {
 
 	public UniquenessViolationException(String message) {
 		super(message);

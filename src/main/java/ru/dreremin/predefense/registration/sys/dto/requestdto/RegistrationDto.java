@@ -1,24 +1,24 @@
 package ru.dreremin.predefense.registration.sys.dto.requestdto;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 
 @Getter
-public class RegistrationDto extends AuthenticationDto {
+public class RegistrationDto {
 
 	@JsonProperty(value = "comissionId")
 	@NotNull
+	@Min(1)
+	@Max(Integer.MAX_VALUE)
 	private final Integer comissionId;
 	
-	public RegistrationDto(String personLogin,
-						   String personPassword,
-						   Integer comissionId) {
-		super(personLogin, personPassword);
+	@JsonCreator
+	public RegistrationDto(Integer comissionId) {
 		this.comissionId = comissionId;
 	}
 }

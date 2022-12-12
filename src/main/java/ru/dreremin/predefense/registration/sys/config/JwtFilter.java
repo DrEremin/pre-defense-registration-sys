@@ -67,7 +67,7 @@ String authHeader = request.getHeader("Authorization");
 					}
 				} catch (JWTVerificationException e) {
 					throw new JWTVerificationException("Invalid JWT token");
-				}
+				} 
 			}
 		}
 		filterChain.doFilter(request, response);

@@ -12,9 +12,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+
 import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .EntitiesMismatchException;
+import ru.dreremin.predefense.registration.sys.exceptions.ExpiredComissionException;
 import ru.dreremin.predefense.registration.sys.exceptions.FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.exceptions.InvalidJwtTokenException;
 import ru.dreremin.predefense.registration.sys.exceptions
@@ -105,11 +108,25 @@ public class ExceptionsController {
 									HttpStatus.CONFLICT);
 	}
 	
+	@ExceptionHandler(JWTVerificationException.class)
+	public ResponseEntity<StatusDto> handleInvalidJwtTokenException(
+			JWTVerificationException e) {
+		return new ResponseEntity<>(new StatusDto(403, e.getMessage()), 
+				HttpStatus.FORBIDDEN);
+	}
+	
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity<StatusDto> handleBadCredentialsException(
 			BadCredentialsException e) {
 		return new ResponseEntity<>(new StatusDto(403, 
 						"Incorrect credentials"), 
 				HttpStatus.FORBIDDEN);
+	}
+	
+	@ExceptionHandler(ExpiredComissionException.class)
+	public ResponseEntity<StatusDto> handleExpiredComissionException(
+			ExpiredComissionException e) {
+		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
+				HttpStatus.CONFLICT);
 	}
 }

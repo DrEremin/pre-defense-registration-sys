@@ -60,7 +60,7 @@ public class MailingService {
 		}
 		return new MailingReportDto(status, message, toAddress);
 	}
-	
+	/*
 	public List<MailingReportDto> sendMailsToStudents(MailingDto dto) 
 			throws FailedAuthenticationException {
 		
@@ -93,7 +93,7 @@ public class MailingService {
 					dto.getContent()));
 		}
 		return responseDto;
-	}
+	}*/
 }
 
 

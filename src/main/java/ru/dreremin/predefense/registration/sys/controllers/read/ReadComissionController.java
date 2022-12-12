@@ -32,7 +32,7 @@ import ru.dreremin.predefense.registration.sys.services.registrations
 @RestController
 @RequestMapping(value = "/comissions-read")
 public class ReadComissionController {
-	
+	/*
 	private final ReadRegistrationService service;
 	
 	@PostMapping(value = "/current/student")
@@ -82,5 +82,5 @@ public class ReadComissionController {
 		log.info("ReadComissionController.getActualComissionsListForTeacher()"
 				+ " success");
 		return actualComissions;
-	}
+	}*/
 }

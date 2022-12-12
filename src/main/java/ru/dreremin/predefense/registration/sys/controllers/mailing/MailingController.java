@@ -24,7 +24,7 @@ import ru.dreremin.predefense.registration.sys.services.mailing.MailingService;
 @CrossOrigin(origins = "http://localhost:3002")
 @Slf4j
 @RequiredArgsConstructor
-@RestController
+//@RestController
 @RequestMapping("/mailing")
 public class MailingController {
 
