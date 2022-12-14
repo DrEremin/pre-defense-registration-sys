@@ -12,7 +12,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.auth0.jwt.exceptions.AlgorithmMismatchException;
+import com.auth0.jwt.exceptions.InvalidClaimException;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 
 import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
 import ru.dreremin.predefense.registration.sys.exceptions
@@ -101,20 +106,6 @@ public class ExceptionsController {
 									HttpStatus.CONFLICT);
 	}
 	
-	@ExceptionHandler(InvalidJwtTokenException.class)
-	public ResponseEntity<StatusDto> handleInvalidJwtTokenException(
-			InvalidJwtTokenException e) {
-		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
-									HttpStatus.CONFLICT);
-	}
-	
-	@ExceptionHandler(JWTVerificationException.class)
-	public ResponseEntity<StatusDto> handleInvalidJwtTokenException(
-			JWTVerificationException e) {
-		return new ResponseEntity<>(new StatusDto(403, e.getMessage()), 
-				HttpStatus.FORBIDDEN);
-	}
-	
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity<StatusDto> handleBadCredentialsException(
 			BadCredentialsException e) {
@@ -129,4 +120,56 @@ public class ExceptionsController {
 		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
 				HttpStatus.CONFLICT);
 	}
+	
+	@ExceptionHandler(InvalidJwtTokenException.class)
+	public ResponseEntity<StatusDto> handleInvalidJwtTokenException(
+			InvalidJwtTokenException e) {
+		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
+									HttpStatus.CONFLICT);
+	}
+	/**
+	 * JWT Exceptions
+	 */
+	
+	@ExceptionHandler(TokenExpiredException.class)
+	public ResponseEntity<StatusDto> handleTokenExpiredException(
+			TokenExpiredException e) {
+		return new ResponseEntity<>(new StatusDto(403,
+				"This token was expired"), 
+				HttpStatus.FORBIDDEN);
+	}
+	
+	@ExceptionHandler(JWTDecodeException.class)
+	public ResponseEntity<StatusDto> handleJWTDecodeException(
+			JWTDecodeException e) {
+		return new ResponseEntity<>(new StatusDto(403, 
+				"This token is decoded incorrectly"), 
+				HttpStatus.FORBIDDEN);
+	}
+	
+	@ExceptionHandler(SignatureVerificationException.class)
+	public ResponseEntity<StatusDto> handleSignatureVerificationException(
+			SignatureVerificationException e) {
+		return new ResponseEntity<>(new StatusDto(403, 
+				"Token signature verification failed"), 
+				HttpStatus.FORBIDDEN);
+	}
+	
+	@ExceptionHandler(AlgorithmMismatchException.class)
+	public ResponseEntity<StatusDto> handleAlgorithmMismatchException(
+			AlgorithmMismatchException e) {
+		return new ResponseEntity<>(new StatusDto(403, 
+				"The token is encoded by another algorithm"), 
+				HttpStatus.FORBIDDEN);
+	}
+	
+	@ExceptionHandler(InvalidClaimException.class)
+	public ResponseEntity<StatusDto> handleInvalidClaimException(
+			InvalidClaimException e) {
+		return new ResponseEntity<>(new StatusDto(403, "Invalid claim"), 
+				HttpStatus.FORBIDDEN);
+	}
+	/**
+	 * JWT Exceptions
+	 */
 }
