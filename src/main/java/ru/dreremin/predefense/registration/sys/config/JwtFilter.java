@@ -59,40 +59,39 @@ public class JwtFilter extends OncePerRequestFilter {
 		
 		String authHeader = request.getHeader("Authorization");
 		errResponse = response;
-		
-		try {
-			if (authHeader == null 
-					|| authHeader.isBlank() 
-					|| !authHeader.startsWith("Bearer_")) {
-				throw new InvalidJwtTokenException(
-						"Invalid  Bearer header of JWT token");
-			} 
-			
-			String jwt = authHeader.substring(7);
-			
-			if (jwt.isBlank()) {
-				throw new InvalidJwtTokenException(
-						"JWT token body is empty");
-			}	
-			
-			String login = jwtTokenProvider
-					.validateTokenAndRetrieveClaim(jwt);
-			UserDetails userDetails = actorDetailsService
-					.loadUserByUsername(login);
-			UsernamePasswordAuthenticationToken authToken = 
-					new UsernamePasswordAuthenticationToken(
-							userDetails, 
-							userDetails.getPassword(), 
-							userDetails.getAuthorities());
-			
-			if (SecurityContextHolder.getContext().getAuthentication() 
-					== null) {
-				SecurityContextHolder.getContext()
-						.setAuthentication(authToken);
+		if (authHeader != null) {
+			try {
+				if (authHeader.isBlank() || !authHeader.startsWith("Bearer_")) {
+					throw new InvalidJwtTokenException(
+							"Invalid  Bearer header of JWT token");
+				} 
+				
+				String jwt = authHeader.substring(7);
+				
+				if (jwt.isBlank()) {
+					throw new InvalidJwtTokenException(
+							"JWT token body is empty");
+				}	
+				
+				String login = jwtTokenProvider
+						.validateTokenAndRetrieveClaim(jwt);
+				UserDetails userDetails = actorDetailsService
+						.loadUserByUsername(login);
+				UsernamePasswordAuthenticationToken authToken = 
+						new UsernamePasswordAuthenticationToken(
+								userDetails, 
+								userDetails.getPassword(), 
+								userDetails.getAuthorities());
+				
+				if (SecurityContextHolder.getContext().getAuthentication() 
+						== null) {
+					SecurityContextHolder.getContext()
+							.setAuthentication(authToken);
+				}
+			} catch (JWTVerificationException e) {
+				responseWithException(e);
+				return;
 			}
-		} catch (JWTVerificationException e) {
-			responseWithException(e);
-			return;
 		}
 		filterChain.doFilter(request, response);
 	}
@@ -132,6 +131,4 @@ public class JwtFilter extends OncePerRequestFilter {
 		out.print(mapper.writeValueAsString(dto.getBody()));
 		out.flush();
 	}
-	
-	
 }

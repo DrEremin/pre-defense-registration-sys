@@ -14,7 +14,7 @@ import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
 import ru.dreremin.predefense.registration.sys.services.registrations
 		 .CreateRegistrationService;
 
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
+//@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -23,9 +23,9 @@ public class CreateRegistrationController {
 
 	private final CreateRegistrationService service;
 	
-	@PutMapping(value = "/student")
+	@PutMapping(value = "/student", consumes = "application/json")
 	public StatusDto studentRegistration(
-			@RequestBody RegistrationDto dto) {
+			@Valid @RequestBody RegistrationDto dto) {
 		
 		service.createStudentRegistration(dto.getComissionId());
 		log.info("CreateRegistrationController."

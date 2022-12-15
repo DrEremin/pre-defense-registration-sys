@@ -32,17 +32,13 @@ public class CreateAdministratorService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE,
             rollbackFor = { UniquenessViolationException.class })
-	public String createAdmin(AdminDto dto) 
-			throws UniquenessViolationException{
+	public String createAdmin(AdminDto dto) {
 		
 		if (actorRepo.existsByLogin(dto.getLogin())) {
-			log.warn("The user with this login already exists");
 			throw new UniquenessViolationException(
 						"The user with this login already exists");
 		}
 		String encodedPassword = passwordEncoder.encode(dto.getPassword());
-		log.debug("raw password" + dto.getPassword());
-		log.debug("encodedPassword" + encodedPassword);
 		Actor actor = actorRepo.save(new Actor(
 				dto.getLogin(), 
 				encodedPassword, 

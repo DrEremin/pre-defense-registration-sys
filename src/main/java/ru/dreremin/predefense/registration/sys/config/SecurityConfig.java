@@ -20,6 +20,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private final ActorDetailsService actorDetailsService;
 	private final JwtFilter jwtFilter;
+	private final RestAuthenticationEntryPoint authEntryPoint;
+	private final RestAccessDeniedHandler acessDeniedHandler;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) 
@@ -30,16 +32,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		
 		http.csrf().disable()                             
 				.authorizeRequests()
 				.antMatchers("/comissions/create/**").hasRole("ADMIN")
 				.antMatchers("/comissions/delete/**").hasRole("ADMIN")
 				.antMatchers("/users/create/**").hasRole("ADMIN")
 				.antMatchers("/users/delete/**").hasRole("ADMIN")
-				.antMatchers("registrations/create/teacher").hasRole("TEACHER")
-				.antMatchers("registrations/delete/teacher").hasRole("TEACHER")
-				.antMatchers("registrations/create/student").hasRole("STUDENT")
-				.antMatchers("registrations/delete/student").hasRole("STUDENT")
+				.antMatchers("/registrations/create/teacher").hasRole("TEACHER")
+				.antMatchers("/registrations/delete/teacher").hasRole("TEACHER")
+				.antMatchers("/registrations/create/student").hasRole("STUDENT")
+				.antMatchers("/registrations/delete/student").hasRole("STUDENT")
 				.antMatchers("/comissions/read/teacher/**").hasRole("TEACHER")
 				.antMatchers("/comissions/read/student/**").hasRole("STUDENT")
 				.antMatchers("/login").permitAll() 
@@ -47,6 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.formLogin().disable()                    
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.exceptionHandling().authenticationEntryPoint(authEntryPoint);
+		http.exceptionHandling().accessDeniedHandler(acessDeniedHandler);
 		http.addFilterBefore(jwtFilter, 
 				UsernamePasswordAuthenticationFilter.class);
 	}

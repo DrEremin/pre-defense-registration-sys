@@ -4,12 +4,18 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
+
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .EntitiesMismatchException;
 import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
@@ -32,6 +38,7 @@ import ru.dreremin.predefense.registration.sys.security.ActorDetails;
 import ru.dreremin.predefense.registration.sys.services.authentication
 		 .AuthenticationService;
 
+@Slf4j
 @Service
 public class CreateRegistrationService extends Registration {
 	
@@ -116,9 +123,7 @@ public class CreateRegistrationService extends Registration {
 					"The comission with such Id was expired");
 		}
 		
-		List<StudentCommission> registrations = 
-				studentComissionRepo.findAllByComissionId(
-						comissionOpt.get().getId());
+		List<StudentCommission> registrations = studentComissionRepo.findAll();
 		
 		if (registrations.size() >= comissionOpt.get().getStudentLimit()) {
 			throw new OverLimitException(
@@ -129,7 +134,7 @@ public class CreateRegistrationService extends Registration {
 			if (registration.getStudentId() == student.getId()) {
 				throw new UniquenessViolationException(
 						"Such a student is already"
-						+ " registered for this commission");
+						+ " registered for commission");
 			}
 		}
 	}

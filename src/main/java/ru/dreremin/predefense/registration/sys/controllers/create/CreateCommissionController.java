@@ -25,10 +25,7 @@ public class CreateCommissionController {
 	private final CreateCommissionService service;
 	
 	@PutMapping(value = "/comissions/create", consumes = "application/json")
-	public StatusDto createComission(@Valid @RequestBody CommissionDto dto) 
-			throws NegativeTimePeriodException, 
-			MethodArgumentNotValidException,
-			HttpMessageNotReadableException {
+	public StatusDto createComission(@Valid @RequestBody CommissionDto dto) {
 		dto.periodValidation();
 		service.createComission(dto);
 		log.info("CreateComissionController.createComission() success");

@@ -54,6 +54,4 @@ public class ActorDetails implements UserDetails {
 		// TODO Auto-generated method stub
 		return true;
 	}
-	
-	
 }

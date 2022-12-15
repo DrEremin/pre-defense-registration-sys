@@ -17,7 +17,6 @@ import ru.dreremin.predefense.registration.sys.dto.requestdto.AdminDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
 import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
 import ru.dreremin.predefense.registration.sys.dto.responsedto.JwtTokenDto;
-import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
 import ru.dreremin.predefense.registration.sys.exceptions.UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.services.admins.CreateAdministratorService;
 import ru.dreremin.predefense.registration.sys
@@ -37,10 +36,7 @@ public class CreateUserController {
 	
 	@PutMapping(value = "/teacher", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<JwtTokenDto> createTeacher(
-			@Valid @RequestBody TeacherDto teacherDto) 
-					throws UniquenessViolationException,
-					MethodArgumentNotValidException, 
-					HttpMessageNotReadableException {
+			@Valid @RequestBody TeacherDto teacherDto) {
 		String jwtToken = teacherService.createTeacher(teacherDto);
 		log.info("CreatePersonController.createTeacher() success");
 		return ResponseEntity.ok(new JwtTokenDto(jwtToken));
@@ -48,10 +44,7 @@ public class CreateUserController {
 	
 	@PutMapping(value = "/student", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<JwtTokenDto> createStudent(
-			@Valid @RequestBody StudentDto studentDto) 
-					throws UniquenessViolationException, 
-					MethodArgumentNotValidException, 
-					HttpMessageNotReadableException {
+			@Valid @RequestBody StudentDto studentDto) {
 		String jwtToken = studentService.createStudent(studentDto);
 		log.info("CreatePersonController.createStudent() success");
 		return ResponseEntity.ok(new JwtTokenDto(jwtToken));
@@ -59,10 +52,7 @@ public class CreateUserController {
 	
 	@PutMapping(value = "/admin", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<JwtTokenDto> createAdmin(
-			@Valid @RequestBody AdminDto adminDto) 
-					throws UniquenessViolationException, 
-					MethodArgumentNotValidException, 
-					HttpMessageNotReadableException {
+			@Valid @RequestBody AdminDto adminDto) {
 		String jwtToken = adminService.createAdmin(adminDto);
 		log.info("CreatePersonController.createStudent() success");
 		return ResponseEntity.ok(new JwtTokenDto(jwtToken));

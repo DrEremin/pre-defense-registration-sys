@@ -1,13 +1,16 @@
 package ru.dreremin.predefense.registration.sys.controllers.exceptions;
 
+import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mail.MailException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -121,15 +124,16 @@ public class ExceptionsController {
 				HttpStatus.CONFLICT);
 	}
 	
-	@ExceptionHandler(InvalidJwtTokenException.class)
-	public ResponseEntity<StatusDto> handleInvalidJwtTokenException(
-			InvalidJwtTokenException e) {
-		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
-									HttpStatus.CONFLICT);
-	}
 	/**
 	 * JWT Exceptions
 	 */
+	
+	@ExceptionHandler(InvalidJwtTokenException.class)
+	public ResponseEntity<StatusDto> handleInvalidJwtTokenException(
+			InvalidJwtTokenException e) {
+		return new ResponseEntity<>(new StatusDto(400, e.getMessage()), 
+									HttpStatus.BAD_REQUEST);
+	}
 	
 	@ExceptionHandler(TokenExpiredException.class)
 	public ResponseEntity<StatusDto> handleTokenExpiredException(
@@ -172,4 +176,20 @@ public class ExceptionsController {
 	/**
 	 * JWT Exceptions
 	 */
+	
+	@ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
+	public ResponseEntity<StatusDto> 
+			handleAuthenticationCredentialsNotFoundException(
+					AuthenticationCredentialsNotFoundException e) {
+		return new ResponseEntity<>(new StatusDto(403, e.getMessage()), 
+				HttpStatus.FORBIDDEN);
+	}
+	
+	@ExceptionHandler(AuthenticationException.class)
+	public ResponseEntity<StatusDto> handleAuthenticationException(
+			AuthenticationException e) {
+		return new ResponseEntity<>(new StatusDto(403, "User is not authorized"), 
+				HttpStatus.FORBIDDEN);
+	}
+	
 }
