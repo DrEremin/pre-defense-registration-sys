@@ -21,10 +21,10 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.services.mailing.MailingService;
 
-@CrossOrigin(origins = "http://localhost:3002")
+//@CrossOrigin(origins = "http://localhost:3002")
 @Slf4j
 @RequiredArgsConstructor
-//@RestController
+@RestController
 @RequestMapping("/mailing")
 public class MailingController {
 
@@ -32,11 +32,7 @@ public class MailingController {
 	
 	@PostMapping("/students")
 	public List<MailingReportDto> sendMailsToStudents(
-			@Valid @RequestBody MailingDto dto) 
-					throws MethodArgumentNotValidException, 
-					HttpMessageNotReadableException,
-					EntityNotFoundException,
-					FailedAuthenticationException {
+			@Valid @RequestBody MailingDto dto) {
 		
 		List<MailingReportDto> responseDto = service.sendMailsToStudents(dto);
 		
@@ -46,11 +42,7 @@ public class MailingController {
 	
 	@PostMapping("/teachers")
 	public List<MailingReportDto> sendMailsToTeachers(
-			@Valid @RequestBody MailingDto dto) 
-					throws MethodArgumentNotValidException, 
-					HttpMessageNotReadableException,
-					EntityNotFoundException,
-					FailedAuthenticationException {
+			@Valid @RequestBody MailingDto dto) {
 		
 		List<MailingReportDto> responseDto = service.sendMailsToTeachers(dto);
 		

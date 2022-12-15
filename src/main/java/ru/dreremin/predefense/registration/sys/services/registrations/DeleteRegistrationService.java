@@ -98,7 +98,7 @@ public class DeleteRegistrationService extends Registration {
 		}
 	}
 	
-	private void setTeacherComissionOpt() throws EntityNotFoundException {
+	private void setTeacherComissionOpt() {
 		teacherComissinOpt = 
 				teacherComissionRepo.findByTeacherIdAndComissionId(
 						teacher.getId(), 
