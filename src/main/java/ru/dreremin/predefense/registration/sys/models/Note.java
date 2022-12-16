@@ -20,15 +20,15 @@ public class Note {
 	private long id;
 	
 	@Column(name = "id_c_nfk")
-	private int comissionId;
+	private int commissionId;
 	
 	@Column(name = "note_content")
 	private String noteContent;
 	
 	public Note() {}
 	
-	public Note(int comissionId, String noteContent) {
-		this.comissionId = comissionId;
+	public Note(int commissionId, String noteContent) {
+		this.commissionId = commissionId;
 		this.noteContent = noteContent;
 	}
 }

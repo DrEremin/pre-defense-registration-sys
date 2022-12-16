@@ -12,9 +12,11 @@ import ru.dreremin.predefense.registration.sys.models.StudentCommission;
 public interface StudentCommissionRepository 
 		extends JpaRepository<StudentCommission, Long> {
 
-	List<StudentCommission> findAllByComissionId(int comissionId);
+	List<StudentCommission> findAllByCommissionId(int commissionId);
 	
 	Optional<StudentCommission> findByStudentId(long studentId);
 	
 	void deleteAllByStudentId(long studentId);
+	
+	void deleteAllByCommissionId(int commissionId);
 }

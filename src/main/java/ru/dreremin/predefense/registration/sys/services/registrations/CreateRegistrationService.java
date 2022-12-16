@@ -5,12 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,24 +31,22 @@ import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.security.ActorDetails;
-import ru.dreremin.predefense.registration.sys.services.authentication
-		 .AuthenticationService;
 
 @Slf4j
 @Service
 public class CreateRegistrationService extends Registration {
 	
 	public CreateRegistrationService(
-			StudentCommissionRepository studentComissionRepo,
-			TeacherCommissionRepository teacherComissionRepo,
-			CommissionRepository comissionRepo,
+			StudentCommissionRepository studentCommissionRepo,
+			TeacherCommissionRepository teacherCommissionRepo,
+			CommissionRepository commissionRepo,
 			StudentRepository studentRepo,
 			TeacherRepository teacherRepo) {
 		
 		super( 
-				studentComissionRepo, 
-				teacherComissionRepo, 
-				comissionRepo,
+				studentCommissionRepo, 
+				teacherCommissionRepo, 
+				commissionRepo,
 				studentRepo,
 				teacherRepo);
 	}
@@ -65,7 +59,7 @@ public class CreateRegistrationService extends Registration {
             		EntitiesMismatchException.class,
             		UniquenessViolationException.class,
             		ExpiredCommissionException.class})
-	public void createStudentRegistration(int comissionId) {
+	public void createStudentRegistration(int commissionId) {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
 				.getAuthentication();
@@ -78,10 +72,10 @@ public class CreateRegistrationService extends Registration {
 					"Student with this login does not exist");
 		}
 		student = studentOpt.get();
-		setComissionOpt(comissionId);
+		setComissionOpt(commissionId);
 		checkingPossibilityOfStudentRegistration();
-		studentComissionRepo.save(new StudentCommission(
-				student.getId(), comissionId));
+		studentCommissionRepo.save(new StudentCommission(
+				student.getId(), commissionId));
 	}
 	
 	@Transactional(
@@ -105,27 +99,27 @@ public class CreateRegistrationService extends Registration {
 		teacher = teacherOpt.get();
 		setComissionOpt(comissionId);
 		checkingPossibilityOfTeacherRegistration();
-		teacherComissionRepo.save(new TeacherCommission(
+		teacherCommissionRepo.save(new TeacherCommission(
 				teacher.getId(), 
 				comissionId));
 	}
 	
 	private void checkingPossibilityOfStudentRegistration() {
 		if (!student.getStudyDirection().equals(
-				comissionOpt.get().getStudyDirection())) {
+				commissionOpt.get().getStudyDirection())) {
 			throw new EntitiesMismatchException(
 					"The study direction of the commission and the"
 					+ " student do not correspond to each other");
 		}
 		if (ZonedDateTime.now().plusHours(3).compareTo(
-				comissionOpt.get().getStartDateTime()) > 0) {
+				commissionOpt.get().getStartDateTime()) > 0) {
 			throw new ExpiredCommissionException(
 					"The comission with such Id was expired");
 		}
 		
-		List<StudentCommission> registrations = studentComissionRepo.findAll();
+		List<StudentCommission> registrations = studentCommissionRepo.findAll();
 		
-		if (registrations.size() >= comissionOpt.get().getStudentLimit()) {
+		if (registrations.size() >= commissionOpt.get().getStudentLimit()) {
 			throw new OverLimitException(
 					"The limit of the allowed number of students"
 					+ " in this commission has been reached");
@@ -142,13 +136,13 @@ public class CreateRegistrationService extends Registration {
 	private void checkingPossibilityOfTeacherRegistration() {
 		
 		if (ZonedDateTime.now().compareTo(
-				comissionOpt.get().getStartDateTime()) > 0) {
+				commissionOpt.get().getStartDateTime()) > 0) {
 			throw new ExpiredCommissionException(
 					"The comission with such Id was expired");
 		}
 		List<TeacherCommission> registrations = 
-				teacherComissionRepo.findAllByComissionId(
-						comissionOpt.get().getId());
+				teacherCommissionRepo.findAllByCommissionId(
+						commissionOpt.get().getId());
 		for (TeacherCommission registration : registrations) {
 			if (registration.getTeacherId() == teacher.getId()) {
 				throw new UniquenessViolationException(

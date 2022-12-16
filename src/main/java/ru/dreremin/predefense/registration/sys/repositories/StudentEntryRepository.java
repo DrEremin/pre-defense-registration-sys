@@ -23,7 +23,7 @@ public interface StudentEntryRepository
 			"from StudentCommission sc " +
 				"join Student s on sc.studentId = s.id " +
 				"join Person p on s.personId = p.id " +
-			"where sc.comissionId = :comId")
-	List<StudentEntry> findAllByComissionId(
+			"where sc.commissionId = :comId")
+	List<StudentEntry> findAllByCommissionId(
 			@Param("comId") int comissionId, Sort sort);
 }

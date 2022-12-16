@@ -27,21 +27,21 @@ import ru.dreremin.predefense.registration.sys.security.ActorDetails;
 @Service
 public class DeleteRegistrationService extends Registration {
 	
-	private Optional<StudentCommission> studentComissinOpt;
+	private Optional<StudentCommission> studentCommissinOpt;
 	
-	private Optional<TeacherCommission> teacherComissinOpt;
+	private Optional<TeacherCommission> teacherCommissinOpt;
 	
 	public DeleteRegistrationService(
-			StudentCommissionRepository studentComissionRepo,
-			TeacherCommissionRepository teacherComissionRepo,
-			CommissionRepository comissionRepo,
+			StudentCommissionRepository studentCommissionRepo,
+			TeacherCommissionRepository teacherCommissionRepo,
+			CommissionRepository commissionRepo,
 			StudentRepository studentRepo,
 			TeacherRepository teacherRepo) {
 		
 		super(
-				studentComissionRepo, 
-				teacherComissionRepo, 
-				comissionRepo,
+				studentCommissionRepo, 
+				teacherCommissionRepo, 
+				commissionRepo,
 				studentRepo,
 				teacherRepo);
 	}
@@ -64,7 +64,7 @@ public class DeleteRegistrationService extends Registration {
 		}
 		student = studentOpt.get();
 		setStudentComissionOpt();
-		studentComissionRepo.delete(studentComissinOpt.get());
+		studentCommissionRepo.delete(studentCommissinOpt.get());
 	}
 	
 	@Transactional(
@@ -86,24 +86,24 @@ public class DeleteRegistrationService extends Registration {
 		teacher = teacherOpt.get();
 		setComissionOpt(comissionId);
 		setTeacherComissionOpt();
-		teacherComissionRepo.delete(teacherComissinOpt.get());
+		teacherCommissionRepo.delete(teacherCommissinOpt.get());
 	}
 	
 	private void setStudentComissionOpt() {
-		studentComissinOpt = 
-				studentComissionRepo.findByStudentId(student.getId());
-		if (studentComissinOpt.isEmpty()) {
+		studentCommissinOpt = 
+				studentCommissionRepo.findByStudentId(student.getId());
+		if (studentCommissinOpt.isEmpty()) {
 			throw new EntityNotFoundException(
 					"The registration for this student does not exist");
 		}
 	}
 	
 	private void setTeacherComissionOpt() {
-		teacherComissinOpt = 
-				teacherComissionRepo.findByTeacherIdAndComissionId(
+		teacherCommissinOpt = 
+				teacherCommissionRepo.findByTeacherIdAndCommissionId(
 						teacher.getId(), 
-						comissionOpt.get().getId());
-		if (teacherComissinOpt.isEmpty()) {
+						commissionOpt.get().getId());
+		if (teacherCommissinOpt.isEmpty()) {
 			throw new EntityNotFoundException(
 					"The registration for this teacher "
 					+ "for such comission does not exist");

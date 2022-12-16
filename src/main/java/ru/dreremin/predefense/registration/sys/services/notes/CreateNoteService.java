@@ -19,18 +19,18 @@ import ru.dreremin.predefense.registration.sys.repositories.NoteRepository;
 public class CreateNoteService {
 	
 	private final NoteRepository noteRepo;
-	private final CommissionRepository comissionRepo;
+	private final CommissionRepository commissionRepo;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE,
 			rollbackFor = {EntityNotFoundException.class})
 	public void createNote(NoteDto dto) throws EntityNotFoundException {
 		
-		Optional<Commission> comissionOpt = 
-				comissionRepo.findById(dto.getComissionId());
-		if (comissionOpt.isEmpty()) {
+		Optional<Commission> commissionOpt = 
+				commissionRepo.findById(dto.getCommissionId());
+		if (commissionOpt.isEmpty()) {
 			throw new EntityNotFoundException(
 					"There is not exists comission with this Id");
 		}
-		noteRepo.save(new Note(dto.getComissionId(), dto.getNoteContent()));
+		noteRepo.save(new Note(dto.getCommissionId(), dto.getNoteContent()));
 	}
 }

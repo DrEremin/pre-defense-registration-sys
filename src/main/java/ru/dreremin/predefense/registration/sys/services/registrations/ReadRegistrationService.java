@@ -55,12 +55,10 @@ public class ReadRegistrationService {
 	private final StudentEntryRepository studentEntryRepo;
 	
 	private final TeacherEntryRepository teacherEntryRepo;
+		
+	private final StudentCommissionRepository studentCommissionRepo;
 	
-	//private final AuthenticationService authenticationService;
-	
-	private final StudentCommissionRepository studentComissionRepo;
-	
-	private final CommissionRepository comissionRepo;
+	private final CommissionRepository commissionRepo;
 	
 	private final NoteRepository noteRepo;
 	
@@ -85,17 +83,17 @@ public class ReadRegistrationService {
 		}
 		
 		Optional<StudentCommission> studentComissionOpt = 
-				studentComissionRepo.findByStudentId(studentOpt.get().getId());
+				studentCommissionRepo.findByStudentId(studentOpt.get().getId());
 		
 		if (studentComissionOpt.isEmpty()) {
 			throw new EntityNotFoundException("This student is not "
 					+ "registered for any commission");
 		}
 		
-		Commission commission = comissionRepo.findById(studentComissionOpt.get()
-				.getComissionId()).get();
+		Commission commission = commissionRepo.findById(studentComissionOpt.get()
+				.getCommissionId()).get();
 		
-		List<StudentEntry> students = studentEntryRepo.findAllByComissionId(
+		List<StudentEntry> students = studentEntryRepo.findAllByCommissionId(
 				commission.getId(), Sort.by(Sort.Order.asc("p.lastName")));
 		
 		Collections.sort(students);
@@ -119,7 +117,7 @@ public class ReadRegistrationService {
 					"Student with this login does not exist");
 		}
 		
-		List<Commission> actualComissions = comissionRepo
+		List<Commission> actualComissions = commissionRepo
 				.findAllByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
 						ZonedDateTime.now().plusHours(3))
 				.stream()
@@ -137,7 +135,7 @@ public class ReadRegistrationService {
 		for (Commission actualComission : actualComissions) {
 			
 			List<TeacherEntry> teachers = teacherEntryRepo
-					.findAllByComissionId(
+					.findAllByCommissionId(
 							actualComission.getId(), 
 							Sort.by(Sort.Order.asc("p.lastName")));
 			Collections.sort(teachers);
@@ -164,26 +162,26 @@ public class ReadRegistrationService {
 					"Teacher with this login does not exist");
 		}
 		
-		List<Commission> actualComissions = comissionRepo
+		List<Commission> actualCommissions = commissionRepo
 				.findAllByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
 						ZonedDateTime.now());
 		
-		if (actualComissions.size() == 0) {
+		if (actualCommissions.size() == 0) {
 			throw new EntityNotFoundException("Аctual commissions not found");
 		}
 
 		List<ActualComissionForTeacherDto> resultDto = new ArrayList<>(
-				actualComissions.size());
+				actualCommissions.size());
 		
-		for (Commission actualComission : actualComissions) {
+		for (Commission actualComission : actualCommissions) {
 			
 			List<TeacherEntry> teachers = teacherEntryRepo
-					.findAllByComissionId(
+					.findAllByCommissionId(
 							actualComission.getId(), 
 							Sort.by(Sort.Order.asc("p.lastName")));
 			
 			Collections.sort(teachers);
-			Optional<Note> noteOpt = noteRepo.findByComissionId(
+			Optional<Note> noteOpt = noteRepo.findByCommissionId(
 					actualComission.getId());
 			String note = noteOpt.isPresent() 
 					? noteOpt.get().getNoteContent() : "";

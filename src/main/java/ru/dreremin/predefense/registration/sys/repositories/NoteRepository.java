@@ -10,5 +10,7 @@ import ru.dreremin.predefense.registration.sys.models.Note;
 @Repository
 public interface NoteRepository extends JpaRepository<Note, Long> {
 	
-	Optional<Note> findByComissionId(int comissionId);
+	Optional<Note> findByCommissionId(int commissionId);
+	
+	void deleteByCommissionId(int commissionId);
 }

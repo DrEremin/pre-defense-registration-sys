@@ -23,12 +23,12 @@ public class StudentCommission {
 	private long studentId;
 	
 	@Column(name = "id_c_scfk")
-	private int comissionId;
+	private int commissionId;
 	
 	public StudentCommission() {}
 	
-	public StudentCommission(long studentId, int comissionId) {
+	public StudentCommission(long studentId, int commissionId) {
 		this.studentId = studentId;
-		this.comissionId = comissionId;
+		this.commissionId = commissionId;
 	}
 }

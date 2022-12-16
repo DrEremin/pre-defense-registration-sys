@@ -15,7 +15,7 @@ public class NoteDto {
 
 	@JsonProperty(value = "comissionId")
 	@NotNull
-	private final Integer comissionId;
+	private final Integer commissionId;
 	
 	@JsonProperty(value = "noteContent")
 	@NotNull

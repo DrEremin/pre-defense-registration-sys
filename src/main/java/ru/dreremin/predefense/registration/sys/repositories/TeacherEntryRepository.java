@@ -22,7 +22,7 @@ public interface TeacherEntryRepository
 			"from TeacherCommission tc " +
 			"join Teacher t on tc.teacherId = t.id " +
 			"join Person p on t.personId = p.id " +
-			"where tc.comissionId = :comId")
-	List<TeacherEntry> findAllByComissionId(
+			"where tc.commissionId = :comId")
+	List<TeacherEntry> findAllByCommissionId(
 		@Param("comId") int comissionId, Sort sort);
 }
