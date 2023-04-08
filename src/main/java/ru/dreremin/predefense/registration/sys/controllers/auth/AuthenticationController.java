@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.AuthenticationDto;
-import ru.dreremin.predefense.registration.sys.dto.responsedto.JwtTokenDto;
-import ru.dreremin.predefense.registration.sys.services.authentication.ActorDetailsService;
-import ru.dreremin.predefense.registration.sys.services.authentication.AuthenticationService;
+import ru.dreremin.predefense.registration.sys.dto.request.AuthenticationDto;
+import ru.dreremin.predefense.registration.sys.dto.response.JwtTokenDto;
+import ru.dreremin.predefense.registration.sys.services.auth.ActorDetailsService;
+import ru.dreremin.predefense.registration.sys.services.auth.AuthenticationService;
 
 @RequiredArgsConstructor
 @RestController

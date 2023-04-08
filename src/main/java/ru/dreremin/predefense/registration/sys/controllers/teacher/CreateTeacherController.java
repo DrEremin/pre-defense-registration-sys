@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
-import ru.dreremin.predefense.registration.sys.dto.responsedto.JwtTokenDto;
-import ru.dreremin.predefense.registration.sys
-		 .services.teachers.CreateTeacherService;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.response.JwtTokenDto;
+import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherService;
 
 @Slf4j
 @RequiredArgsConstructor

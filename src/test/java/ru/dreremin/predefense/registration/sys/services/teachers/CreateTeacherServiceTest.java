@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Person;
@@ -24,6 +24,7 @@ import ru.dreremin.predefense.registration.sys.repositories
 		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
+import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherService;
 
 
 @Slf4j

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
 
 @RequiredArgsConstructor
 @Component

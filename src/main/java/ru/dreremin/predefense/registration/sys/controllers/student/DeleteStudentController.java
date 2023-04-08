@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.LoginDto;
-import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
-import ru.dreremin.predefense.registration.sys.services.students.DeleteStudentService;
+import ru.dreremin.predefense.registration.sys.dto.request.LoginDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
+import ru.dreremin.predefense.registration.sys.services.student.DeleteStudentService;
 
 @Slf4j
 @RequiredArgsConstructor

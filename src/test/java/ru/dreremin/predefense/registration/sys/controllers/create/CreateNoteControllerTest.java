@@ -35,13 +35,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.NoteDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
+import ru.dreremin.predefense.registration.sys.dto.request.NoteDto;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.NoteRepository;
-import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateCommissionService;
+import ru.dreremin.predefense.registration.sys.services.commission.CreateCommissionService;
 
 @Slf4j
 @SpringBootTest

@@ -15,17 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.AuthenticationDto;
-import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .ActualCommissionForStudentDto;
-import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .ActualComissionForTeacherDto;
-import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .CurrentCommissionOfStudentDto;
+import ru.dreremin.predefense.registration.sys.dto.request.AuthenticationDto;
+import ru.dreremin.predefense.registration.sys.dto.response.ActualComissionForTeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.response.ActualCommissionForStudentDto;
+import ru.dreremin.predefense.registration.sys.dto.response.CurrentCommissionOfStudentDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
-import ru.dreremin.predefense.registration.sys.services.registrations
-		 .ReadRegistrationService;
+import ru.dreremin.predefense.registration.sys.services.registration.ReadRegistrationService;
 
 //@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 @RequiredArgsConstructor

@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.factories.EntitiesFactory;

@@ -35,10 +35,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
+import ru.dreremin.predefense.registration.sys.dto.request.RegistrationDto;
+import ru.dreremin.predefense.registration.sys.dto.request.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .EntitiesMismatchException;
 import ru.dreremin.predefense.registration.sys.exceptions
@@ -59,14 +59,10 @@ import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
-import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateCommissionService;
-import ru.dreremin.predefense.registration.sys.services.registrations
-		 .CreateRegistrationService;
-import ru.dreremin.predefense.registration.sys.services.students
-		 .CreateStudentService;
-import ru.dreremin.predefense.registration.sys.services.teachers
-		 .CreateTeacherService;
+import ru.dreremin.predefense.registration.sys.services.commission.CreateCommissionService;
+import ru.dreremin.predefense.registration.sys.services.registration.CreateRegistrationService;
+import ru.dreremin.predefense.registration.sys.services.student.CreateStudentService;
+import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherService;
 
 @Slf4j
 @SpringBootTest

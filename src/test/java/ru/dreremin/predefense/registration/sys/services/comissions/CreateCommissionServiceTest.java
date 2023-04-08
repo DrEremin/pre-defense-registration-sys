@@ -17,9 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
+import ru.dreremin.predefense.registration.sys.services.commission.CreateCommissionService;
 
 @Slf4j
 @SpringBootTest

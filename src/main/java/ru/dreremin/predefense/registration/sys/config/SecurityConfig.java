@@ -11,8 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
-
-import ru.dreremin.predefense.registration.sys.services.authentication.ActorDetailsService;
+import ru.dreremin.predefense.registration.sys.services.auth.ActorDetailsService;
 
 @RequiredArgsConstructor
 @EnableWebSecurity

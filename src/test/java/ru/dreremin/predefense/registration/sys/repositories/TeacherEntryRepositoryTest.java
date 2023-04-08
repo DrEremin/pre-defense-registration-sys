@@ -21,17 +21,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.RegistrationDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
+import ru.dreremin.predefense.registration.sys.dto.request.RegistrationDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
-import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateCommissionService;
-import ru.dreremin.predefense.registration.sys.services.registrations
-		 .CreateRegistrationService;
-import ru.dreremin.predefense.registration.sys.services.teachers
-		 .CreateTeacherService;
+import ru.dreremin.predefense.registration.sys.services.commission.CreateCommissionService;
+import ru.dreremin.predefense.registration.sys.services.registration.CreateRegistrationService;
+import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherService;
 
 @Slf4j
 @SpringBootTest

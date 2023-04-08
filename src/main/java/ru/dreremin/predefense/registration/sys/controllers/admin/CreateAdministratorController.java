@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.AdminDto;
-import ru.dreremin.predefense.registration.sys.dto.responsedto.JwtTokenDto;
-import ru.dreremin.predefense.registration.sys.services.admins
-		.CreateAdministratorService;
+import ru.dreremin.predefense.registration.sys.dto.request.AdminDto;
+import ru.dreremin.predefense.registration.sys.dto.response.JwtTokenDto;
+import ru.dreremin.predefense.registration.sys.services.admin.CreateAdministratorService;
 
 
 @Slf4j

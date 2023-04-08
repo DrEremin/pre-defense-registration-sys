@@ -11,9 +11,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.MailingDto;
-import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .MailingReportDto;
+import ru.dreremin.predefense.registration.sys.dto.request.MailingDto;
+import ru.dreremin.predefense.registration.sys.dto.response.MailingReportDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.models.Email;

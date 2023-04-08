@@ -1,8 +1,8 @@
 package ru.dreremin.predefense.registration.sys.factories;
 
-import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.PersonDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
+import ru.dreremin.predefense.registration.sys.dto.request.PersonDto;
+import ru.dreremin.predefense.registration.sys.dto.request.StudentDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.models.Student;

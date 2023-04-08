@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
-import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateCommissionService;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
+import ru.dreremin.predefense.registration.sys.services.commission.CreateCommissionService;
 
 @Slf4j
 @RequiredArgsConstructor

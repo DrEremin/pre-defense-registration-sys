@@ -29,11 +29,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.controllers.exceptions.ExceptionsController;
-import ru.dreremin.predefense.registration.sys.dto.responsedto.StatusDto;
+import ru.dreremin.predefense.registration.sys.controllers.exception.ExceptionController;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
 import ru.dreremin.predefense.registration.sys.exceptions.InvalidJwtTokenException;
 import ru.dreremin.predefense.registration.sys.security.JwtTokenProvider;
-import ru.dreremin.predefense.registration.sys.services.authentication.ActorDetailsService;
+import ru.dreremin.predefense.registration.sys.services.auth.ActorDetailsService;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
 	
 	private final ActorDetailsService actorDetailsService;
 	
-	private final ExceptionsController exceptionsController;
+	private final ExceptionController exceptionController;
 	
 	private HttpServletResponse errResponse;
 	
@@ -102,24 +102,24 @@ public class JwtFilter extends OncePerRequestFilter {
 		ResponseEntity<StatusDto> dto = null;
 		
 		if (e instanceof TokenExpiredException) {
-			dto = exceptionsController
+			dto = exceptionController
 					.handleTokenExpiredException((TokenExpiredException) e);
 		} else if (e instanceof JWTDecodeException) {
-			dto = exceptionsController
+			dto = exceptionController
 					.handleJWTDecodeException((JWTDecodeException) e);
 		} else if (e instanceof SignatureVerificationException) {
-			dto = exceptionsController
+			dto = exceptionController
 					.handleSignatureVerificationException(
 							(SignatureVerificationException) e);
 		} else if (e instanceof AlgorithmMismatchException) {
-			dto = exceptionsController
+			dto = exceptionController
 					.handleAlgorithmMismatchException(
 							(AlgorithmMismatchException) e);
 		} else if (e instanceof InvalidClaimException) {
-			dto = exceptionsController
+			dto = exceptionController
 					.handleInvalidClaimException((InvalidClaimException) e);
 		} else if (e instanceof InvalidJwtTokenException) {
-			dto = exceptionsController
+			dto = exceptionController
 					.handleInvalidJwtTokenException(
 							(InvalidJwtTokenException) e);
 		}

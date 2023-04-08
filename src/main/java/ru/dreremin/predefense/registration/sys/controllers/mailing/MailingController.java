@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.MailingDto;
-import ru.dreremin.predefense.registration.sys.dto.responsedto
-		 .MailingReportDto;
+import ru.dreremin.predefense.registration.sys.dto.request.MailingDto;
+import ru.dreremin.predefense.registration.sys.dto.response.MailingReportDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.services.mailing.MailingService;

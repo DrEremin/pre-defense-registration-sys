@@ -18,15 +18,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.requestdto.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
+import ru.dreremin.predefense.registration.sys.dto.request.StudentDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentCommission;
-import ru.dreremin.predefense.registration.sys.services.comissions
-		 .CreateCommissionService;
-import ru.dreremin.predefense.registration.sys.services.students
-		 .CreateStudentService;
+import ru.dreremin.predefense.registration.sys.services.commission.CreateCommissionService;
+import ru.dreremin.predefense.registration.sys.services.student.CreateStudentService;
 
 @Slf4j
 @SpringBootTest
