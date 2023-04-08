@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.controllers.read;
+package ru.dreremin.predefense.registration.sys.controllers.registration;
 
 import java.util.List;
 
