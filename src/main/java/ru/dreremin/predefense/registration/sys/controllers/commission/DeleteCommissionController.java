@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.controllers.delete;
+package ru.dreremin.predefense.registration.sys.controllers.commission;
 
 import javax.validation.Valid;
 

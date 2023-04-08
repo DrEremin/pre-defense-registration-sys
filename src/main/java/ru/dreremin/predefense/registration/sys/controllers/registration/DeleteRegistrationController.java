@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.controllers.delete;
+package ru.dreremin.predefense.registration.sys.controllers.registration;
 
 import javax.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
