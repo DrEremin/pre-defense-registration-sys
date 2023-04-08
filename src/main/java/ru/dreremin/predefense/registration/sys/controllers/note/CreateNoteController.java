@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.controllers.create;
+package ru.dreremin.predefense.registration.sys.controllers.note;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
