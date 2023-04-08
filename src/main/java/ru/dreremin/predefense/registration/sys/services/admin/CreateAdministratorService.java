@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import ru.dreremin.predefense.registration.sys.dto.request.AdminDto;
 import ru.dreremin.predefense.registration.sys.dto.request.StudentDto;
 import ru.dreremin.predefense.registration.sys.exceptions.UniquenessViolationException;
-import ru.dreremin.predefense.registration.sys.factories.EntitiesFactory;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Administrator;
 import ru.dreremin.predefense.registration.sys.repositories.ActorRepository;
@@ -19,6 +18,7 @@ import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.security.JwtTokenProvider;
 import ru.dreremin.predefense.registration.sys.services.person.CreatePersonService;
 import ru.dreremin.predefense.registration.sys.services.student.CreateStudentService;
+import ru.dreremin.predefense.registration.sys.util.EntitiesFactory;
 
 @Slf4j
 @Service

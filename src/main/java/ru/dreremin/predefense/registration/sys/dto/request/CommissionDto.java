@@ -1,25 +1,24 @@
 package ru.dreremin.predefense.registration.sys.dto.request;
 
 import java.time.ZonedDateTime;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
-import ru.dreremin.predefense.registration.sys.exceptions.NegativeTimePeriodException;
+
+import ru.dreremin.predefense.registration.sys.exceptions
+		 .NegativeTimePeriodException;
 
 @Getter
 public class CommissionDto {
 	
 	@JsonProperty(value = "startTimestamp")
 	@NotNull
-	private final ZonedDateTime startTimestamp;
+	private ZonedDateTime startTimestamp;
 	
 	@JsonProperty(value = "endTimestamp")
 	@NotNull
-	private final ZonedDateTime endTimestamp;
+	private ZonedDateTime endTimestamp;
 	
 	@JsonProperty(value = "presenceFormat")
 	@NotNull
@@ -45,6 +44,7 @@ public class CommissionDto {
 						String studyDirection, 
 						String location,
 						Short studentLimit) {
+		
 		this.startTimestamp = startDateTime;
 		this.endTimestamp = endDateTime;
 		this.presenceFormat = presenceFormat;
@@ -52,6 +52,15 @@ public class CommissionDto {
 		this.location = location;
 		this.studentLimit = studentLimit;
 	}
+	
+	public void setStartTimestamp(ZonedDateTime startTimestamp) {
+		this.startTimestamp = startTimestamp;
+	}
+	
+	public void setEndTimestamp(ZonedDateTime endTimestamp) {
+		this.endTimestamp = endTimestamp;
+	}
+	
 	/*
 	public ZonedDateTime getStartTimestamp() { return this.startTimestamp; }
 	

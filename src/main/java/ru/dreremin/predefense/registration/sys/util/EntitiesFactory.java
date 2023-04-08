@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.factories;
+package ru.dreremin.predefense.registration.sys.util;
 
 import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.request.PersonDto;
