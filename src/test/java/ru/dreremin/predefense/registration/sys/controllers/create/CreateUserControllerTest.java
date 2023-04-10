@@ -28,13 +28,13 @@ import lombok.extern.slf4j.Slf4j;
 import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
-import ru.dreremin.predefense.registration.sys.factories.EntitiesFactory;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
+import ru.dreremin.predefense.registration.sys.util.EntitiesFactory;
 
 @Slf4j
 @SpringBootTest
