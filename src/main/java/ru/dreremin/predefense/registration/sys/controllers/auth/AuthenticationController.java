@@ -25,7 +25,7 @@ public class AuthenticationController {
 	public ResponseEntity<JwtTokenDto> login(
 			@Valid @RequestBody AuthenticationDto dto) {
 		
-		String jwtToken = authenticationService.login(dto);
+		String jwtToken = authenticationService.getToken(dto);
 		
 		return ResponseEntity.ok(new JwtTokenDto(jwtToken));
 	}

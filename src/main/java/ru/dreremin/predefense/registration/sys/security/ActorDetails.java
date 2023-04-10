@@ -54,4 +54,12 @@ public class ActorDetails implements UserDetails {
 		// TODO Auto-generated method stub
 		return true;
 	}
+	
+	public long getId() {
+		return actor.getId();
+	}
+	
+	public String getRole() {
+		return actor.getRole();
+	}
 }

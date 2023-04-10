@@ -31,7 +31,7 @@ public class AuthenticationService {
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider jwtTokenProvider;
 	
-	public String login(AuthenticationDto dto) {
+	public String getToken(AuthenticationDto dto) {
 
 		UsernamePasswordAuthenticationToken authToken = 
 				new UsernamePasswordAuthenticationToken(
