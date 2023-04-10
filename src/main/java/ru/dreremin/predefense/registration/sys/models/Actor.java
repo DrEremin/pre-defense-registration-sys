@@ -36,5 +36,12 @@ public class Actor {
 		this.password = password;
 		this.role = role;
 	}
+	
+	public Actor(long id, String login, String password, String role) {
+		this.id = id;
+		this.login = login;
+		this.password = password;
+		this.role = role;
+	}
 } 
  

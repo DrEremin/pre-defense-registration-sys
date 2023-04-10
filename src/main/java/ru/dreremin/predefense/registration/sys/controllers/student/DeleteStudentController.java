@@ -25,8 +25,17 @@ public class DeleteStudentController {
 	public ResponseEntity<StatusDto> deleteStudent(
 			@Valid @RequestBody LoginDto dto) {
 		
-		deleteStudentService.deleteStudent(dto.getLogin());
+		deleteStudentService.deleteStudentByLogin(dto.getLogin());
 		log.info("DeleteStudentController.deleteStudent() is success");
 		return ResponseEntity.ok(new StatusDto(200, "Ok"));
 	}
+	
+	@DeleteMapping("/students/all")
+	public ResponseEntity<StatusDto> deleteAllStudents() {
+		
+		deleteStudentService.deleteAllStudents();
+		log.info("DeleteStudentController.deleteAllStudents() is success");
+		return ResponseEntity.ok(new StatusDto(200, "Ok"));
+	}
 }
+
