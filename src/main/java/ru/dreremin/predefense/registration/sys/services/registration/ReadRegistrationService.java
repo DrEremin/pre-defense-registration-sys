@@ -1,14 +1,15 @@
 package ru.dreremin.predefense.registration.sys.services.registration;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javax.persistence.EntityNotFoundException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,12 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.request.AuthenticationDto;
-import ru.dreremin.predefense.registration.sys.dto.response.ActualComissionForTeacherDto;
-import ru.dreremin.predefense.registration.sys.dto.response.ActualCommissionForStudentDto;
-import ru.dreremin.predefense.registration.sys.dto.response.CurrentCommissionOfStudentDto;
-import ru.dreremin.predefense.registration.sys.exceptions
-		 .FailedAuthenticationException;
+import ru.dreremin.predefense.registration.sys.dto.request.TimePeriodDto;
+import ru.dreremin.predefense.registration.sys.dto.response.CommissionsListDto;
+import ru.dreremin.predefense.registration.sys.dto.response
+		 .CurrentCommissionOfStudentDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.models.Student;
@@ -41,7 +40,6 @@ import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherEntryRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.security.ActorDetails;
-import ru.dreremin.predefense.registration.sys.services.auth.AuthenticationService;
 
 @RequiredArgsConstructor
 @Service
@@ -60,6 +58,9 @@ public class ReadRegistrationService {
 	private final StudentRepository studentRepo;
 	
 	private final TeacherRepository teacherRepo;
+	
+	@Value("${spring.zone}")
+	private String zone;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
@@ -86,8 +87,8 @@ public class ReadRegistrationService {
 					+ "registered for any actual commission");
 		}
 		
-		Commission commission = commissionRepo.findById(studentComissionOpt.get()
-				.getCommissionId()).get();
+		Commission commission = commissionRepo.findById(studentComissionOpt
+				.get().getCommissionId()).get();
 		
 		List<StudentEntry> students = studentEntryRepo.findAllByCommissionId(
 				commission.getId(), Sort.by(Sort.Order.asc("p.lastName")));
@@ -98,7 +99,7 @@ public class ReadRegistrationService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
-	public List<ActualCommissionForStudentDto> 
+	public List<CommissionsListDto> 
 			getActualComissionsListForStudent() {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
@@ -113,7 +114,7 @@ public class ReadRegistrationService {
 					"Student with this login does not exist");
 		}
 		
-		List<Commission> actualComissions = commissionRepo
+		List<Commission> actualCommissions = commissionRepo
 				.findAllByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
 						ZonedDateTime.now().plusHours(3))
 				.stream()
@@ -121,29 +122,16 @@ public class ReadRegistrationService {
 						.getStudyDirection()))
 				.collect(Collectors.toList());
 		
-		if (actualComissions.size() == 0) {
+		if (actualCommissions.size() == 0) {
 			throw new EntityNotFoundException("Аctual commissions not found");
 		}
-
-		List<ActualCommissionForStudentDto> resultDto = new ArrayList<>(
-				actualComissions.size());
 		
-		for (Commission actualComission : actualComissions) {
-			
-			List<TeacherEntry> teachers = teacherEntryRepo
-					.findAllByCommissionId(
-							actualComission.getId(), 
-							Sort.by(Sort.Order.asc("p.lastName")));
-			Collections.sort(teachers);
-			resultDto.add(new ActualCommissionForStudentDto(actualComission, 
-					teachers));
-		}
-		return resultDto;
+		return getResultDto(actualCommissions, false);
 	}
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
-	public List<ActualComissionForTeacherDto> 
+	public List<CommissionsListDto> 
 			getActualComissionsListForTeacher() {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
@@ -165,30 +153,66 @@ public class ReadRegistrationService {
 		if (actualCommissions.size() == 0) {
 			throw new EntityNotFoundException("Аctual commissions not found");
 		}
-
-		List<ActualComissionForTeacherDto> resultDto = new ArrayList<>(
-				actualCommissions.size());
+		return getResultDto(actualCommissions, true);
+	}
+	
+	public List<CommissionsListDto> getCommissionListByTimePeriod(
+			TimePeriodDto dto) {
 		
-		for (Commission actualComission : actualCommissions) {
+		setZone(dto);
+		
+		List<Commission> commissions = commissionRepo
+				.findAllByStartDateTimeBetweenOrderByStartDateTime(
+						dto.getStartDateTime(), 
+						dto.getEndDateTime());
+		
+			
+		if (commissions.size() == 0) {
+			throw new EntityNotFoundException("Commissions not found");
+		}
+		return getResultDto(commissions, true);	
+	}
+	
+	private List<CommissionsListDto> getResultDto(
+			List<Commission> commissions, 
+			boolean isNote) {
+		
+		
+		
+		List<CommissionsListDto> resultDto = new ArrayList<>(
+				commissions.size());
+		
+		for (Commission commission : commissions) {
 			
 			List<TeacherEntry> teachers = teacherEntryRepo
 					.findAllByCommissionId(
-							actualComission.getId(), 
+							commission.getId(), 
 							Sort.by(Sort.Order.asc("p.lastName")));
+			String note;
 			
 			Collections.sort(teachers);
-			Optional<Note> noteOpt = noteRepo.findByCommissionId(
-					actualComission.getId());
-			String note = noteOpt.isPresent() 
-					? noteOpt.get().getNoteContent() : "";
+			if (isNote) {
+				Optional<Note> noteOpt = noteRepo.findByCommissionId(
+						commission.getId());
+				note = noteOpt.isPresent() 
+						? noteOpt.get().getNoteContent() : "";
+			} else {
+				note = null;
+			}
 			
-			resultDto.add(new ActualComissionForTeacherDto(
-					actualComission, 
+			resultDto.add(new CommissionsListDto(
+					commission, 
 					teachers, 
 					note));
 		}
 		return resultDto;
 	}
 	
-	
+	private void setZone(TimePeriodDto dto) {
+		
+		dto.setStartDateTime(ZonedDateTime.of(
+				dto.getStartDateTime().toLocalDateTime(), ZoneId.of(zone)));
+		dto.setStartDateTime(ZonedDateTime.of(
+				dto.getStartDateTime().toLocalDateTime(), ZoneId.of(zone)));
+	}
 }  

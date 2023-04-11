@@ -14,4 +14,8 @@ public interface CommissionRepository
 	
 	List<Commission> findAllByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
 			ZonedDateTime currentTimestamp);
+	
+	List<Commission> findAllByStartDateTimeBetweenOrderByStartDateTime(
+			ZonedDateTime startDateTime, 
+			ZonedDateTime endDateTime);
 }

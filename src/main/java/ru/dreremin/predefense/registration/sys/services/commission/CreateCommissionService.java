@@ -31,7 +31,9 @@ public class CreateCommissionService {
 	
 	private void setZone(CommissionDto dto) {
 		
-		dto.setStartTimestamp(ZonedDateTime.of(dto.getStartTimestamp().toLocalDateTime(), ZoneId.of(zone)));
-		dto.setEndTimestamp(ZonedDateTime.of(dto.getEndTimestamp().toLocalDateTime(), ZoneId.of(zone)));
+		dto.setStartTimestamp(ZonedDateTime.of(
+				dto.getStartTimestamp().toLocalDateTime(), ZoneId.of(zone)));
+		dto.setEndTimestamp(ZonedDateTime.of(
+				dto.getEndTimestamp().toLocalDateTime(), ZoneId.of(zone)));
 	}
 }
