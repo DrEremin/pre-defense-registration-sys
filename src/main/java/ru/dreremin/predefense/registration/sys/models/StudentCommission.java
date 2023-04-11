@@ -31,4 +31,10 @@ public class StudentCommission {
 		this.studentId = studentId;
 		this.commissionId = commissionId;
 	}
+	
+	public StudentCommission(long id, long studentId, int commissionId) {
+		this.id = id;
+		this.studentId = studentId;
+		this.commissionId = commissionId;
+	}
 }

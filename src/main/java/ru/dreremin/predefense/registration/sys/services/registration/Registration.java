@@ -43,5 +43,6 @@ public abstract class Registration {
 			throw new EntityNotFoundException(
 					"There is not exists comission with this Id");
 		}
+		
 	}
 }

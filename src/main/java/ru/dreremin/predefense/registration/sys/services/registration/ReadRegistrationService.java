@@ -78,11 +78,12 @@ public class ReadRegistrationService {
 		}
 		
 		Optional<StudentCommission> studentComissionOpt = 
-				studentCommissionRepo.findByStudentId(studentOpt.get().getId());
+				studentCommissionRepo.findByStudentIdAndActualTime(
+						studentOpt.get().getId(), ZonedDateTime.now());
 		
 		if (studentComissionOpt.isEmpty()) {
 			throw new EntityNotFoundException("This student is not "
-					+ "registered for any commission");
+					+ "registered for any actual commission");
 		}
 		
 		Commission commission = commissionRepo.findById(studentComissionOpt.get()
@@ -188,4 +189,6 @@ public class ReadRegistrationService {
 		}
 		return resultDto;
 	}
+	
+	
 }  

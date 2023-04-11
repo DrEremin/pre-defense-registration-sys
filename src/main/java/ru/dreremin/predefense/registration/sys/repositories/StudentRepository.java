@@ -1,5 +1,6 @@
 package ru.dreremin.predefense.registration.sys.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +18,8 @@ public interface StudentRepository extends JpaRepository<Student, Long>{
 	default boolean existsByPersonId(Long id) {
 		return findByPersonId(id).isPresent();
 	}
+	
+	List<Student> findAllByGroupNumber(String groupNumber);
 	
 	@Query("select new Student("
 			+ "s.id, "

@@ -12,9 +12,11 @@ import lombok.RequiredArgsConstructor;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.repositories.ActorRepository;
-import ru.dreremin.predefense.registration.sys.repositories.StudentCommissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .StudentCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
-import ru.dreremin.predefense.registration.sys.services.person.DeletePersonService;
+import ru.dreremin.predefense.registration.sys.services.person
+		 .DeletePersonService;
 
 @RequiredArgsConstructor
 @Service
@@ -50,6 +52,23 @@ public class DeleteStudentService {
 	public void deleteAllStudents() {
 		
 		List<Student> students = studentRepo.findAll();
+		
+		for (Student student : students) {
+			deleteStudent(student.getId());
+		}
+	}
+	
+	@Transactional(isolation = Isolation.SERIALIZABLE, 
+			rollbackFor = { UsernameNotFoundException.class, 
+					EntityNotFoundException.class })
+	public void deleteStudentsByGroup(String group) {
+		
+		List<Student> students = studentRepo.findAllByGroupNumber(group);
+		
+		if (students.size() == 0) {
+			throw new EntityNotFoundException(
+					"Group with this number does not exist");
+		}
 		
 		for (Student student : students) {
 			deleteStudent(student.getId());

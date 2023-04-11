@@ -117,18 +117,23 @@ public class CreateRegistrationService extends Registration {
 					"The comission with such Id was expired");
 		}
 		
-		List<StudentCommission> registrations = studentCommissionRepo.findAll();
+		List<StudentCommission> commissionRegistrations = studentCommissionRepo
+				.findAllByCommissionId(commissionOpt.get().getId());
 		
-		if (registrations.size() >= commissionOpt.get().getStudentLimit()) {
+		if (commissionRegistrations.size() >= commissionOpt.get().getStudentLimit()) {
 			throw new OverLimitException(
 					"The limit of the allowed number of students"
 					+ " in this commission has been reached");
 		}
-		for (StudentCommission registration : registrations) {
+		
+		List<StudentCommission> actualRegistrations = studentCommissionRepo
+				.findAllActualRegistrations(ZonedDateTime.now());
+		
+		for (StudentCommission registration : actualRegistrations) {
 			if (registration.getStudentId() == student.getId()) {
 				throw new UniquenessViolationException(
-						"Such a student is already"
-						+ " registered for commission");
+						"Such a student has already been signed up for "
+						+ "this commission");
 			}
 		}
 	}

@@ -1,9 +1,12 @@
 package ru.dreremin.predefense.registration.sys.repositories;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import ru.dreremin.predefense.registration.sys.models.StudentCommission;
@@ -15,6 +18,30 @@ public interface StudentCommissionRepository
 	List<StudentCommission> findAllByCommissionId(int commissionId);
 	
 	Optional<StudentCommission> findByStudentId(long studentId);
+	
+	@Query("select new StudentCommission("
+			+ "sc.id, "
+			+ "sc.studentId, "
+			+ "sc.commissionId) "
+			+ "from StudentCommission sc "
+			+ "join Commission c "
+			+ 		"on sc.commissionId = c.id "
+			+ "where sc.studentId = :studentId "
+			+ 		"and c.startDateTime >= :timestamp")
+	Optional<StudentCommission> findByStudentIdAndActualTime(
+			@Param("studentId") long studentId, 
+			@Param("timestamp") ZonedDateTime startDateTime);
+	
+	@Query("select new StudentCommission("
+			+ "sc.id, "
+			+ "sc.studentId, "
+			+ "sc.commissionId) "
+			+ "from StudentCommission sc "
+			+ "join Commission c "
+			+ 		"on sc.commissionId = c.id "
+			+ "where c.startDateTime >= :timestamp")
+	List<StudentCommission> findAllActualRegistrations(
+			@Param("timestamp") ZonedDateTime startDateTime);
 	
 	void deleteAllByStudentId(long studentId);
 	
