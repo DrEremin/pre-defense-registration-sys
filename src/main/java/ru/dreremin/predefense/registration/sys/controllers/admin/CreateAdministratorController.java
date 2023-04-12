@@ -19,12 +19,11 @@ import ru.dreremin.predefense.registration.sys.services.admin.CreateAdministrato
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/create")
 public class CreateAdministratorController {
 	
 	private final CreateAdministratorService adminService;
 	
-	@PutMapping(value = "/admin", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/admin/users/create/admin", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<JwtTokenDto> createAdmin(
 			@Valid @RequestBody AdminDto adminDto) {
 		String jwtToken = adminService.createAdmin(adminDto);

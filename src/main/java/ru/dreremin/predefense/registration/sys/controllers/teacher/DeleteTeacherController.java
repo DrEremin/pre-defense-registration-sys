@@ -16,12 +16,11 @@ import ru.dreremin.predefense.registration.sys.services.teacher.DeleteTeacherSer
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/delete")
 public class DeleteTeacherController {
 
 	private final DeleteTeacherService deleteTeacherService;
 	
-	@DeleteMapping("/teacher")
+	@DeleteMapping("/admin/users/delete/teacher")
 	public ResponseEntity<StatusDto> deleteTeacher(
 			@Valid @RequestBody LoginDto dto) {
 		

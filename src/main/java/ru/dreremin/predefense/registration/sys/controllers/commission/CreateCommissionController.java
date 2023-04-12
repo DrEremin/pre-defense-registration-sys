@@ -19,7 +19,8 @@ public class CreateCommissionController {
 	
 	private final CreateCommissionService service;
 	
-	@PutMapping(value = "/comissions/create", consumes = "application/json")
+	@PutMapping(value = "/admin/commissions/create", 
+			consumes = "application/json")
 	public StatusDto createComission(@Valid @RequestBody CommissionDto dto) {
 		dto.periodValidation();
 		service.createComission(dto);

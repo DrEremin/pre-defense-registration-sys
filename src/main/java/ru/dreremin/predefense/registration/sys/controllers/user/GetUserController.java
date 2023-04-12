@@ -15,12 +15,12 @@ import ru.dreremin.predefense.registration.sys.services.user.GetUserService;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class GetUserController {
 	
 	private final GetUserService getUserService;
 	
-	@GetMapping(value = "/get/user")
+	@GetMapping(value = "/get")
 	public ResponseEntity<UserDto> getUser(
 			@RequestHeader(value = "Authorization") String jwt) {
 		

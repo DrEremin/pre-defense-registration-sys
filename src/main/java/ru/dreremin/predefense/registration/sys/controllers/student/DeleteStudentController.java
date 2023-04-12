@@ -17,12 +17,12 @@ import ru.dreremin.predefense.registration.sys.services.student.DeleteStudentSer
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/delete")
+@RequestMapping("/admin/users/delete")
 public class DeleteStudentController {
 
 	private final DeleteStudentService deleteStudentService;
 	
-	@DeleteMapping("/student")
+	@DeleteMapping("/student/login")
 	public ResponseEntity<StatusDto> deleteStudent(
 			@Valid @RequestBody LoginDto dto) {
 		
@@ -39,7 +39,7 @@ public class DeleteStudentController {
 		return ResponseEntity.ok(new StatusDto(200, "Ok"));
 	}
 	
-	@DeleteMapping("/students/by-group/{groupNumber}")
+	@DeleteMapping("/students/{groupNumber}")
 	public ResponseEntity<StatusDto> deleteStudentsByGroup(
 			@PathVariable("groupNumber") String group) {
 		

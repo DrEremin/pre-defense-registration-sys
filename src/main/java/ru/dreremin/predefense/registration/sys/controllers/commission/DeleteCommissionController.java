@@ -19,7 +19,8 @@ public class DeleteCommissionController {
 	
 	private final DeleteCommissionService service;
 	
-	@DeleteMapping(value = "/comissions/delete", consumes = "application/json")
+	@DeleteMapping(value = "/admin/commissions/delete", 
+			consumes = "application/json")
 	public StatusDto createComission(@Valid @RequestBody RegistrationDto dto) {
 		service.deleteComission(dto.getComissionId());
 		log.info("DeleteComissionController.deleteComission() is success");

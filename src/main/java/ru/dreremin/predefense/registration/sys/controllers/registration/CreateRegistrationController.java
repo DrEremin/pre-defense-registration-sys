@@ -17,12 +17,12 @@ import ru.dreremin.predefense.registration.sys.services.registration.CreateRegis
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/registrations/create")
 public class CreateRegistrationController {
 
 	private final CreateRegistrationService service;
 	
-	@PutMapping(value = "/student", consumes = "application/json")
+	@PutMapping(value = "/student/registrations/create", 
+			consumes = "application/json")
 	public StatusDto studentRegistration(
 			@Valid @RequestBody RegistrationDto dto) {
 		
@@ -32,7 +32,7 @@ public class CreateRegistrationController {
 		return new StatusDto(200, "Ok");
 	}
 	
-	@PutMapping(value = "/teacher", consumes = "application/json")
+	@PutMapping(value = "/teacher/registrations/create", consumes = "application/json")
 	public StatusDto teacherRegistration(
 			@Valid @RequestBody RegistrationDto dto) {
 		service.createTeacherRegistration(dto.getComissionId());

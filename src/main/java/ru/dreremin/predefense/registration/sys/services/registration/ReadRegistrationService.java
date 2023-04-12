@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import ru.dreremin.predefense.registration.sys.dto.request.TimePeriodDto;
-import ru.dreremin.predefense.registration.sys.dto.response.CommissionsListDto;
+import ru.dreremin.predefense.registration.sys.dto.response.CommissionDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CurrentCommissionOfStudentDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
@@ -99,7 +99,7 @@ public class ReadRegistrationService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
-	public List<CommissionsListDto> 
+	public List<CommissionDto> 
 			getActualComissionsListForStudent() {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
@@ -131,7 +131,7 @@ public class ReadRegistrationService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
-	public List<CommissionsListDto> 
+	public List<CommissionDto> 
 			getActualComissionsListForTeacher() {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
@@ -156,7 +156,7 @@ public class ReadRegistrationService {
 		return getResultDto(actualCommissions, true);
 	}
 	
-	public List<CommissionsListDto> getCommissionListByTimePeriod(
+	public List<CommissionDto> getCommissionListByTimePeriod(
 			TimePeriodDto dto) {
 		
 		setZone(dto);
@@ -173,13 +173,24 @@ public class ReadRegistrationService {
 		return getResultDto(commissions, true);	
 	}
 	
-	private List<CommissionsListDto> getResultDto(
+	public List<CommissionDto> getCommissionById(int id) {
+		
+		Optional<Commission> commissionOpt = commissionRepo.findById(id);
+		
+		if (commissionOpt.isEmpty()) {
+			throw new EntityNotFoundException(
+					"Commission with this id does not exist");
+		}	
+		return getResultDto(List.of(commissionOpt.get()), true);
+	}
+	
+	private List<CommissionDto> getResultDto(
 			List<Commission> commissions, 
 			boolean isNote) {
 		
 		
 		
-		List<CommissionsListDto> resultDto = new ArrayList<>(
+		List<CommissionDto> resultDto = new ArrayList<>(
 				commissions.size());
 		
 		for (Commission commission : commissions) {
@@ -200,7 +211,7 @@ public class ReadRegistrationService {
 				note = null;
 			}
 			
-			resultDto.add(new CommissionsListDto(
+			resultDto.add(new CommissionDto(
 					commission, 
 					teachers, 
 					note));

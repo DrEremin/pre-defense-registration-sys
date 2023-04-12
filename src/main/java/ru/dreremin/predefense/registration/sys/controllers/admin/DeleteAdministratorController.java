@@ -16,12 +16,11 @@ import ru.dreremin.predefense.registration.sys.services.admin.DeleteAdministrato
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/delete")
 public class DeleteAdministratorController {
 	
 	private final DeleteAdministratorService deleteAdministratorService;
 	
-	@DeleteMapping("/admin")
+	@DeleteMapping("/admin/users/delete/admin")
 	public ResponseEntity<StatusDto> deleteAdmin(
 			@Valid @RequestBody LoginDto dto) {
 		

@@ -16,12 +16,11 @@ import ru.dreremin.predefense.registration.sys.services.registration.DeleteRegis
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/registrations/delete")
 public class DeleteRegistrationController {
 	
 	private final DeleteRegistrationService service;
 	
-	@DeleteMapping(value = "/student")
+	@DeleteMapping(value = "/student/registrations/delete")
 	public StatusDto deleteStudentRegistration() {
 		
 		service.deleteStudentRegistration();
@@ -30,7 +29,8 @@ public class DeleteRegistrationController {
 		return new StatusDto(200, "Ok");
 	}
 	
-	@DeleteMapping(value = "/teacher", consumes = "application/json")
+	@DeleteMapping(value = "/teacher/registrations/delete", 
+			consumes = "application/json")
 	public StatusDto deleteTeacherRegistration(
 			@Valid @RequestBody RegistrationDto dto) {
 		

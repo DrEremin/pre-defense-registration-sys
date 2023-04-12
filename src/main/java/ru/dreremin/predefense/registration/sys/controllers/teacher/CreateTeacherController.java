@@ -18,12 +18,12 @@ import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherSer
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/create")
 public class CreateTeacherController {
 
 	private final CreateTeacherService teacherService;
 	
-	@PutMapping(value = "/teacher", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/admin/users/create/teacher", 
+			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<JwtTokenDto> createTeacher(
 			@Valid @RequestBody TeacherDto teacherDto) {
 		String jwtToken = teacherService.createTeacher(teacherDto);

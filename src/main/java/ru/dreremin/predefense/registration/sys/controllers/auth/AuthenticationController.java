@@ -21,7 +21,7 @@ public class AuthenticationController {
 	
 	private final AuthenticationService authenticationService;
 	
-	@PostMapping("/login")
+	@PostMapping("/user/login")
 	public ResponseEntity<JwtTokenDto> login(
 			@Valid @RequestBody AuthenticationDto dto) {
 		
