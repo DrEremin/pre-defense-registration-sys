@@ -6,6 +6,8 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -33,6 +35,9 @@ public class CurrentCommissionOfStudentDto implements Serializable {
 	@JsonProperty(value = "location")
 	private final String location;
 	
+	@JsonProperty(value = "presenceFormat")
+	private final String presenceFormat;
+	
 	@JsonProperty(value = "students")
 	private final List<StudentEntry> students;
 	
@@ -42,6 +47,7 @@ public class CurrentCommissionOfStudentDto implements Serializable {
 		this.date = commission.getStartDateTime().toLocalDate();
 		this.startTime = commission.getStartDateTime().toLocalTime();
 		this.endTime = commission.getEndDateTime().toLocalTime();
+		this.presenceFormat = commission.getPresenceFormat();
 		this.location = commission.getLocation();
 		this.students = students;
 	}
@@ -53,6 +59,8 @@ public class CurrentCommissionOfStudentDto implements Serializable {
 	public LocalTime getStartTime() { return startTime; }
 	
 	public LocalTime getEndTime() { return endTime; }
+	
+	public String getPresenceFormat() { return presenceFormat; }
 	
 	public String getLocation() { return location; }
 	

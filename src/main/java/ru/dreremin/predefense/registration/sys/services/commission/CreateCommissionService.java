@@ -26,14 +26,14 @@ public class CreateCommissionService {
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public void createComission(CommissionDto dto) {
 		setZone(dto);
-		repository.save(EntitiesFactory.createComission(dto));
+		repository.save(EntitiesFactory.createCommission(dto));
 	} 
 	
 	private void setZone(CommissionDto dto) {
 		
-		dto.setStartTimestamp(ZonedDateTime.of(
-				dto.getStartTimestamp().toLocalDateTime(), ZoneId.of(zone)));
-		dto.setEndTimestamp(ZonedDateTime.of(
-				dto.getEndTimestamp().toLocalDateTime(), ZoneId.of(zone)));
+		dto.setStartDateTime(ZonedDateTime.of(
+				dto.getStartDateTime().toLocalDateTime(), ZoneId.of(zone)));
+		dto.setEndDateTime(ZonedDateTime.of(
+				dto.getEndDateTime().toLocalDateTime(), ZoneId.of(zone)));
 	}
 }

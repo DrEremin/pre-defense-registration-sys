@@ -25,6 +25,9 @@ public class CommissionDto {
 	@JsonProperty(value = "studyDirection")
 	protected final String studyDirection;
 	
+	@JsonProperty(value = "presenceFormat")
+	protected final String presenceFormat;
+	
 	@JsonProperty(value = "location")
 	protected final String location;
 	
@@ -41,6 +44,7 @@ public class CommissionDto {
 		this.startTime = commission.getStartDateTime().toLocalTime();
 		this.endTime = commission.getEndDateTime().toLocalTime();
 		this.studyDirection = commission.getStudyDirection();
+		this.presenceFormat = commission.getPresenceFormat();
 		this.location = commission.getLocation();
 		this.teachers = teachers;
 		this.note = note;

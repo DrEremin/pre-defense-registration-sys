@@ -10,8 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "comission")
 public class Commission implements Comparable<Commission>{
@@ -28,7 +30,7 @@ public class Commission implements Comparable<Commission>{
 	private ZonedDateTime endDateTime;
 	
 	@Column(name = "presence_format_c")
-	private boolean presenceFormat;
+	private String presenceFormat;
 	
 	@Column(name = "study_direction_c")
 	private String studyDirection;
@@ -43,7 +45,7 @@ public class Commission implements Comparable<Commission>{
 	
 	public Commission(ZonedDateTime startDateTime,
 					 ZonedDateTime endDateTime,
-					 boolean presenceFormat,
+					 String presenceFormat,
 					 String studyDirection,
 					 String location,
 					 Short studentLimit) {
@@ -54,6 +56,24 @@ public class Commission implements Comparable<Commission>{
 		this.location = location;
 		this.studentLimit = studentLimit;
 	}
+	
+	public Commission(
+			int id,
+			ZonedDateTime startDateTime,
+			ZonedDateTime endDateTime,
+			String presenceFormat,
+			String studyDirection,
+			String location,
+			Short studentLimit) {
+		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
+		this.presenceFormat = presenceFormat;
+		this.studyDirection = studyDirection;
+		this.location = location;
+		this.studentLimit = studentLimit;
+}
+	
+	
 	
 	@Override
 	public int compareTo(Commission other) {

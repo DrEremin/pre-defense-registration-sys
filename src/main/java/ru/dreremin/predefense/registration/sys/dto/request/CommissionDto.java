@@ -12,17 +12,20 @@ import ru.dreremin.predefense.registration.sys.exceptions
 @Getter
 public class CommissionDto {
 	
-	@JsonProperty(value = "startTimestamp")
-	@NotNull
-	private ZonedDateTime startTimestamp;
+	@JsonProperty(value = "id")
+	private int id;
 	
-	@JsonProperty(value = "endTimestamp")
+	@JsonProperty(value = "startDateTime")
 	@NotNull
-	private ZonedDateTime endTimestamp;
+	private ZonedDateTime startDateTime;
+	
+	@JsonProperty(value = "endDateTime")
+	@NotNull
+	private ZonedDateTime endDateTime;
 	
 	@JsonProperty(value = "presenceFormat")
 	@NotNull
-	private final Boolean presenceFormat;
+	private final String presenceFormat;
 	
 	@JsonProperty(value = "studyDirection")
 	@NotEmpty
@@ -40,43 +43,30 @@ public class CommissionDto {
 	
 	public CommissionDto(ZonedDateTime startDateTime, 
 						ZonedDateTime endDateTime, 
-						Boolean presenceFormat, 
+						String presenceFormat, 
 						String studyDirection, 
 						String location,
 						Short studentLimit) {
 		
-		this.startTimestamp = startDateTime;
-		this.endTimestamp = endDateTime;
+		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
 		this.presenceFormat = presenceFormat;
 		this.studyDirection = studyDirection;
 		this.location = location;
 		this.studentLimit = studentLimit;
 	}
 	
-	public void setStartTimestamp(ZonedDateTime startTimestamp) {
-		this.startTimestamp = startTimestamp;
+	public void setStartDateTime(ZonedDateTime startTimestamp) {
+		this.startDateTime = startTimestamp;
 	}
 	
-	public void setEndTimestamp(ZonedDateTime endTimestamp) {
-		this.endTimestamp = endTimestamp;
+	public void setEndDateTime(ZonedDateTime endTimestamp) {
+		this.endDateTime = endTimestamp;
 	}
-	
-	/*
-	public ZonedDateTime getStartTimestamp() { return this.startTimestamp; }
-	
-	public ZonedDateTime getEndTimestamp() { return this.endTimestamp; }
-	
-	public boolean getPresenceFormat() { return this.presenceFormat; }
-	
-	public String getStudyDirection() { return this.studyDirection; }
-	
-	public String getLocation() { return this.location; }
-	
-	public Short getStudentLimit() { return this.studentLimit; }*/
 	
 	public void periodValidation() throws NegativeTimePeriodException {
-		if (this.endTimestamp.toLocalDateTime().compareTo(
-				this.startTimestamp.toLocalDateTime()) < 0) {
+		if (this.endDateTime.toLocalDateTime().compareTo(
+				this.startDateTime.toLocalDateTime()) < 0) {
 			throw new NegativeTimePeriodException(
 					"The end date-time is earlier than start date-time");
 		}
