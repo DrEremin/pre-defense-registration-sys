@@ -34,4 +34,30 @@ public interface StudentRepository extends JpaRepository<Student, Long>{
 				+ "on p.id = s.personId "
 			+ "where a.login = :username")
 	Optional<Student> findByActorLogin(@Param("username") String login);
+	
+	@Query("select new Student("
+			+ "s.id, "
+			+ "s.personId, "
+			+ "s.groupNumber, "
+			+ "s.studyDirection, "
+			+ "s.studyType) "
+			+ "from Student s "
+			+ "join Person p "
+				+ "on s.personId = p.id "
+			+ "order by p.lastName asc")
+	List<Student> findAllOrderByLastName();
+	
+	@Query("select new Student("
+			+ "s.id, "
+			+ "s.personId, "
+			+ "s.groupNumber, "
+			+ "s.studyDirection, "
+			+ "s.studyType) "
+			+ "from Student s "
+			+ "join Person p "
+				+ "on s.personId = p.id "
+			+ "where s.groupNumber = :groupNumber "
+			+ "order by p.lastName asc")
+	List<Student> findAllByGroupNumberOrderByLastName(
+			@Param("groupNumber") String groupNumber);
 }

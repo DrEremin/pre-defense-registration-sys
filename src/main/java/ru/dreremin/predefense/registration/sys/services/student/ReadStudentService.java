@@ -30,7 +30,7 @@ public class ReadStudentService {
 	
 	public List<StudentDto> getAllStudents() {
 		
-		List<Student> students = studentRepository.findAll();
+		List<Student> students = studentRepository.findAllOrderByLastName();
 		
 		return getListOfStudentResponseDto(
 				students, 
@@ -40,7 +40,8 @@ public class ReadStudentService {
 	public List<StudentDto> getAllStudentsByGroupNumber(String groupNumber) {
 		
 		List<Student> students = studentRepository
-				.findAllByGroupNumber(groupNumber);
+				.findAllByGroupNumberOrderByLastName(groupNumber);
+		
 		
 		return getListOfStudentResponseDto(
 				students, 
