@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,20 @@ public class ReadStudentController {
 	private final ReadStudentService readStudentService;
 	
 	@GetMapping("/admin/users/read/students/all")
-	public ResponseEntity<List<StudentDto>> getAllTeachers() {
+	public ResponseEntity<List<StudentDto>> getAllStudents() {
 		
 		List<StudentDto> students = readStudentService.getAllStudents();
+		
+		log.info("ReadStudentController.getAllStudents() success");
+		return ResponseEntity.ok(students);
+	}
+	
+	@GetMapping("/admin/users/read/students/{groupNumber}")
+	public ResponseEntity<List<StudentDto>> getAllStudentsByGroupNumber(
+			@PathVariable ("groupNumber") String groupNumber) {
+		
+		List<StudentDto> students = readStudentService
+				.getAllStudentsByGroupNumber(groupNumber);
 		
 		log.info("ReadStudentController.getAllStudents() success");
 		return ResponseEntity.ok(students);

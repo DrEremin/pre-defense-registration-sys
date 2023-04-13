@@ -31,20 +31,38 @@ public class ReadStudentService {
 	public List<StudentDto> getAllStudents() {
 		
 		List<Student> students = studentRepository.findAll();
+		
+		return getListOfStudentResponseDto(
+				students, 
+				"Not a single student was found");
+	}
+	
+	public List<StudentDto> getAllStudentsByGroupNumber(String groupNumber) {
+		
+		List<Student> students = studentRepository
+				.findAllByGroupNumber(groupNumber);
+		
+		return getListOfStudentResponseDto(
+				students, 
+				"No student with this group was found");
+	}
+	
+	private List<StudentDto> getListOfStudentResponseDto(
+			List<Student> students, 
+			String message) {
+		
 		List<StudentDto> result = new ArrayList<>();
 		
 		if (students.size() == 0) {
-			throw new EntityNotFoundException(
-					"Not a single student was found");
+			throw new EntityNotFoundException(message);
 		}
-		
 		for (Student student : students) {
-			result.add(getStudentDto(student));
+			result.add(getStudentResponseDto(student));
 		}
 		return result;
 	}
 	
-	private StudentDto getStudentDto(Student student) {
+	private StudentDto getStudentResponseDto(Student student) {
 		
 		Person person = personRepository.findById(student.getPersonId())
 				.orElseThrow(() -> new EntityNotFoundException(
@@ -65,5 +83,4 @@ public class ReadStudentService {
 				email.getBox(),
 				actor.getLogin());
 	}
-
-}
+}	
