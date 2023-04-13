@@ -1,5 +1,6 @@
 package ru.dreremin.predefense.registration.sys.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,4 +30,13 @@ public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 				+ "on p.id = t.personId "
 			+ "where a.login = :username")
 	Optional<Teacher> findByActorLogin(@Param("username") String login);
+	
+	@Query("select new Teacher("
+			+ "t.id, "
+			+ "t.personId, "
+			+ "t.jobTitle) "
+			+ "from Teacher t join Person p "
+				+ "on t.personId = p.id "
+			+ "order by p.lastName")
+	List<Teacher> findAllOrderByLastName();
 }
