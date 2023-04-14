@@ -22,7 +22,7 @@ public class CreateNoteController {
 	
 	private final CreateNoteService service;
 
-	@PutMapping(value = "/create-note", consumes = "application/json")
+	@PutMapping(value = "/admin/create/note", consumes = "application/json")
 	public StatusResponseDto createNote(@Valid @RequestBody NoteRequestDto dto) 
 			throws MethodArgumentNotValidException, 
 			HttpMessageNotReadableException,
