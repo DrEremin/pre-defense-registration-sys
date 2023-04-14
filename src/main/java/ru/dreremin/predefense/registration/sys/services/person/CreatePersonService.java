@@ -23,8 +23,11 @@ import ru.dreremin.predefense.registration.sys.util.EntitiesFactory;
 public class CreatePersonService {
 	
 	private final PersonRepository personRepo;
+	
 	private final ActorRepository actorRepo;
+	
 	private final EmailRepository emailRepo;
+	
 	private final PasswordEncoder passwordEncoder;
 	
 	public Person createPerson(PersonRequestDto dto, String role) {

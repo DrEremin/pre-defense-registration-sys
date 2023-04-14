@@ -25,11 +25,11 @@ public class UpdateCommissionService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class})
-	public void updateCommission(CommissionRequestDto dto) {
+	public void updateCommission(int id, CommissionRequestDto dto) {
 		
 		Commission commission = commissionRepository.findById(
-				dto.getId()).orElseThrow(() -> new EntityNotFoundException(
-						"Commission with this id does not exist"));
+				id).orElseThrow(() -> new EntityNotFoundException(
+						"Commission with this ID does not exist"));
 		
 		setZone(dto);
 		setFieldsOfCommission(dto, commission);
@@ -55,7 +55,7 @@ public class UpdateCommissionService {
 		if (dto.getLocation() != null) {
 			commission.setLocation(dto.getLocation());
 		}
-		if (dto.getStudentLimit() != 0) {
+		if (dto.getStudentLimit() != null) {
 			commission.setStudentLimit(dto.getStudentLimit());
 		}
 	}

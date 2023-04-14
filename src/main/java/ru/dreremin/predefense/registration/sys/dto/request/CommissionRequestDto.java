@@ -12,9 +12,6 @@ import ru.dreremin.predefense.registration.sys.exceptions
 @Getter
 public class CommissionRequestDto {
 	
-	@JsonProperty(value = "id")
-	private int id;
-	
 	@JsonProperty(value = "startDateTime")
 	@NotNull
 	private ZonedDateTime startDateTime;

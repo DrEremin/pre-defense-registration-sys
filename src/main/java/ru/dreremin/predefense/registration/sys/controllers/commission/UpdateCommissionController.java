@@ -2,6 +2,7 @@ package ru.dreremin.predefense.registration.sys.controllers.commission;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +20,13 @@ public class UpdateCommissionController {
 	
 	private final UpdateCommissionService updateCommissionService;
 	
-	@PutMapping(value = "/admin/commissions/update", 
+	@PutMapping(value = "/admin/commissions/update/{id}", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> updateCommission(
+			@PathVariable(value = "id") int id,
 			@RequestBody CommissionRequestDto dto) {
 		
-		updateCommissionService.updateCommission(dto);
+		updateCommissionService.updateCommission(id, dto);
 		log.info("UpdateCommissionController.updateCommission() is success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
