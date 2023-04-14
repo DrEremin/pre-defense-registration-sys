@@ -9,7 +9,7 @@ import lombok.Getter;
 
 
 @Getter
-public class StudentDto extends PersonDto {
+public class StudentRequestDto extends PersonRequestDto {
 	
 	@JsonProperty(value = "studyDirection")
 	@NotEmpty
@@ -25,7 +25,7 @@ public class StudentDto extends PersonDto {
 	@Size(max = 10)
 	private final String groupNumber;
 	
-	public StudentDto (
+	public StudentRequestDto (
 			String login,
 			String password,
 			String lastName,

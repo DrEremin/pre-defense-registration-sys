@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.LoginDto;
-import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
+import ru.dreremin.predefense.registration.sys.dto.request.LoginRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
 import ru.dreremin.predefense.registration.sys.services.admin.DeleteAdministratorService;
 
 @Slf4j
@@ -21,11 +21,11 @@ public class DeleteAdministratorController {
 	private final DeleteAdministratorService deleteAdministratorService;
 	
 	@DeleteMapping("/admin/users/delete/admin")
-	public ResponseEntity<StatusDto> deleteAdmin(
-			@Valid @RequestBody LoginDto dto) {
+	public ResponseEntity<StatusResponseDto> deleteAdmin(
+			@Valid @RequestBody LoginRequestDto dto) {
 		
 		deleteAdministratorService.deleteAdmin(dto.getLogin());
 		log.info("DeleteAdministratorController.deleteAdmin() is success");
-		return ResponseEntity.ok(new StatusDto(200, "Ok"));
+		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
 }

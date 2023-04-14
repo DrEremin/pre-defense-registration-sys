@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.RegistrationDto;
-import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
+import ru.dreremin.predefense.registration.sys.dto.request.RegistrationRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
 import ru.dreremin.predefense.registration.sys.services.registration.CreateRegistrationService;
 
 //@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
@@ -23,21 +23,21 @@ public class CreateRegistrationController {
 	
 	@PutMapping(value = "/student/registrations/create", 
 			consumes = "application/json")
-	public StatusDto studentRegistration(
-			@Valid @RequestBody RegistrationDto dto) {
+	public StatusResponseDto studentRegistration(
+			@Valid @RequestBody RegistrationRequestDto dto) {
 		
 		service.createStudentRegistration(dto.getComissionId());
 		log.info("CreateRegistrationController."
 				+ "createStudentRegistration() is success");
-		return new StatusDto(200, "Ok");
+		return new StatusResponseDto(200, "Ok");
 	}
 	
 	@PutMapping(value = "/teacher/registrations/create", consumes = "application/json")
-	public StatusDto teacherRegistration(
-			@Valid @RequestBody RegistrationDto dto) {
+	public StatusResponseDto teacherRegistration(
+			@Valid @RequestBody RegistrationRequestDto dto) {
 		service.createTeacherRegistration(dto.getComissionId());
 		log.info("CreateRegistrationController."
 				+ "createTeacherRegistration() success");
-		return new StatusDto(200, "Ok");
+		return new StatusResponseDto(200, "Ok");
 	}
 }

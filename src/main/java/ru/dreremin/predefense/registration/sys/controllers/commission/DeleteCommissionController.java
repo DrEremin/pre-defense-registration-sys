@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.RegistrationDto;
-import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
+import ru.dreremin.predefense.registration.sys.dto.request.RegistrationRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
 import ru.dreremin.predefense.registration.sys.services.commission.DeleteCommissionService;
 
 @Slf4j
@@ -21,9 +21,9 @@ public class DeleteCommissionController {
 	
 	@DeleteMapping(value = "/admin/commissions/delete", 
 			consumes = "application/json")
-	public StatusDto createComission(@Valid @RequestBody RegistrationDto dto) {
+	public StatusResponseDto createComission(@Valid @RequestBody RegistrationRequestDto dto) {
 		service.deleteComission(dto.getComissionId());
 		log.info("DeleteComissionController.deleteComission() is success");
-		return new StatusDto(200, "Ok");
+		return new StatusResponseDto(200, "Ok");
 	}
 }

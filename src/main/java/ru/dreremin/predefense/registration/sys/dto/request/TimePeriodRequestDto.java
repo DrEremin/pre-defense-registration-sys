@@ -14,7 +14,7 @@ import ru.dreremin.predefense.registration.sys.exceptions.NegativeTimePeriodExce
 @Getter
 @Setter
 @AllArgsConstructor
-public class TimePeriodDto {
+public class TimePeriodRequestDto {
 	
 	@JsonProperty(value = "startDateTime")
 	@NotNull

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.util.EntitiesFactory;
@@ -24,12 +24,12 @@ public class CreateCommissionService {
 	private String zone;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE)
-	public void createComission(CommissionDto dto) {
+	public void createComission(CommissionRequestDto dto) {
 		setZone(dto);
 		repository.save(EntitiesFactory.createCommission(dto));
 	} 
 	
-	private void setZone(CommissionDto dto) {
+	private void setZone(CommissionRequestDto dto) {
 		
 		dto.setStartDateTime(ZonedDateTime.of(
 				dto.getStartDateTime().toLocalDateTime(), ZoneId.of(zone)));

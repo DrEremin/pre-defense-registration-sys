@@ -11,8 +11,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.request.MailingDto;
-import ru.dreremin.predefense.registration.sys.dto.response.MailingReportDto;
+import ru.dreremin.predefense.registration.sys.dto.request.MailingRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.MailingResponseDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.models.Email;
@@ -29,7 +29,7 @@ public class MailingService {
 	@Value("${spring.mail.sender.email}")
 	private String fromAddress;
 	
-	private MailingReportDto sendEmail(
+	private MailingResponseDto sendEmail(
 			String toAddress, 
 			String subject, 
 			String content) {
@@ -57,15 +57,15 @@ public class MailingService {
 			status = 500;
 			message = "Failed to parse message";
 		} finally {
-			return new MailingReportDto(status, message, toAddress);
+			return new MailingResponseDto(status, message, toAddress);
 		}
 	}
 	
-	public List<MailingReportDto> sendMailsToStudents(MailingDto dto) 
+	public List<MailingResponseDto> sendMailsToStudents(MailingRequestDto dto) 
 			throws FailedAuthenticationException {
 		
 		List<Email> addresses = emailRepo.findAllByStudent();
-		List<MailingReportDto> responseDto = new ArrayList<>(addresses.size());
+		List<MailingResponseDto> responseDto = new ArrayList<>(addresses.size());
 		
 		for (Email email : addresses) {
 			responseDto.add(sendEmail(
@@ -76,11 +76,11 @@ public class MailingService {
 		return responseDto;
 	}
 	
-	public List<MailingReportDto> sendMailsToTeachers(MailingDto dto) 
+	public List<MailingResponseDto> sendMailsToTeachers(MailingRequestDto dto) 
 			throws FailedAuthenticationException {
 		
 		List<Email> emails = emailRepo.findAllByTeacher();
-		List<MailingReportDto> responseDto = new ArrayList<>(emails.size());
+		List<MailingResponseDto> responseDto = new ArrayList<>(emails.size());
 		
 		for (Email email : emails) {
 			responseDto.add(sendEmail(

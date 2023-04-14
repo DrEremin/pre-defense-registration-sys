@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.MailingDto;
-import ru.dreremin.predefense.registration.sys.dto.response.MailingReportDto;
+import ru.dreremin.predefense.registration.sys.dto.request.MailingRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.MailingResponseDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.services.mailing.MailingService;
@@ -30,20 +30,20 @@ public class MailingController {
 	private final MailingService service;
 	
 	@PostMapping("/students")
-	public List<MailingReportDto> sendMailsToStudents(
-			@Valid @RequestBody MailingDto dto) {
+	public List<MailingResponseDto> sendMailsToStudents(
+			@Valid @RequestBody MailingRequestDto dto) {
 		
-		List<MailingReportDto> responseDto = service.sendMailsToStudents(dto);
+		List<MailingResponseDto> responseDto = service.sendMailsToStudents(dto);
 		
 		log.info("MailingController.sendMailsToStudents() is success");
 		return responseDto;
 	}
 	
 	@PostMapping("/teachers")
-	public List<MailingReportDto> sendMailsToTeachers(
-			@Valid @RequestBody MailingDto dto) {
+	public List<MailingResponseDto> sendMailsToTeachers(
+			@Valid @RequestBody MailingRequestDto dto) {
 		
-		List<MailingReportDto> responseDto = service.sendMailsToTeachers(dto);
+		List<MailingResponseDto> responseDto = service.sendMailsToTeachers(dto);
 		
 		log.info("MailingController.sendMailsToTeachers() is success");
 		return responseDto;

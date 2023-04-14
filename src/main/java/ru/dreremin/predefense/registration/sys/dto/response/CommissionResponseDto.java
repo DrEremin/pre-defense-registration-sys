@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
 
-public class CommissionDto {
+public class CommissionResponseDto {
 
 	@JsonProperty(value = "id")
 	protected final int id;
@@ -37,7 +37,7 @@ public class CommissionDto {
 	@JsonProperty(value = "note")
 	protected final String note;
 	
-	public CommissionDto(Commission commission,
+	public CommissionResponseDto(Commission commission,
 				List<TeacherEntry> teachers, String note) {
 		this.id = commission.getId();
 		this.date = commission.getStartDateTime().toLocalDate();

@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.request.TimePeriodDto;
-import ru.dreremin.predefense.registration.sys.dto.response.CommissionDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TimePeriodRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
-		 .CurrentCommissionOfStudentDto;
+		 .CurrentCommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.models.Student;
@@ -64,7 +64,7 @@ public class ReadRegistrationService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
-	public CurrentCommissionOfStudentDto getCurrentComissionOfStudent() {
+	public CurrentCommissionResponseDto getCurrentComissionOfStudent() {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
 				.getAuthentication();
@@ -94,12 +94,12 @@ public class ReadRegistrationService {
 				commission.getId(), Sort.by(Sort.Order.asc("p.lastName")));
 		
 		Collections.sort(students);
-		return new CurrentCommissionOfStudentDto(commission, students);
+		return new CurrentCommissionResponseDto(commission, students);
 	} 
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
-	public List<CommissionDto> 
+	public List<CommissionResponseDto> 
 			getActualComissionsListForStudent() {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
@@ -131,7 +131,7 @@ public class ReadRegistrationService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
-	public List<CommissionDto> 
+	public List<CommissionResponseDto> 
 			getActualComissionsListForTeacher() {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
@@ -156,8 +156,8 @@ public class ReadRegistrationService {
 		return getResultDto(actualCommissions, true);
 	}
 	
-	public List<CommissionDto> getCommissionListByTimePeriod(
-			TimePeriodDto dto) {
+	public List<CommissionResponseDto> getCommissionListByTimePeriod(
+			TimePeriodRequestDto dto) {
 		
 		setZone(dto);
 		
@@ -173,7 +173,7 @@ public class ReadRegistrationService {
 		return getResultDto(commissions, true);	
 	}
 	
-	public List<CommissionDto> getCommissionById(int id) {
+	public List<CommissionResponseDto> getCommissionById(int id) {
 		
 		Optional<Commission> commissionOpt = commissionRepo.findById(id);
 		
@@ -184,13 +184,13 @@ public class ReadRegistrationService {
 		return getResultDto(List.of(commissionOpt.get()), true);
 	}
 	
-	private List<CommissionDto> getResultDto(
+	private List<CommissionResponseDto> getResultDto(
 			List<Commission> commissions, 
 			boolean isNote) {
 		
 		
 		
-		List<CommissionDto> resultDto = new ArrayList<>(
+		List<CommissionResponseDto> resultDto = new ArrayList<>(
 				commissions.size());
 		
 		for (Commission commission : commissions) {
@@ -211,7 +211,7 @@ public class ReadRegistrationService {
 				note = null;
 			}
 			
-			resultDto.add(new CommissionDto(
+			resultDto.add(new CommissionResponseDto(
 					commission, 
 					teachers, 
 					note));
@@ -219,7 +219,7 @@ public class ReadRegistrationService {
 		return resultDto;
 	}
 	
-	private void setZone(TimePeriodDto dto) {
+	private void setZone(TimePeriodRequestDto dto) {
 		
 		dto.setStartDateTime(ZonedDateTime.of(
 				dto.getStartDateTime().toLocalDateTime(), ZoneId.of(zone)));

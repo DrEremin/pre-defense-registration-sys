@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class MailingReportDto extends StatusDto {
+public class MailingResponseDto extends StatusResponseDto {
 	
 	@JsonProperty(value = "email")
 	private final String emailAddress;
 	
 	@JsonCreator
-	public MailingReportDto(int status, String message, String emailAddress) {
+	public MailingResponseDto(int status, String message, String emailAddress) {
 		super(status, message);
 		this.emailAddress = emailAddress;
 	}

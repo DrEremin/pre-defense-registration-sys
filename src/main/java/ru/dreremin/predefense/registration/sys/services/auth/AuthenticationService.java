@@ -9,7 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.request.AuthenticationDto;
+import ru.dreremin.predefense.registration.sys.dto.request.AuthenticationRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.models.Administrator;
@@ -31,7 +31,7 @@ public class AuthenticationService {
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider jwtTokenProvider;
 	
-	public String getToken(AuthenticationDto dto) {
+	public String getToken(AuthenticationRequestDto dto) {
 
 		UsernamePasswordAuthenticationToken authToken = 
 				new UsernamePasswordAuthenticationToken(

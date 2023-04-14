@@ -10,7 +10,7 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .NegativeTimePeriodException;
 
 @Getter
-public class CommissionDto {
+public class CommissionRequestDto {
 	
 	@JsonProperty(value = "id")
 	private int id;
@@ -41,7 +41,7 @@ public class CommissionDto {
 	@NotNull
 	private final Short studentLimit;
 	
-	public CommissionDto(ZonedDateTime startDateTime, 
+	public CommissionRequestDto(ZonedDateTime startDateTime, 
 						ZonedDateTime endDateTime, 
 						String presenceFormat, 
 						String studyDirection, 

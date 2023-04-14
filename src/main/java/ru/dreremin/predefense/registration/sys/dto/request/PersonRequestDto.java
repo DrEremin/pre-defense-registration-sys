@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class PersonDto extends AuthenticationDto{
+public class PersonRequestDto extends AuthenticationRequestDto{
 	
 	@JsonProperty(value = "lastName")
 	@NotEmpty
@@ -34,7 +34,7 @@ public class PersonDto extends AuthenticationDto{
 	protected final String email;
 	
 	@JsonCreator
-	public PersonDto(
+	public PersonRequestDto(
 			String login,
 			String password,
 			String lastName, 

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.request.NoteDto;
+import ru.dreremin.predefense.registration.sys.dto.request.NoteRequestDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.repositories
@@ -23,7 +23,7 @@ public class CreateNoteService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE,
 			rollbackFor = {EntityNotFoundException.class})
-	public void createNote(NoteDto dto) throws EntityNotFoundException {
+	public void createNote(NoteRequestDto dto) throws EntityNotFoundException {
 		
 		Optional<Commission> commissionOpt = 
 				commissionRepo.findById(dto.getCommissionId());

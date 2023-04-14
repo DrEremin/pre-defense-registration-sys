@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.AdminDto;
-import ru.dreremin.predefense.registration.sys.dto.response.JwtTokenDto;
+import ru.dreremin.predefense.registration.sys.dto.request.AdminRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.JwtTokenResponseDto;
 import ru.dreremin.predefense.registration.sys.services.admin.CreateAdministratorService;
 
 
@@ -24,10 +24,10 @@ public class CreateAdministratorController {
 	private final CreateAdministratorService adminService;
 	
 	@PutMapping(value = "/admin/users/create/admin", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<JwtTokenDto> createAdmin(
-			@Valid @RequestBody AdminDto adminDto) {
-		String jwtToken = adminService.createAdmin(adminDto);
+	public ResponseEntity<JwtTokenResponseDto> createAdmin(
+			@Valid @RequestBody AdminRequestDto adminRequestDto) {
+		String jwtToken = adminService.createAdmin(adminRequestDto);
 		log.info("CreateAdministratorController.createStudent() success");
-		return ResponseEntity.ok(new JwtTokenDto(jwtToken));
+		return ResponseEntity.ok(new JwtTokenResponseDto(jwtToken));
 	}
 }

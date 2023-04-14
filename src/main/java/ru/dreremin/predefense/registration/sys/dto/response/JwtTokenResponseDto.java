@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class JwtTokenDto {
+public class JwtTokenResponseDto {
 	
 	@JsonProperty("jwtToken")
 	private final String jwtToken;

@@ -6,7 +6,7 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
-import ru.dreremin.predefense.registration.sys.dto.response.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.response.TeacherResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
@@ -28,7 +28,7 @@ public class ReadTeacherService {
 	
 	private final EmailRepository emailRepository;
 	
-	public List<TeacherDto> getAllTeachers() {
+	public List<TeacherResponseDto> getAllTeachers() {
 		
 		List<Teacher> teachers = teacherRepository.findAllOrderByLastName();
 		
@@ -37,11 +37,11 @@ public class ReadTeacherService {
 				"Not a single teacher was found");
 	}
 	
-	private List<TeacherDto> getListOfTeacherResponseDto(
+	private List<TeacherResponseDto> getListOfTeacherResponseDto(
 			List<Teacher> teachers, 
 			String message) {
 		
-		List<TeacherDto> result = new ArrayList<>();
+		List<TeacherResponseDto> result = new ArrayList<>();
 		
 		if (teachers.size() == 0) {
 			throw new EntityNotFoundException(message);
@@ -52,7 +52,7 @@ public class ReadTeacherService {
 		return result;
 	}
 	
-	private TeacherDto getTeacherResponseDto(Teacher teacher) {
+	private TeacherResponseDto getTeacherResponseDto(Teacher teacher) {
 		
 		Person person = personRepository.findById(teacher.getPersonId())
 				.orElseThrow(() -> new EntityNotFoundException(
@@ -63,7 +63,7 @@ public class ReadTeacherService {
 		Actor actor = actorRepository.findById(person.getActorId())
 				.orElseThrow(() -> new EntityNotFoundException(
 						"There is no actor with such an id"));
-		return new TeacherDto(
+		return new TeacherResponseDto(
 				person.getLastName(), 
 				person.getFirstName(), 
 				person.getPatronymic(),

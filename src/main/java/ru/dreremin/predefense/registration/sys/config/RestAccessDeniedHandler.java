@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
 
 @RequiredArgsConstructor
 @Component
@@ -27,7 +27,7 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
 		
 	response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-		StatusDto dto = new StatusDto(403, "User is not authorized");
+		StatusResponseDto dto = new StatusResponseDto(403, "User is not authorized");
 		response.getWriter().print(mapper.writeValueAsString(dto));
 		
 	}

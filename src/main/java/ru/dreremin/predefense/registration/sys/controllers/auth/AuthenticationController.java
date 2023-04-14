@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.request.AuthenticationDto;
-import ru.dreremin.predefense.registration.sys.dto.response.JwtTokenDto;
+import ru.dreremin.predefense.registration.sys.dto.request.AuthenticationRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.JwtTokenResponseDto;
 import ru.dreremin.predefense.registration.sys.services.auth.ActorDetailsService;
 import ru.dreremin.predefense.registration.sys.services.auth.AuthenticationService;
 
@@ -22,11 +22,11 @@ public class AuthenticationController {
 	private final AuthenticationService authenticationService;
 	
 	@PostMapping("/user/login")
-	public ResponseEntity<JwtTokenDto> login(
-			@Valid @RequestBody AuthenticationDto dto) {
+	public ResponseEntity<JwtTokenResponseDto> login(
+			@Valid @RequestBody AuthenticationRequestDto dto) {
 		
 		String jwtToken = authenticationService.getToken(dto);
 		
-		return ResponseEntity.ok(new JwtTokenDto(jwtToken));
+		return ResponseEntity.ok(new JwtTokenResponseDto(jwtToken));
 	}
 }

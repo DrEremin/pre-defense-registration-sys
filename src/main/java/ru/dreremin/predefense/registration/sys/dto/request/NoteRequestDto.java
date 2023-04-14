@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class NoteDto {
+public class NoteRequestDto {
 
 	@JsonProperty(value = "comissionId")
 	@NotNull

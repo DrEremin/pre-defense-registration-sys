@@ -22,7 +22,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 
-import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .EntitiesMismatchException;
 import ru.dreremin.predefense.registration.sys.exceptions.ExpiredCommissionException;
@@ -38,89 +38,89 @@ import ru.dreremin.predefense.registration.sys.exceptions
 public class ExceptionController {
 
 	@ExceptionHandler(UniquenessViolationException.class)
-	public ResponseEntity<StatusDto> handleUniquenessViolationException(
+	public ResponseEntity<StatusResponseDto> handleUniquenessViolationException(
 			UniquenessViolationException e) {
-		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
+		return new ResponseEntity<>(new StatusResponseDto(409, e.getMessage()), 
 									HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<StatusDto> handleMethodArgumentNotValidException(
+	public ResponseEntity<StatusResponseDto> handleMethodArgumentNotValidException(
 			MethodArgumentNotValidException e) {
-		return new ResponseEntity<>(new StatusDto(
+		return new ResponseEntity<>(new StatusResponseDto(
 						400, "Invalid format request body field"),
 				HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<StatusDto> handleHttpMessageNotReadableException(
+	public ResponseEntity<StatusResponseDto> handleHttpMessageNotReadableException(
 			HttpMessageNotReadableException e) {
-		return new ResponseEntity<>(new StatusDto(
+		return new ResponseEntity<>(new StatusResponseDto(
 						400, "Failed to read request body"), 
 				HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(NegativeTimePeriodException.class)
-	public ResponseEntity<StatusDto> handleNegativeTimePeriodException(
+	public ResponseEntity<StatusResponseDto> handleNegativeTimePeriodException(
 			NegativeTimePeriodException e) {
-		return new ResponseEntity<>(new StatusDto(400, e.getMessage()), 
+		return new ResponseEntity<>(new StatusResponseDto(400, e.getMessage()), 
 									HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<StatusDto> handleEntityNotFoundException(
+	public ResponseEntity<StatusResponseDto> handleEntityNotFoundException(
 			EntityNotFoundException e) {
-		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
+		return new ResponseEntity<>(new StatusResponseDto(409, e.getMessage()), 
 									HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(OverLimitException.class)
-	public ResponseEntity<StatusDto> handleEntityAbsenceException(
+	public ResponseEntity<StatusResponseDto> handleEntityAbsenceException(
 			OverLimitException e) {
-		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
+		return new ResponseEntity<>(new StatusResponseDto(409, e.getMessage()), 
 									HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(EntitiesMismatchException.class)
-	public ResponseEntity<StatusDto> handleEntityAbsenceException(
+	public ResponseEntity<StatusResponseDto> handleEntityAbsenceException(
 			EntitiesMismatchException e) {
-		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
+		return new ResponseEntity<>(new StatusResponseDto(409, e.getMessage()), 
 									HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(FailedAuthenticationException.class)
-	public ResponseEntity<StatusDto> handleEntityAbsenceException(
+	public ResponseEntity<StatusResponseDto> handleEntityAbsenceException(
 			FailedAuthenticationException e) {
-		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
+		return new ResponseEntity<>(new StatusResponseDto(409, e.getMessage()), 
 									HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(MailException.class)
-	public ResponseEntity<StatusDto> handleMailException(
+	public ResponseEntity<StatusResponseDto> handleMailException(
 			MailException e) {
-		return new ResponseEntity<>(new StatusDto(500, "Error sending email"), 
+		return new ResponseEntity<>(new StatusResponseDto(500, "Error sending email"), 
 									HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler(UsernameNotFoundException.class)
-	public ResponseEntity<StatusDto> handleUsernameNotFoundException(
+	public ResponseEntity<StatusResponseDto> handleUsernameNotFoundException(
 			UsernameNotFoundException e) {
-		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
+		return new ResponseEntity<>(new StatusResponseDto(409, e.getMessage()), 
 									HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(BadCredentialsException.class)
-	public ResponseEntity<StatusDto> handleBadCredentialsException(
+	public ResponseEntity<StatusResponseDto> handleBadCredentialsException(
 			BadCredentialsException e) {
-		return new ResponseEntity<>(new StatusDto(403, 
+		return new ResponseEntity<>(new StatusResponseDto(403, 
 						"Incorrect credentials"), 
 				HttpStatus.FORBIDDEN);
 	}
 	
 	@ExceptionHandler(ExpiredCommissionException.class)
-	public ResponseEntity<StatusDto> handleExpiredComissionException(
+	public ResponseEntity<StatusResponseDto> handleExpiredComissionException(
 			ExpiredCommissionException e) {
-		return new ResponseEntity<>(new StatusDto(409, e.getMessage()), 
+		return new ResponseEntity<>(new StatusResponseDto(409, e.getMessage()), 
 				HttpStatus.CONFLICT);
 	}
 	
@@ -129,48 +129,48 @@ public class ExceptionController {
 	 */
 	
 	@ExceptionHandler(InvalidJwtTokenException.class)
-	public ResponseEntity<StatusDto> handleInvalidJwtTokenException(
+	public ResponseEntity<StatusResponseDto> handleInvalidJwtTokenException(
 			InvalidJwtTokenException e) {
-		return new ResponseEntity<>(new StatusDto(400, e.getMessage()), 
+		return new ResponseEntity<>(new StatusResponseDto(400, e.getMessage()), 
 									HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(TokenExpiredException.class)
-	public ResponseEntity<StatusDto> handleTokenExpiredException(
+	public ResponseEntity<StatusResponseDto> handleTokenExpiredException(
 			TokenExpiredException e) {
-		return new ResponseEntity<>(new StatusDto(403,
+		return new ResponseEntity<>(new StatusResponseDto(403,
 				"This token was expired"), 
 				HttpStatus.FORBIDDEN);
 	}
 	
 	@ExceptionHandler(JWTDecodeException.class)
-	public ResponseEntity<StatusDto> handleJWTDecodeException(
+	public ResponseEntity<StatusResponseDto> handleJWTDecodeException(
 			JWTDecodeException e) {
-		return new ResponseEntity<>(new StatusDto(403, 
+		return new ResponseEntity<>(new StatusResponseDto(403, 
 				"This token is decoded incorrectly"), 
 				HttpStatus.FORBIDDEN);
 	}
 	
 	@ExceptionHandler(SignatureVerificationException.class)
-	public ResponseEntity<StatusDto> handleSignatureVerificationException(
+	public ResponseEntity<StatusResponseDto> handleSignatureVerificationException(
 			SignatureVerificationException e) {
-		return new ResponseEntity<>(new StatusDto(403, 
+		return new ResponseEntity<>(new StatusResponseDto(403, 
 				"Token signature verification failed"), 
 				HttpStatus.FORBIDDEN);
 	}
 	
 	@ExceptionHandler(AlgorithmMismatchException.class)
-	public ResponseEntity<StatusDto> handleAlgorithmMismatchException(
+	public ResponseEntity<StatusResponseDto> handleAlgorithmMismatchException(
 			AlgorithmMismatchException e) {
-		return new ResponseEntity<>(new StatusDto(403, 
+		return new ResponseEntity<>(new StatusResponseDto(403, 
 				"The token is encoded by another algorithm"), 
 				HttpStatus.FORBIDDEN);
 	}
 	
 	@ExceptionHandler(InvalidClaimException.class)
-	public ResponseEntity<StatusDto> handleInvalidClaimException(
+	public ResponseEntity<StatusResponseDto> handleInvalidClaimException(
 			InvalidClaimException e) {
-		return new ResponseEntity<>(new StatusDto(403, "Invalid claim"), 
+		return new ResponseEntity<>(new StatusResponseDto(403, "Invalid claim"), 
 				HttpStatus.FORBIDDEN);
 	}
 	/**
@@ -178,17 +178,17 @@ public class ExceptionController {
 	 */
 	
 	@ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
-	public ResponseEntity<StatusDto> 
+	public ResponseEntity<StatusResponseDto> 
 			handleAuthenticationCredentialsNotFoundException(
 					AuthenticationCredentialsNotFoundException e) {
-		return new ResponseEntity<>(new StatusDto(403, e.getMessage()), 
+		return new ResponseEntity<>(new StatusResponseDto(403, e.getMessage()), 
 				HttpStatus.FORBIDDEN);
 	}
 	
 	@ExceptionHandler(AuthenticationException.class)
-	public ResponseEntity<StatusDto> handleAuthenticationException(
+	public ResponseEntity<StatusResponseDto> handleAuthenticationException(
 			AuthenticationException e) {
-		return new ResponseEntity<>(new StatusDto(403, "User is not authorized"), 
+		return new ResponseEntity<>(new StatusResponseDto(403, "User is not authorized"), 
 				HttpStatus.FORBIDDEN);
 	}
 	

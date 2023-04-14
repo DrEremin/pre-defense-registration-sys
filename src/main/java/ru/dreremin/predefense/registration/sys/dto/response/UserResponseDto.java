@@ -1,19 +1,19 @@
 package ru.dreremin.predefense.registration.sys.dto.response;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class StatusDto implements Serializable {
+public class UserResponseDto {
+
+	@JsonProperty(value = "id")
+	private final long id;
 	
-	@JsonProperty(value = "status")
-	protected final int status;
+	@JsonProperty(value = "login")
+	private final String login;
 	
-	@JsonProperty(value = "message")
-	protected final String message;
+	@JsonProperty(value = "role")
+	private final String role;
 }

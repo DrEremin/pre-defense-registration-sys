@@ -6,14 +6,24 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class LoginDto {
+import lombok.Getter;
+
+@Getter
+public class AuthenticationRequestDto {
+	
 	@JsonProperty(value = "login")
 	@NotEmpty
 	@Size(min = 2, max = 20)
 	protected final String login;
 	
-	@JsonCreator
-	public LoginDto(String login) { this.login = login; }
+	@JsonProperty(value = "password")
+	@NotEmpty
+	@Size(min = 2, max = 20)
+	protected final String password;
 	
-	public String getLogin() { return login; }
+	@JsonCreator
+	public AuthenticationRequestDto(String login, String password) {
+		this.login = login;
+		this.password = password;
+	}
 }

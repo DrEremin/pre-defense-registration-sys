@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class MailingDto {
+public class MailingRequestDto {
 
 	@JsonProperty(value = "subject")
 	@NotNull
@@ -20,7 +20,7 @@ public class MailingDto {
 	@NotEmpty
 	private String content;
 	
-	public MailingDto (String subject, String content) {
+	public MailingRequestDto (String subject, String content) {
 		this.subject = subject;
 		this.content = content;
 	}

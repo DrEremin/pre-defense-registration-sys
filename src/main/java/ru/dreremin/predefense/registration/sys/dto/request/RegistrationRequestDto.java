@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class RegistrationDto {
+public class RegistrationRequestDto {
 
 	@JsonProperty(value = "comissionId")
 	@NotNull
@@ -18,7 +18,7 @@ public class RegistrationDto {
 	private final Integer comissionId;
 	
 	@JsonCreator
-	public RegistrationDto(Integer comissionId) {
+	public RegistrationRequestDto(Integer comissionId) {
 		this.comissionId = comissionId;
 	}
 }

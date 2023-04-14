@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.PersonDto;
+import ru.dreremin.predefense.registration.sys.dto.request.PersonRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Actor;
@@ -27,8 +27,7 @@ public class CreatePersonService {
 	private final EmailRepository emailRepo;
 	private final PasswordEncoder passwordEncoder;
 	
-	public Person createPerson(PersonDto dto, String role) 
-			throws UniquenessViolationException {
+	public Person createPerson(PersonRequestDto dto, String role) {
 		
 		try{
 			if (actorRepo.existsByLogin(dto.getLogin())) {

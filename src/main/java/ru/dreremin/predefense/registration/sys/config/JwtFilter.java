@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.dreremin.predefense.registration.sys.controllers.exception.ExceptionController;
-import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
 import ru.dreremin.predefense.registration.sys.exceptions.InvalidJwtTokenException;
 import ru.dreremin.predefense.registration.sys.security.JwtTokenProvider;
 import ru.dreremin.predefense.registration.sys.services.auth.ActorDetailsService;
@@ -99,7 +99,7 @@ public class JwtFilter extends OncePerRequestFilter {
 	protected void responseWithException(JWTVerificationException e) 
 			throws IOException {
 		
-		ResponseEntity<StatusDto> dto = null;
+		ResponseEntity<StatusResponseDto> dto = null;
 		
 		if (e instanceof TokenExpiredException) {
 			dto = exceptionController

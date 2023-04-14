@@ -6,7 +6,7 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
-import ru.dreremin.predefense.registration.sys.dto.response.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StudentResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
@@ -28,7 +28,7 @@ public class ReadStudentService {
 	
 	private final EmailRepository emailRepository;
 	
-	public List<StudentDto> getAllStudents() {
+	public List<StudentResponseDto> getAllStudents() {
 		
 		List<Student> students = studentRepository.findAllOrderByLastName();
 		
@@ -37,7 +37,7 @@ public class ReadStudentService {
 				"Not a single student was found");
 	}
 	
-	public List<StudentDto> getAllStudentsByGroupNumber(String groupNumber) {
+	public List<StudentResponseDto> getAllStudentsByGroupNumber(String groupNumber) {
 		
 		List<Student> students = studentRepository
 				.findAllByGroupNumberOrderByLastName(groupNumber);
@@ -48,11 +48,11 @@ public class ReadStudentService {
 				"No student with this group was found");
 	}
 	
-	private List<StudentDto> getListOfStudentResponseDto(
+	private List<StudentResponseDto> getListOfStudentResponseDto(
 			List<Student> students, 
 			String message) {
 		
-		List<StudentDto> result = new ArrayList<>();
+		List<StudentResponseDto> result = new ArrayList<>();
 		
 		if (students.size() == 0) {
 			throw new EntityNotFoundException(message);
@@ -63,7 +63,7 @@ public class ReadStudentService {
 		return result;
 	}
 	
-	private StudentDto getStudentResponseDto(Student student) {
+	private StudentResponseDto getStudentResponseDto(Student student) {
 		
 		Person person = personRepository.findById(student.getPersonId())
 				.orElseThrow(() -> new EntityNotFoundException(
@@ -74,7 +74,7 @@ public class ReadStudentService {
 		Actor actor = actorRepository.findById(person.getActorId())
 				.orElseThrow(() -> new EntityNotFoundException(
 						"There is no actor with such an id"));
-		return new StudentDto(
+		return new StudentResponseDto(
 				person.getLastName(), 
 				person.getFirstName(), 
 				person.getPatronymic(),

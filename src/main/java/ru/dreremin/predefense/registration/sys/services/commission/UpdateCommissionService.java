@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
@@ -25,7 +25,7 @@ public class UpdateCommissionService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class})
-	public void updateCommission(CommissionDto dto) {
+	public void updateCommission(CommissionRequestDto dto) {
 		
 		Commission commission = commissionRepository.findById(
 				dto.getId()).orElseThrow(() -> new EntityNotFoundException(
@@ -37,7 +37,7 @@ public class UpdateCommissionService {
 	}
 	
 	private void setFieldsOfCommission(
-			CommissionDto dto, 
+			CommissionRequestDto dto, 
 			Commission commission) {
 		
 		if (dto.getStartDateTime() != null) {
@@ -60,7 +60,7 @@ public class UpdateCommissionService {
 		}
 	}
 	
-	private void setZone(CommissionDto dto) {
+	private void setZone(CommissionRequestDto dto) {
 		
 		if (dto.getStartDateTime() != null) {
 			dto.setStartDateTime(ZonedDateTime.of(

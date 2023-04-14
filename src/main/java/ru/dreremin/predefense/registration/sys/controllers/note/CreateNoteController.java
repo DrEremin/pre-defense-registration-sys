@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.NoteDto;
-import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
+import ru.dreremin.predefense.registration.sys.dto.request.NoteRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
 import ru.dreremin.predefense.registration.sys.services.note.CreateNoteService;
 
 @Slf4j
@@ -23,13 +23,13 @@ public class CreateNoteController {
 	private final CreateNoteService service;
 
 	@PutMapping(value = "/create-note", consumes = "application/json")
-	public StatusDto createNote(@Valid @RequestBody NoteDto dto) 
+	public StatusResponseDto createNote(@Valid @RequestBody NoteRequestDto dto) 
 			throws MethodArgumentNotValidException, 
 			HttpMessageNotReadableException,
 			EntityNotFoundException {
 		service.createNote(dto);
 		log.info("CreateNoteController."
 				+ "createNote() is success");
-		return new StatusDto(200, "Ok");
+		return new StatusResponseDto(200, "Ok");
 	}
 }

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
 import ru.dreremin.predefense.registration.sys.services.commission.UpdateCommissionService;
 
 @Slf4j
@@ -21,11 +21,11 @@ public class UpdateCommissionController {
 	
 	@PutMapping(value = "/admin/commissions/update", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<StatusDto> updateCommission(
-			@RequestBody CommissionDto dto) {
+	public ResponseEntity<StatusResponseDto> updateCommission(
+			@RequestBody CommissionRequestDto dto) {
 		
 		updateCommissionService.updateCommission(dto);
 		log.info("UpdateCommissionController.updateCommission() is success");
-		return ResponseEntity.ok(new StatusDto(200, "Ok"));
+		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
 }

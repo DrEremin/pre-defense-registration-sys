@@ -18,7 +18,7 @@ import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 
 @Getter
 @RequiredArgsConstructor
-public class CurrentCommissionOfStudentDto implements Serializable {
+public class CurrentCommissionResponseDto implements Serializable {
 
 	@JsonProperty(value = "studyDirection")
 	private final String studyDirection;
@@ -41,7 +41,7 @@ public class CurrentCommissionOfStudentDto implements Serializable {
 	@JsonProperty(value = "students")
 	private final List<StudentEntry> students;
 	
-	public CurrentCommissionOfStudentDto(Commission commission,
+	public CurrentCommissionResponseDto(Commission commission,
 								  List<StudentEntry> students) {
 		this.studyDirection = commission.getStudyDirection();
 		this.date = commission.getStartDateTime().toLocalDate();
@@ -73,7 +73,7 @@ public class CurrentCommissionOfStudentDto implements Serializable {
 		if (other == null || this.getClass() != other.getClass()) { 
 			return false;
 		}
-		CurrentCommissionOfStudentDto o = (CurrentCommissionOfStudentDto) other;
+		CurrentCommissionResponseDto o = (CurrentCommissionResponseDto) other;
 		return this.studyDirection.equals(o.getStudyDirection()) 
 				&& this.date.equals(o.getDate())
 				&& this.startTime.equals(o.getStartTime())

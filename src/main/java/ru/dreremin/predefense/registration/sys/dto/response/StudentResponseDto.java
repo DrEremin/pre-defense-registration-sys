@@ -1,13 +1,10 @@
 package ru.dreremin.predefense.registration.sys.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @RequiredArgsConstructor
-public class TeacherDto {
+public class StudentResponseDto {
 
 	@JsonProperty(value = "lastName")
 	private final String lastName;
@@ -18,8 +15,14 @@ public class TeacherDto {
 	@JsonProperty(value = "patronymic")
 	private final String patronymic;
 	
-	@JsonProperty(value = "jobTitle")
-	private final String jobTitle;
+	@JsonProperty(value = "studyDirection")
+	private final String studyDirection;
+	
+	@JsonProperty(value = "studyType")
+	private final String studyType;
+	
+	@JsonProperty(value = "groupNumber")
+	private final String groupNumber;
 	
 	@JsonProperty(value = "email")
 	private final String email;

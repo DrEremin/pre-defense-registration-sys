@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.AdminDto;
-import ru.dreremin.predefense.registration.sys.dto.request.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.request.AdminRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.StudentRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions.UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Administrator;
@@ -32,7 +32,7 @@ public class CreateAdministratorService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE,
             rollbackFor = { UniquenessViolationException.class })
-	public String createAdmin(AdminDto dto) {
+	public String createAdmin(AdminRequestDto dto) {
 		
 		if (actorRepo.existsByLogin(dto.getLogin())) {
 			throw new UniquenessViolationException(

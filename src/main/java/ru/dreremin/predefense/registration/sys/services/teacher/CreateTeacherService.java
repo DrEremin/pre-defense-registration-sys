@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
@@ -25,8 +25,8 @@ public class CreateTeacherService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE,
             rollbackFor = { UniquenessViolationException.class })
-	public String createTeacher(TeacherDto dto) 
-			throws UniquenessViolationException{
+	public String createTeacher(TeacherRequestDto dto) 
+			throws UniquenessViolationException {
 		
 		long personId = createPersonService.createPerson(dto, "ROLE_TEACHER")
 				.getId();

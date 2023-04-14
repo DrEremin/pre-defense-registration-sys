@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.StudentDto;
-import ru.dreremin.predefense.registration.sys.dto.response.JwtTokenDto;
+import ru.dreremin.predefense.registration.sys.dto.request.StudentRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.JwtTokenResponseDto;
 import ru.dreremin.predefense.registration.sys.services.student.CreateStudentService;
 
 
@@ -25,10 +25,10 @@ public class CreateStudentController {
 	
 	@PutMapping(value = "/admin/users/create/student", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<JwtTokenDto> createStudent(
-			@Valid @RequestBody StudentDto studentDto) {
-		String jwtToken = studentService.createStudent(studentDto);
+	public ResponseEntity<JwtTokenResponseDto> createStudent(
+			@Valid @RequestBody StudentRequestDto studentRequestDto) {
+		String jwtToken = studentService.createStudent(studentRequestDto);
 		log.info("CreateStudentController.createStudent() success");
-		return ResponseEntity.ok(new JwtTokenDto(jwtToken));
+		return ResponseEntity.ok(new JwtTokenResponseDto(jwtToken));
 	}
 }

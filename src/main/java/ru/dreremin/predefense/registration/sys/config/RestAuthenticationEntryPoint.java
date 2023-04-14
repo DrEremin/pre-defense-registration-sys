@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import ru.dreremin.predefense.registration.sys.controllers.exception.ExceptionController;
-import ru.dreremin.predefense.registration.sys.dto.response.StatusDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
 
 @RequiredArgsConstructor
 @Component
@@ -28,7 +28,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		
 		response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-		StatusDto dto = new StatusDto(403, "User was not authenticated");
+		StatusResponseDto dto = new StatusResponseDto(403, "User was not authenticated");
 		response.getWriter().print(mapper.writeValueAsString(dto));
 	}
 }

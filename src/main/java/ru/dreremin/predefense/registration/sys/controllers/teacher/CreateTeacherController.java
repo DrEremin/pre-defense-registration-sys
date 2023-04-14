@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
-import ru.dreremin.predefense.registration.sys.dto.response.JwtTokenDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.JwtTokenResponseDto;
 import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherService;
 
 @Slf4j
@@ -24,10 +24,10 @@ public class CreateTeacherController {
 	
 	@PutMapping(value = "/admin/users/create/teacher", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<JwtTokenDto> createTeacher(
-			@Valid @RequestBody TeacherDto teacherDto) {
-		String jwtToken = teacherService.createTeacher(teacherDto);
+	public ResponseEntity<JwtTokenResponseDto> createTeacher(
+			@Valid @RequestBody TeacherRequestDto teacherRequestDto) {
+		String jwtToken = teacherService.createTeacher(teacherRequestDto);
 		log.info("CreateTeacherController.createTeacher() success");
-		return ResponseEntity.ok(new JwtTokenDto(jwtToken));
+		return ResponseEntity.ok(new JwtTokenResponseDto(jwtToken));
 	}
 }

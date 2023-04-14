@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import ru.dreremin.predefense.registration.sys.dto.request.TimePeriodDto;
-import ru.dreremin.predefense.registration.sys.dto.response.CommissionDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TimePeriodRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response.CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
-		 .CurrentCommissionOfStudentDto;
+		 .CurrentCommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.services.registration
 		 .ReadRegistrationService;
 
@@ -27,9 +27,9 @@ public class ReadRegistrationController {
 	private final ReadRegistrationService service;
 	
 	@GetMapping(value = "/student/commissions/read/current")
-	public CurrentCommissionOfStudentDto getCurrentComissionOfStudent() {
+	public CurrentCommissionResponseDto getCurrentComissionOfStudent() {
 		
-		CurrentCommissionOfStudentDto responseDto = 
+		CurrentCommissionResponseDto responseDto = 
 				service.getCurrentComissionOfStudent();
 		
 		log.info("ReadComissionController.getComissionForStudent() is success");
@@ -37,10 +37,10 @@ public class ReadRegistrationController {
 	}
 	
 	@GetMapping(value = "/student/commissions/read/actual-list")
-	public List<CommissionDto> 
+	public List<CommissionResponseDto> 
 			getActualComissionsListForStudent() {
 		
-		List<CommissionDto> actualComissions = service
+		List<CommissionResponseDto> actualComissions = service
 				.getActualComissionsListForStudent();
 		
 		log.info("ReadComissionController.getActualComissionsListForStudent()"
@@ -49,10 +49,10 @@ public class ReadRegistrationController {
 	}
 
 	@GetMapping(value = "/teacher/commissions/read/actual-list")
-	public List<CommissionDto> 
+	public List<CommissionResponseDto> 
 			getActualComissionsListForTeacher() {
 		
-		List<CommissionDto> actualComissions = service
+		List<CommissionResponseDto> actualComissions = service
 				.getActualComissionsListForTeacher();
 		
 		log.info("ReadComissionController.getActualComissionsListForTeacher()"
@@ -61,12 +61,12 @@ public class ReadRegistrationController {
 	}
 	
 	@PostMapping(value = "/admin/commissions/read/list-by-period")
-	public List<CommissionDto> 
+	public List<CommissionResponseDto> 
 			getComissionsListByTimePeriod(
-					@Valid @RequestBody TimePeriodDto dto) {
+					@Valid @RequestBody TimePeriodRequestDto dto) {
 		
 		dto.periodValidation();
-		List<CommissionDto> actualComissions = service
+		List<CommissionResponseDto> actualComissions = service
 				.getCommissionListByTimePeriod(dto);
 		
 		log.info("ReadComissionController.getComissionsListByTimePeriod()"
@@ -75,10 +75,10 @@ public class ReadRegistrationController {
 	}
 	
 	@GetMapping(value = "/admin/commissions/read/{id}")
-	public List<CommissionDto> 
+	public List<CommissionResponseDto> 
 			getComissionById(@PathVariable("id") int id) {
 		
-		List<CommissionDto> commission = service
+		List<CommissionResponseDto> commission = service
 				.getCommissionById(id);
 		
 		log.info("ReadComissionController.getCommissionById()"
