@@ -1,28 +1,27 @@
-package ru.dreremin.predefense.registration.sys.services.teacher;
+package ru.dreremin.predefense.registration.sys.services.student;
 
 import javax.persistence.EntityNotFoundException;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.request.TeacherRequestDto;
+
+import ru.dreremin.predefense.registration.sys.dto.request.StudentRequestDto;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
-import ru.dreremin.predefense.registration.sys.models.Teacher;
+import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.repositories.ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
-import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
+import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 
 @RequiredArgsConstructor
 @Service
-public class UpdateTeacherService {
+public class UpdateStudentService {
 
-	private final TeacherRepository teacherRepository;
+	private final StudentRepository studentRepository;
 	
 	private final ActorRepository actorRepository;
 	
@@ -34,7 +33,7 @@ public class UpdateTeacherService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class})
-	public void updateTeacher(String login, TeacherRequestDto dto) {
+	public void updateStudent(String login, StudentRequestDto dto) {
 		
 		Actor actor = actorRepository.findByLogin(login).orElseThrow(
 				() -> new EntityNotFoundException(
@@ -70,12 +69,18 @@ public class UpdateTeacherService {
 			email.setAddress(dto.getEmail());
 		}
 		
-		Teacher teacher = teacherRepository.findByPersonId(person.getId())
+		Student student = studentRepository.findByPersonId(person.getId())
 				.orElseThrow(() -> new EntityNotFoundException(
-						"Teacher with this login does not exist"));
+						"Student with this login does not exist"));
 		
-		if (dto.getJobTitle() != null) {
-			teacher.setJobTitle(dto.getJobTitle());
+		if (dto.getGroupNumber() != null) {
+			student.setGroupNumber(dto.getGroupNumber());
+		}
+		if (dto.getStudyDirection() != null) {
+			student.setStudyDirection(dto.getStudyDirection());
+		}
+		if (dto.getStudyType() != null) {
+			student.setStudyType(dto.getStudyType());
 		}
 	}
 }

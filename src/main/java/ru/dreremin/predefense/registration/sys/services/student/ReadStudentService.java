@@ -81,7 +81,7 @@ public class ReadStudentService {
 				student.getStudyDirection(),
 				student.getStudyType(),
 				student.getGroupNumber(),
-				email.getBox(),
+				email.getAddress(),
 				actor.getLogin());
 	}
 }	

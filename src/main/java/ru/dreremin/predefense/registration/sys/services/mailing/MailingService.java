@@ -69,7 +69,7 @@ public class MailingService {
 		
 		for (Email email : addresses) {
 			responseDto.add(sendEmail(
-					email.getBox(), 
+					email.getAddress(), 
 					dto.getSubject(), 
 					dto.getContent()));
 		}
@@ -84,7 +84,7 @@ public class MailingService {
 		
 		for (Email email : emails) {
 			responseDto.add(sendEmail(
-					email.getBox(), 
+					email.getAddress(), 
 					dto.getSubject(), 
 					dto.getContent()));
 		}

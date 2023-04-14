@@ -68,7 +68,7 @@ public class ReadTeacherService {
 				person.getFirstName(), 
 				person.getPatronymic(),
 				teacher.getJobTitle(),
-				email.getBox(),
+				email.getAddress(),
 				actor.getLogin());
 	}
 }
