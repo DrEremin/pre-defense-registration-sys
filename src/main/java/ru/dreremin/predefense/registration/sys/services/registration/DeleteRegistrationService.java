@@ -1,5 +1,6 @@
 package ru.dreremin.predefense.registration.sys.services.registration;
 
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -91,10 +92,12 @@ public class DeleteRegistrationService extends Registration {
 	
 	private void setStudentComissionOpt() {
 		studentCommissinOpt = 
-				studentCommissionRepo.findByStudentId(student.getId());
+				studentCommissionRepo.findByStudentIdAndActualTime(
+						student.getId(), 
+						ZonedDateTime.now());
 		if (studentCommissinOpt.isEmpty()) {
 			throw new EntityNotFoundException(
-					"The registration for this student does not exist");
+					"The actual registration for this student does not exist");
 		}
 	}
 	
