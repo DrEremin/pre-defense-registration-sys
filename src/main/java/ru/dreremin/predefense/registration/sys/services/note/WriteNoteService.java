@@ -29,9 +29,8 @@ public class WriteNoteService {
 	public void addNote(NoteRequestDto dto) {
 		
 		commissionRepository.findById(dto.getCommissionId()).orElseThrow(
-						() -> new EntityNotFoundException(
-								"There is not exists "
-								+ "commission with this Id"));
+						() -> new EntityNotFoundException("There is not "
+								+ "exists commission with this Id"));
 		
 		Optional<Note> noteOpt = noteRepository.findByCommissionId(
 				dto.getCommissionId());
