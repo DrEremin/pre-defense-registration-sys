@@ -11,10 +11,11 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+
 import ru.dreremin.predefense.registration.sys.dto.request.MailingRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.response.MailingResponseDto;
-import ru.dreremin.predefense.registration.sys.exceptions
-		 .FailedAuthenticationException;
+import ru.dreremin.predefense.registration.sys.dto.response
+		 .WrapperForListResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 
@@ -61,8 +62,8 @@ public class MailingService {
 		}
 	}
 	
-	public List<MailingResponseDto> sendMailsToStudents(MailingRequestDto dto) 
-			throws FailedAuthenticationException {
+	public WrapperForListResponseDto<MailingResponseDto> sendMailsToStudents(
+			MailingRequestDto dto) {
 		
 		List<Email> addresses = emailRepo.findAllByStudent();
 		List<MailingResponseDto> responseDto = new ArrayList<>(addresses.size());
@@ -73,11 +74,11 @@ public class MailingService {
 					dto.getSubject(), 
 					dto.getContent()));
 		}
-		return responseDto;
+		return new WrapperForListResponseDto<>(responseDto);
 	}
 	
-	public List<MailingResponseDto> sendMailsToTeachers(MailingRequestDto dto) 
-			throws FailedAuthenticationException {
+	public WrapperForListResponseDto<MailingResponseDto> sendMailsToTeachers(
+			MailingRequestDto dto) {
 		
 		List<Email> emails = emailRepo.findAllByTeacher();
 		List<MailingResponseDto> responseDto = new ArrayList<>(emails.size());
@@ -88,7 +89,7 @@ public class MailingService {
 					dto.getSubject(), 
 					dto.getContent()));
 		}
-		return responseDto;
+		return new WrapperForListResponseDto<>(responseDto);
 	}
 }
 
