@@ -2,6 +2,8 @@ package ru.dreremin.predefense.registration.sys.controllers.commission;
 
 import java.util.List;
 import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,7 @@ import ru.dreremin.predefense.registration.sys.dto.request.TimePeriodRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.response.CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CurrentCommissionResponseDto;
+import ru.dreremin.predefense.registration.sys.dto.response.WrapperForListResponseDto;
 import ru.dreremin.predefense.registration.sys.services.commission.ReadCommissionService;
 
 //@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
@@ -26,62 +29,62 @@ public class ReadCommissionController {
 	private final ReadCommissionService service;
 	
 	@GetMapping(value = "/student/commissions/read/current")
-	public CurrentCommissionResponseDto getCurrentComissionOfStudent() {
+	public ResponseEntity<CurrentCommissionResponseDto> getCurrentComissionOfStudent() {
 		
 		CurrentCommissionResponseDto responseDto = 
 				service.getCurrentComissionOfStudent();
 		
 		log.info("ReadComissionController.getCurrentComissionOfStudent() "
 				+ "is success");
-		return responseDto;
+		return ResponseEntity.ok(responseDto);
 	}
 	
 	@GetMapping(value = "/student/commissions/read/actual-list")
-	public List<CommissionResponseDto> 
+	public ResponseEntity<WrapperForListResponseDto<CommissionResponseDto>> 
 			getActualComissionsListForStudent() {
 		
-		List<CommissionResponseDto> actualComissions = service
-				.getActualComissionsListForStudent();
+		WrapperForListResponseDto<CommissionResponseDto> actualComissions = 
+				service.getActualComissionsListForStudent();
 		
 		log.info("ReadComissionController.getActualComissionsListForStudent()"
 				+ "is success");
-		return actualComissions;
+		return ResponseEntity.ok(actualComissions);
 	}
 
 	@GetMapping(value = "/teacher/commissions/read/actual-list")
-	public List<CommissionResponseDto> 
+	public ResponseEntity<WrapperForListResponseDto<CommissionResponseDto>>
 			getActualComissionsListForTeacher() {
 		
-		List<CommissionResponseDto> actualComissions = service
+		WrapperForListResponseDto<CommissionResponseDto> actualComissions = service
 				.getActualComissionsListForTeacher();
 		
 		log.info("ReadComissionController.getActualComissionsListForTeacher()"
 				+ "is success");
-		return actualComissions;
+		return ResponseEntity.ok(actualComissions);
 	}
 	
 	@PostMapping(value = "/admin/commissions/read/list-by-period")
-	public List<CommissionResponseDto> 
+	public ResponseEntity<WrapperForListResponseDto<CommissionResponseDto>> 
 			getComissionsListByTimePeriod(
 					@Valid @RequestBody TimePeriodRequestDto dto) {
 		
 		dto.periodValidation();
-		List<CommissionResponseDto> actualComissions = service
+		WrapperForListResponseDto<CommissionResponseDto> actualComissions = service
 				.getCommissionListByTimePeriod(dto);
 		
 		log.info("ReadComissionController.getComissionsListByTimePeriod()"
 				+ "is success");
-		return actualComissions;
+		return ResponseEntity.ok(actualComissions);
 	}
 	
 	@GetMapping(value = "/admin/commissions/read/{id}")
-	public List<CommissionResponseDto> 
+	public ResponseEntity<CommissionResponseDto> 
 			getComissionById(@PathVariable("id") int id) {
 		
-		List<CommissionResponseDto> commission = service
+		CommissionResponseDto commission = service
 				.getCommissionById(id);
 		
 		log.info("ReadComissionController.getCommissionById() is success");
-		return commission;
+		return ResponseEntity.ok(commission);
 	}
 }

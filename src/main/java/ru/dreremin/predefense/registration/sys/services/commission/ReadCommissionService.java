@@ -24,6 +24,7 @@ import ru.dreremin.predefense.registration.sys.dto.response
 		 .CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CurrentCommissionResponseDto;
+import ru.dreremin.predefense.registration.sys.dto.response.WrapperForListResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.models.Student;
@@ -102,7 +103,7 @@ public class ReadCommissionService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
-	public List<CommissionResponseDto> 
+	public WrapperForListResponseDto<CommissionResponseDto> 
 			getActualComissionsListForStudent() {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
@@ -128,13 +129,13 @@ public class ReadCommissionService {
 		if (actualCommissions.size() == 0) {
 			throw new EntityNotFoundException("Аctual commissions not found");
 		}
-		
-		return getResultDto(actualCommissions, false);
+		return new WrapperForListResponseDto<>(
+				getResultDto(actualCommissions, false));
 	}
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
-	public List<CommissionResponseDto> 
+	public WrapperForListResponseDto<CommissionResponseDto> 
 			getActualComissionsListForTeacher() {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
@@ -156,11 +157,11 @@ public class ReadCommissionService {
 		if (actualCommissions.size() == 0) {
 			throw new EntityNotFoundException("Аctual commissions not found");
 		}
-		return getResultDto(actualCommissions, true);
+		return new WrapperForListResponseDto<>(getResultDto(actualCommissions, true));
 	}
 	
-	public List<CommissionResponseDto> getCommissionListByTimePeriod(
-			TimePeriodRequestDto dto) {
+	public WrapperForListResponseDto<CommissionResponseDto> 
+			getCommissionListByTimePeriod(TimePeriodRequestDto dto) {
 		
 		setZone(dto);
 		
@@ -173,10 +174,11 @@ public class ReadCommissionService {
 		if (commissions.size() == 0) {
 			throw new EntityNotFoundException("Commissions not found");
 		}
-		return getResultDto(commissions, true);	
+		return new WrapperForListResponseDto<>(
+				getResultDto(commissions, true));	
 	}
 	
-	public List<CommissionResponseDto> getCommissionById(int id) {
+	public CommissionResponseDto getCommissionById(int id) {
 		
 		Optional<Commission> commissionOpt = commissionRepo.findById(id);
 		
@@ -184,7 +186,7 @@ public class ReadCommissionService {
 			throw new EntityNotFoundException(
 					"Commission with this id does not exist");
 		}	
-		return getResultDto(List.of(commissionOpt.get()), true);
+		return getResultDto(List.of(commissionOpt.get()), true).get(0);
 	}
 	
 	private List<CommissionResponseDto> getResultDto(
