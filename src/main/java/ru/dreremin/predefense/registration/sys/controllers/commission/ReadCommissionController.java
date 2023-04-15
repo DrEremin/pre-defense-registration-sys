@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.controllers.registration;
+package ru.dreremin.predefense.registration.sys.controllers.commission;
 
 import java.util.List;
 import javax.validation.Valid;
@@ -15,16 +15,15 @@ import ru.dreremin.predefense.registration.sys.dto.request.TimePeriodRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.response.CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CurrentCommissionResponseDto;
-import ru.dreremin.predefense.registration.sys.services.registration
-		 .ReadRegistrationService;
+import ru.dreremin.predefense.registration.sys.services.commission.ReadCommissionService;
 
 //@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 @RequiredArgsConstructor
 @Slf4j
 @RestController
-public class ReadRegistrationController {
+public class ReadCommissionController {
 	
-	private final ReadRegistrationService service;
+	private final ReadCommissionService service;
 	
 	@GetMapping(value = "/student/commissions/read/current")
 	public CurrentCommissionResponseDto getCurrentComissionOfStudent() {

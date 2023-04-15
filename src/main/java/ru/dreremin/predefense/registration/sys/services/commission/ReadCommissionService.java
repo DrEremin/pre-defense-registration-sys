@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.services.registration;
+package ru.dreremin.predefense.registration.sys.services.commission;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -17,8 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import ru.dreremin.predefense.registration.sys.dto.request.TimePeriodRequestDto;
-import ru.dreremin.predefense.registration.sys.dto.response.CommissionResponseDto;
+
+import ru.dreremin.predefense.registration.sys.dto.request
+		 .TimePeriodRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.response
+		 .CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CurrentCommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
@@ -43,7 +46,7 @@ import ru.dreremin.predefense.registration.sys.security.ActorDetails;
 
 @RequiredArgsConstructor
 @Service
-public class ReadRegistrationService {
+public class ReadCommissionService {
 
 	private final StudentEntryRepository studentEntryRepo;
 	
