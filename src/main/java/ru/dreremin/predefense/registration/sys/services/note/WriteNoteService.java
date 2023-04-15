@@ -15,7 +15,7 @@ import ru.dreremin.predefense.registration.sys.repositories.NoteRepository;
 
 @RequiredArgsConstructor
 @Service
-public class UpdateNoteService {
+public class WriteNoteService {
 
 	private final NoteRepository noteRepository;
 	
