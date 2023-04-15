@@ -21,4 +21,5 @@ public class GetUserService {
 				.getClaim("login")
 				.asString());
 	}
+	
 }

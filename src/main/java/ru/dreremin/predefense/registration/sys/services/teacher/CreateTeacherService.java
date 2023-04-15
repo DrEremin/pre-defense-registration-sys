@@ -11,8 +11,8 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
-import ru.dreremin.predefense.registration.sys.security.JwtTokenProvider;
-import ru.dreremin.predefense.registration.sys.services.person.CreatePersonService;
+import ru.dreremin.predefense.registration.sys.services.person
+		 .CreatePersonService;
 
 @Slf4j
 @Service
@@ -20,12 +20,12 @@ import ru.dreremin.predefense.registration.sys.services.person.CreatePersonServi
 public class CreateTeacherService {
 	
 	private final TeacherRepository teacherRepo;
+	
 	private final CreatePersonService createPersonService;
-	private final JwtTokenProvider jwtTokenProvider;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE,
             rollbackFor = { UniquenessViolationException.class })
-	public String createTeacher(TeacherRequestDto dto) 
+	public void createTeacher(TeacherRequestDto dto) 
 			throws UniquenessViolationException {
 		
 		long personId = createPersonService.createPerson(dto, "ROLE_TEACHER")
@@ -33,6 +33,5 @@ public class CreateTeacherService {
 		
 		teacherRepo.save(new Teacher(personId, dto.getJobTitle()));
 		log.info("The teacher created successfully");
-		return jwtTokenProvider.generateToken(dto.getLogin());
 	}
 }

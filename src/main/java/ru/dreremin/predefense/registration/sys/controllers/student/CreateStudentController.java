@@ -1,19 +1,18 @@
 package ru.dreremin.predefense.registration.sys.controllers.student;
 
 import javax.validation.Valid;
-
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import ru.dreremin.predefense.registration.sys.dto.request.StudentRequestDto;
-import ru.dreremin.predefense.registration.sys.dto.response.JwtTokenResponseDto;
-import ru.dreremin.predefense.registration.sys.services.student.CreateStudentService;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
+import ru.dreremin.predefense.registration.sys.services.student
+		 .CreateStudentService;
 
 
 @Slf4j
@@ -25,10 +24,10 @@ public class CreateStudentController {
 	
 	@PutMapping(value = "/admin/users/create/student", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<JwtTokenResponseDto> createStudent(
+	public ResponseEntity<StatusResponseDto> createStudent(
 			@Valid @RequestBody StudentRequestDto studentRequestDto) {
-		String jwtToken = studentService.createStudent(studentRequestDto);
+		studentService.createStudent(studentRequestDto);
 		log.info("CreateStudentController.createStudent() success");
-		return ResponseEntity.ok(new JwtTokenResponseDto(jwtToken));
+		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
 }

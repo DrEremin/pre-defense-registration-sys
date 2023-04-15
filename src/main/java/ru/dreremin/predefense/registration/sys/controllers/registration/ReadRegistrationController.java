@@ -32,7 +32,8 @@ public class ReadRegistrationController {
 		CurrentCommissionResponseDto responseDto = 
 				service.getCurrentComissionOfStudent();
 		
-		log.info("ReadComissionController.getComissionForStudent() is success");
+		log.info("ReadComissionController.getCurrentComissionOfStudent() "
+				+ "is success");
 		return responseDto;
 	}
 	
@@ -81,8 +82,7 @@ public class ReadRegistrationController {
 		List<CommissionResponseDto> commission = service
 				.getCommissionById(id);
 		
-		log.info("ReadComissionController.getCommissionById()"
-				+ "is success");
+		log.info("ReadComissionController.getCommissionById() is success");
 		return commission;
 	}
 }
