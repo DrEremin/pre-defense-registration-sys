@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import ru.dreremin.predefense.registration.sys.dto.response.TeacherResponseDto;
+import ru.dreremin.predefense.registration.sys.dto.response.WrapperForListResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
@@ -28,13 +29,13 @@ public class ReadTeacherService {
 	
 	private final EmailRepository emailRepository;
 	
-	public List<TeacherResponseDto> getAllTeachers() {
+	public WrapperForListResponseDto<TeacherResponseDto> getAllTeachers() {
 		
 		List<Teacher> teachers = teacherRepository.findAllOrderByLastName();
 		
-		return getListOfTeacherResponseDto(
+		return new WrapperForListResponseDto<>(getListOfTeacherResponseDto(
 				teachers, 
-				"Not a single teacher was found");
+				"Not a single teacher was found"));
 	}
 	
 	private List<TeacherResponseDto> getListOfTeacherResponseDto(

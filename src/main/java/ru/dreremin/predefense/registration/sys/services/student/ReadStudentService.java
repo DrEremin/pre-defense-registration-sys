@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import ru.dreremin.predefense.registration.sys.dto.response.StudentResponseDto;
+import ru.dreremin.predefense.registration.sys.dto.response.WrapperForListResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
@@ -28,24 +29,25 @@ public class ReadStudentService {
 	
 	private final EmailRepository emailRepository;
 	
-	public List<StudentResponseDto> getAllStudents() {
+	public WrapperForListResponseDto<StudentResponseDto> getAllStudents() {
 		
 		List<Student> students = studentRepository.findAllOrderByLastName();
 		
-		return getListOfStudentResponseDto(
+		return new WrapperForListResponseDto<>(getListOfStudentResponseDto(
 				students, 
-				"Not a single student was found");
+				"Not a single student was found"));
 	}
 	
-	public List<StudentResponseDto> getAllStudentsByGroupNumber(String groupNumber) {
+	public WrapperForListResponseDto<StudentResponseDto> 
+			getAllStudentsByGroupNumber(String groupNumber) {
 		
 		List<Student> students = studentRepository
 				.findAllByGroupNumberOrderByLastName(groupNumber);
 		
 		
-		return getListOfStudentResponseDto(
+		return new WrapperForListResponseDto<>(getListOfStudentResponseDto(
 				students, 
-				"No student with this group was found");
+				"No student with this group was found"));
 	}
 	
 	private List<StudentResponseDto> getListOfStudentResponseDto(
