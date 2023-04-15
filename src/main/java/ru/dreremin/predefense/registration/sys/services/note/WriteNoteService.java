@@ -21,12 +21,10 @@ public class WriteNoteService {
 	
 	private final CommissionRepository commissionRepository;
 	
-	private final CreateNoteService createNoteService;
-	
 	@Transactional(
 			isolation = Isolation.SERIALIZABLE,
 			rollbackFor = {EntityNotFoundException.class})
-	public void addNote(NoteRequestDto dto) {
+	public void writeNote(NoteRequestDto dto) {
 		
 		commissionRepository.findById(dto.getCommissionId()).orElseThrow(
 						() -> new EntityNotFoundException("There is not "
@@ -36,9 +34,17 @@ public class WriteNoteService {
 				dto.getCommissionId());
 		
 		if (noteOpt.isEmpty()) {
-			createNoteService.createNote(dto);
+			if (dto.getNoteContent().length() > 0) { 
+				noteRepository.save(new Note(
+						dto.getCommissionId(), 
+						dto.getNoteContent()));
+			}
 		} else {
-			noteOpt.get().setNoteContent(dto.getNoteContent());
+			if (dto.getNoteContent().length() > 0) {
+				noteOpt.get().setNoteContent(dto.getNoteContent());
+			} else {
+				noteRepository.delete(noteOpt.get());
+			}
 		}
 	}
 }

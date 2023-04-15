@@ -23,10 +23,10 @@ public class WriteNoteController {
 	@PutMapping(
 			value = "/admin/write/note", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<StatusResponseDto> updateNote(
+	public ResponseEntity<StatusResponseDto> writeNote(
 			@Valid @RequestBody NoteRequestDto dto) {
-		writeNoteService.addNote(dto);
-		log.info("UpdateNoteController.updateNote() is success");
+		writeNoteService.writeNote(dto);
+		log.info("WriteNoteController.writeNote() is success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
 }

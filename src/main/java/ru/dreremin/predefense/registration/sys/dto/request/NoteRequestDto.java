@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 public class NoteRequestDto {
 
 	@JsonProperty(value = "comissionId")
@@ -16,6 +15,10 @@ public class NoteRequestDto {
 	
 	@JsonProperty(value = "noteContent")
 	@NotNull
-	@NotEmpty
 	private final String noteContent;
+	
+	public NoteRequestDto(Integer commissionId, String noteContent) {
+		this.commissionId = commissionId;
+		this.noteContent = noteContent.strip();
+	}
 }
