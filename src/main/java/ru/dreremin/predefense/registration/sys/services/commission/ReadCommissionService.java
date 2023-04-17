@@ -5,10 +5,12 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import ru.dreremin.predefense.registration.sys.dto.request
 		 .TimePeriodRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.response
@@ -25,6 +27,8 @@ import ru.dreremin.predefense.registration.sys.dto.response
 		 .CurrentCommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .WrapperForListResponseDto;
+import ru.dreremin.predefense.registration.sys.dto.response
+		 .WrapperForPageResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.models.Student;
@@ -45,6 +49,7 @@ import ru.dreremin.predefense.registration.sys.repositories
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.security.ActorDetails;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReadCommissionService {
@@ -103,8 +108,8 @@ public class ReadCommissionService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
-	public WrapperForListResponseDto<CommissionResponseDto> 
-			getActualComissionsListForStudent() {
+	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+			getActualComissionsListForStudent(PageRequest pageRequest) {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
 				.getAuthentication();
@@ -118,25 +123,23 @@ public class ReadCommissionService {
 					"Student with this login does not exist");
 		}
 		
-		List<Commission> actualCommissions = commissionRepo
-				.findAllByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
-						ZonedDateTime.now().plusHours(3))
-				.stream()
-				.filter(ac -> ac.getStudyDirection().equals(studentOpt.get()
-						.getStudyDirection()))
-				.collect(Collectors.toList());
+		Page<Commission> actualCommissions = commissionRepo
+				.findAllActualCommissionsForStudent(
+						ZonedDateTime.now().plusHours(3),
+						studentOpt.get().getStudyDirection(),
+						pageRequest);
 		
-		if (actualCommissions.size() == 0) {
+		if (actualCommissions.getTotalElements() == 0) {
 			throw new EntityNotFoundException("Аctual commissions not found");
 		}
-		return new WrapperForListResponseDto<>(
-				getResultDto(actualCommissions, false));
+		return new WrapperForPageResponseDto<>(
+				getResult(actualCommissions, false));
 	}
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
-	public WrapperForListResponseDto<CommissionResponseDto> 
-			getActualComissionsListForTeacher() {
+	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+			getActualComissionsListForTeacher(PageRequest pageRequest) {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
 				.getAuthentication();
@@ -150,15 +153,16 @@ public class ReadCommissionService {
 					"Teacher with this login does not exist");
 		}
 		
-		List<Commission> actualCommissions = commissionRepo
-				.findAllByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
-						ZonedDateTime.now());
+		Page<Commission> actualCommissions = commissionRepo
+				.findAllActualCommissionsForTeacher(
+						ZonedDateTime.now(), 
+						pageRequest);
 		
-		if (actualCommissions.size() == 0) {
+		if (actualCommissions.getTotalElements() == 0) {
 			throw new EntityNotFoundException("Аctual commissions not found");
 		}
-		return new WrapperForListResponseDto<>(
-				getResultDto(actualCommissions, true));
+		return new WrapperForPageResponseDto<>(
+				getResult(actualCommissions, true));
 	}
 	
 	public WrapperForListResponseDto<CommissionResponseDto> 
@@ -188,6 +192,38 @@ public class ReadCommissionService {
 					"Commission with this id does not exist");
 		}	
 		return getResultDto(List.of(commissionOpt.get()), true).get(0);
+	}
+	
+	private Map.Entry<Page<Commission>, List<CommissionResponseDto>> getResult(
+			Page<Commission> page, 
+			boolean isNote) {
+		
+		List<Commission> commissions = page.getContent();
+		List<CommissionResponseDto> resultDto = new ArrayList<>(
+				commissions.size());
+		
+		for (Commission commission : commissions) {
+			
+			List<TeacherEntry> teachers = teacherEntryRepo
+					.findAllByCommissionId(
+							commission.getId(), 
+							Sort.by(Sort.Order.asc("p.lastName")));
+			String note;
+			
+			if (isNote) {
+				Optional<Note> noteOpt = noteRepo.findByCommissionId(
+						commission.getId());
+				note = noteOpt.isPresent() 
+						? noteOpt.get().getNoteContent() : "";
+			} else {
+				note = null;
+			}
+			resultDto.add(new CommissionResponseDto(
+					commission, 
+					teachers, 
+					note));
+		}
+		return Map.entry(page, resultDto);
 	}
 	
 	private List<CommissionResponseDto> getResultDto(

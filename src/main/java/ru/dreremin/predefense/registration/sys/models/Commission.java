@@ -63,6 +63,7 @@ public class Commission implements Comparable<Commission>{
 			String studyDirection,
 			String location,
 			Short studentLimit) {
+		this.id = id;
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
 		this.presenceFormat = presenceFormat;
