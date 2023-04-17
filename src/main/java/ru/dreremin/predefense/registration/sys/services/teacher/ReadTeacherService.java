@@ -2,13 +2,16 @@ package ru.dreremin.predefense.registration.sys.services.teacher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import ru.dreremin.predefense.registration.sys.dto.response.TeacherResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
-		 .WrapperForListResponseDto;
+		 .WrapperForPageResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
@@ -30,28 +33,31 @@ public class ReadTeacherService {
 	
 	private final EmailRepository emailRepository;
 	
-	public WrapperForListResponseDto<TeacherResponseDto> getAllTeachers() {
+	public WrapperForPageResponseDto<Teacher, TeacherResponseDto> 
+			getAllTeachers(PageRequest pageRequest) {
 		
-		List<Teacher> teachers = teacherRepository.findAllOrderByLastName();
+		Page<Teacher> page = teacherRepository
+				.findAllOrderByLastName(pageRequest);
 		
-		return new WrapperForListResponseDto<>(getListOfTeacherResponseDto(
-				teachers, 
-				"Not a single teacher was found"));
+		return new WrapperForPageResponseDto<>(
+				getPageOfTeacherResponseDto(
+						page, 
+						"Not a single teacher was found"));
 	}
 	
-	private List<TeacherResponseDto> getListOfTeacherResponseDto(
-			List<Teacher> teachers, 
-			String message) {
+	private Map.Entry<Page<Teacher>, List<TeacherResponseDto>> 
+			getPageOfTeacherResponseDto(Page<Teacher> page, String message) {
 		
-		List<TeacherResponseDto> result = new ArrayList<>();
+		List<Teacher> teachers = page.getContent();
+		List<TeacherResponseDto> result = new ArrayList<>(teachers.size());
 		
-		if (teachers.size() == 0) {
+		if (page.getTotalElements() == 0) {
 			throw new EntityNotFoundException(message);
 		}
 		for (Teacher teacher : teachers) {
 			result.add(getTeacherResponseDto(teacher));
 		}
-		return result;
+		return Map.entry(page, result);
 	}
 	
 	private TeacherResponseDto getTeacherResponseDto(Teacher teacher) {
@@ -66,6 +72,7 @@ public class ReadTeacherService {
 				.orElseThrow(() -> new EntityNotFoundException(
 						"There is no actor with such an id"));
 		return new TeacherResponseDto(
+				actor.getId(),
 				person.getLastName(), 
 				person.getFirstName(), 
 				person.getPatronymic(),

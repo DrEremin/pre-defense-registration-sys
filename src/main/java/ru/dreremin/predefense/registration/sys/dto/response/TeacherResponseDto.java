@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TeacherResponseDto {
 
+	@JsonProperty(value = "id")
+	private final long id;
+	
 	@JsonProperty(value = "lastName")
 	private final String lastName;
 	

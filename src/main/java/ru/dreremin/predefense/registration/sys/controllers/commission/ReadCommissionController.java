@@ -23,8 +23,6 @@ import ru.dreremin.predefense.registration.sys.dto.response
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CurrentCommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
-		 .WrapperForListResponseDto;
-import ru.dreremin.predefense.registration.sys.dto.response
 		 .WrapperForPageResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.services.commission
@@ -104,17 +102,31 @@ public class ReadCommissionController {
 	@PostMapping(
 			value = "/admin/commissions/read/list-by-period", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<WrapperForListResponseDto<CommissionResponseDto>> 
-			getComissionsListByTimePeriod(
+	public ResponseEntity<WrapperForPageResponseDto
+			<Commission, CommissionResponseDto>> getComissionsListByTimePeriod(
+					@RequestParam(value = "page", defaultValue = "0") 
+					@Min(0)
+					@Max(Integer.MAX_VALUE)
+					int page, 
+					@RequestParam(value = "size", defaultValue = "10") 
+					@Min(0)
+					@Max(Integer.MAX_VALUE)
+					int size,
 					@Valid @RequestBody TimePeriodRequestDto dto) {
 		
 		dto.periodValidation();
-		WrapperForListResponseDto<CommissionResponseDto> actualComissions = 
-				service.getCommissionListByTimePeriod(dto);
-		
+		WrapperForPageResponseDto<Commission, CommissionResponseDto> result = 
+				service.getCommissionListByTimePeriod(
+						dto, 
+						PageRequest.of(
+								page, 
+								size, 
+								Sort.by(Sort.Order
+										.asc("startDateTime")
+										.nullsLast())));
 		log.info("ReadComissionController.getComissionsListByTimePeriod()"
 				+ "is success");
-		return ResponseEntity.ok(actualComissions);
+		return ResponseEntity.ok(result);
 	}
 	
 	@GetMapping(value = "/admin/commissions/read/by-id/{id}")

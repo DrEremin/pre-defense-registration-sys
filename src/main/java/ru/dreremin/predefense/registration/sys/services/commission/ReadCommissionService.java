@@ -165,22 +165,24 @@ public class ReadCommissionService {
 				getResult(actualCommissions, true));
 	}
 	
-	public WrapperForListResponseDto<CommissionResponseDto> 
-			getCommissionListByTimePeriod(TimePeriodRequestDto dto) {
+	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+			getCommissionListByTimePeriod(
+					TimePeriodRequestDto dto, 
+					PageRequest pageRequest) {
 		
 		setZone(dto);
 		
-		List<Commission> commissions = commissionRepo
+		Page<Commission> commissions = commissionRepo
 				.findAllByStartDateTimeBetweenOrderByStartDateTime(
 						dto.getStartDateTime(), 
-						dto.getEndDateTime());
+						dto.getEndDateTime(),
+						pageRequest);
 		
-			
-		if (commissions.size() == 0) {
+		if (commissions.getTotalElements() == 0) {
 			throw new EntityNotFoundException("Commissions not found");
 		}
-		return new WrapperForListResponseDto<>(
-				getResultDto(commissions, true));	
+		return new WrapperForPageResponseDto<>(
+				getResult(commissions, true));
 	}
 	
 	public CommissionResponseDto getCommissionById(int id) {
