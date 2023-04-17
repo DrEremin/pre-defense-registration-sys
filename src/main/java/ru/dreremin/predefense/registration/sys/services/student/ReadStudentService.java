@@ -2,13 +2,16 @@ package ru.dreremin.predefense.registration.sys.services.student;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import ru.dreremin.predefense.registration.sys.dto.response.StudentResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
-		 .WrapperForListResponseDto;
+		 .WrapperForPageResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
@@ -30,40 +33,45 @@ public class ReadStudentService {
 	
 	private final EmailRepository emailRepository;
 	
-	public WrapperForListResponseDto<StudentResponseDto> getAllStudents() {
+	public WrapperForPageResponseDto<Student, StudentResponseDto> 
+			getAllStudents(PageRequest pageRequest) {
 		
-		List<Student> students = studentRepository.findAllOrderByLastName();
+		Page<Student> students = studentRepository
+				.findAllOrderByLastName(pageRequest);
 		
-		return new WrapperForListResponseDto<>(getListOfStudentResponseDto(
+		return new WrapperForPageResponseDto<>(getPageOfStudentResponseDto(
 				students, 
 				"Not a single student was found"));
 	}
 	
-	public WrapperForListResponseDto<StudentResponseDto> 
-			getAllStudentsByGroupNumber(String groupNumber) {
+	public WrapperForPageResponseDto<Student, StudentResponseDto> 
+			getAllStudentsByGroupNumber(
+					String groupNumber, 
+					PageRequest pageRequest) {
 		
-		List<Student> students = studentRepository
-				.findAllByGroupNumberOrderByLastName(groupNumber);
-		
-		
-		return new WrapperForListResponseDto<>(getListOfStudentResponseDto(
+		Page<Student> students = studentRepository
+				.findAllByGroupNumberOrderByLastName(groupNumber, pageRequest);
+
+		return new WrapperForPageResponseDto<>(getPageOfStudentResponseDto(
 				students, 
 				"No student with this group was found"));
 	}
 	
-	private List<StudentResponseDto> getListOfStudentResponseDto(
-			List<Student> students, 
+	private Map.Entry<Page<Student>, List<StudentResponseDto>> 
+			getPageOfStudentResponseDto(
+			Page<Student> page, 
 			String message) {
 		
-		List<StudentResponseDto> result = new ArrayList<>();
+		List<Student> students = page.getContent();
+		List<StudentResponseDto> result = new ArrayList<>(students.size());
 		
-		if (students.size() == 0) {
+		if (page.getTotalElements() == 0) {
 			throw new EntityNotFoundException(message);
 		}
 		for (Student student : students) {
 			result.add(getStudentResponseDto(student));
 		}
-		return result;
+		return Map.entry(page, result);
 	}
 	
 	private StudentResponseDto getStudentResponseDto(Student student) {
@@ -78,6 +86,7 @@ public class ReadStudentService {
 				.orElseThrow(() -> new EntityNotFoundException(
 						"There is no actor with such an id"));
 		return new StudentResponseDto(
+				actor.getId(),
 				person.getLastName(), 
 				person.getFirstName(), 
 				person.getPatronymic(),

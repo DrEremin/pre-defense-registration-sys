@@ -2,6 +2,8 @@ package ru.dreremin.predefense.registration.sys.repositories;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -44,7 +46,7 @@ public interface StudentRepository extends JpaRepository<Student, Long>{
 			+ "join Person p "
 				+ "on s.personId = p.id "
 			+ "order by p.lastName asc")
-	List<Student> findAllOrderByLastName();
+	Page<Student> findAllOrderByLastName(Pageable pageable);
 	
 	@Query("select new Student("
 			+ "s.id, "
@@ -57,6 +59,6 @@ public interface StudentRepository extends JpaRepository<Student, Long>{
 				+ "on s.personId = p.id "
 			+ "where s.groupNumber = :groupNumber "
 			+ "order by p.lastName asc")
-	List<Student> findAllByGroupNumberOrderByLastName(
-			@Param("groupNumber") String groupNumber);
+	Page<Student> findAllByGroupNumberOrderByLastName(
+			@Param("groupNumber") String groupNumber, Pageable pageable);
 }
