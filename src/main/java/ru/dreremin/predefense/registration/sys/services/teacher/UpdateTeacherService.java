@@ -1,13 +1,12 @@
 package ru.dreremin.predefense.registration.sys.services.teacher;
 
 import javax.persistence.EntityNotFoundException;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
+
 import ru.dreremin.predefense.registration.sys.dto.request.TeacherRequestDto;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Email;

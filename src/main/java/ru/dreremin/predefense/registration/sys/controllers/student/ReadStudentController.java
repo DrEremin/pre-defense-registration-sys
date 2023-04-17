@@ -1,16 +1,15 @@
 package ru.dreremin.predefense.registration.sys.controllers.student;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import ru.dreremin.predefense.registration.sys.dto.response.StudentResponseDto;
-import ru.dreremin.predefense.registration.sys.dto.response.WrapperForListResponseDto;
+import ru.dreremin.predefense.registration.sys.dto.response
+		 .WrapperForListResponseDto;
 import ru.dreremin.predefense.registration.sys.services.student
 		 .ReadStudentService;
 
@@ -32,7 +31,7 @@ public class ReadStudentController {
 		return ResponseEntity.ok(students);
 	}
 	
-	@GetMapping("/admin/users/read/students/{groupNumber}")
+	@GetMapping("/admin/users/read/students/by-group/{groupNumber}")
 	public ResponseEntity<WrapperForListResponseDto<StudentResponseDto>> 
 			getAllStudentsByGroupNumber(
 					@PathVariable ("groupNumber") String groupNumber) {

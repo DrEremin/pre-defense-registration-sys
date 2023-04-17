@@ -18,7 +18,7 @@ public class DeleteAdministratorController {
 	
 	private final DeleteAdministratorService deleteAdministratorService;
 	
-	@DeleteMapping("/admin/users/delete/admin/{login}")
+	@DeleteMapping("/admin/users/delete/admin/by-login/{login}")
 	public ResponseEntity<StatusResponseDto> deleteAdmin(
 			@PathVariable(value = "login") String login) {
 		

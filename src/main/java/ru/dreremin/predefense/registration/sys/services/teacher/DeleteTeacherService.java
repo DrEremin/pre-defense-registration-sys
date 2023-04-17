@@ -1,23 +1,21 @@
 package ru.dreremin.predefense.registration.sys.services.teacher;
 
 import java.util.Optional;
-
 import javax.persistence.EntityNotFoundException;
-
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
+
 import ru.dreremin.predefense.registration.sys.models.Actor;
-import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.repositories.ActorRepository;
-import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
-import ru.dreremin.predefense.registration.sys.repositories.TeacherCommissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
-import ru.dreremin.predefense.registration.sys.services.person.DeletePersonService;
+import ru.dreremin.predefense.registration.sys.services.person
+		 .DeletePersonService;
 
 @RequiredArgsConstructor
 @Service

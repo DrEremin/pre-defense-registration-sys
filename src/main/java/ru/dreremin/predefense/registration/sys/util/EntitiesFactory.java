@@ -1,6 +1,7 @@
 package ru.dreremin.predefense.registration.sys.util;
 
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request
+		 .CommissionRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.request.PersonRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.request.StudentRequestDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;

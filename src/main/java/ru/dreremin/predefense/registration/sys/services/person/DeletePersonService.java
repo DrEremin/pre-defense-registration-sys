@@ -1,10 +1,9 @@
 package ru.dreremin.predefense.registration.sys.services.person;
 
 import java.util.Optional;
-
 import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
+
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
@@ -24,7 +23,8 @@ import ru.dreremin.predefense.registration.sys.dto.response
 		 .CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CurrentCommissionResponseDto;
-import ru.dreremin.predefense.registration.sys.dto.response.WrapperForListResponseDto;
+import ru.dreremin.predefense.registration.sys.dto.response
+		 .WrapperForListResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.models.Student;
@@ -157,7 +157,8 @@ public class ReadCommissionService {
 		if (actualCommissions.size() == 0) {
 			throw new EntityNotFoundException("Аctual commissions not found");
 		}
-		return new WrapperForListResponseDto<>(getResultDto(actualCommissions, true));
+		return new WrapperForListResponseDto<>(
+				getResultDto(actualCommissions, true));
 	}
 	
 	public WrapperForListResponseDto<CommissionResponseDto> 

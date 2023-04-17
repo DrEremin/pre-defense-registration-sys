@@ -1,11 +1,8 @@
 package ru.dreremin.predefense.registration.sys.dto.request;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 
 @Getter

@@ -1,19 +1,18 @@
 package ru.dreremin.predefense.registration.sys.services.admin;
 
 import java.util.Optional;
-
 import javax.persistence.EntityNotFoundException;
-
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
+
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Administrator;
 import ru.dreremin.predefense.registration.sys.repositories.ActorRepository;
-import ru.dreremin.predefense.registration.sys.repositories.AdministratorRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .AdministratorRepository;
 
 @RequiredArgsConstructor
 @Service

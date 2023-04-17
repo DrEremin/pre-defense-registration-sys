@@ -2,23 +2,19 @@ package ru.dreremin.predefense.registration.sys.config;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.Instant;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication
+		  .UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
@@ -26,16 +22,17 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.controllers.exception.ExceptionController;
-import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
-import ru.dreremin.predefense.registration.sys.exceptions.InvalidJwtTokenException;
-import ru.dreremin.predefense.registration.sys.security.JwtTokenProvider;
-import ru.dreremin.predefense.registration.sys.services.auth.ActorDetailsService;
 
-@Slf4j
+import ru.dreremin.predefense.registration.sys.controllers.exception
+		 .ExceptionController;
+import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
+import ru.dreremin.predefense.registration.sys.exceptions
+		 .InvalidJwtTokenException;
+import ru.dreremin.predefense.registration.sys.security.JwtTokenProvider;
+import ru.dreremin.predefense.registration.sys.services.auth
+		 .ActorDetailsService;
+
 @RequiredArgsConstructor
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -61,7 +58,8 @@ public class JwtFilter extends OncePerRequestFilter {
 		errResponse = response;
 		if (authHeader != null) {
 			try {
-				if (authHeader.isBlank() || !authHeader.startsWith("Bearer_")) {
+				if (authHeader.isBlank() 
+						|| !authHeader.startsWith("Bearer_")) {
 					throw new InvalidJwtTokenException(
 							"Invalid  Bearer header of JWT token");
 				} 

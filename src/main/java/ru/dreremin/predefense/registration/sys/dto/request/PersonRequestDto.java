@@ -3,10 +3,8 @@ package ru.dreremin.predefense.registration.sys.dto.request;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 
 @Getter

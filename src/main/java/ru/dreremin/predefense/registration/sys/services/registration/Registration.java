@@ -1,7 +1,6 @@
 package ru.dreremin.predefense.registration.sys.services.registration;
 
 import java.util.Optional;
-
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 

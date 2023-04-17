@@ -20,7 +20,7 @@ public class DeleteStudentController {
 
 	private final DeleteStudentService deleteStudentService;
 	
-	@DeleteMapping("/student/{login}")
+	@DeleteMapping("/student/by-login/{login}")
 	public ResponseEntity<StatusResponseDto> deleteStudent(
 			@PathVariable(value = "login") String login) {
 		
@@ -37,7 +37,7 @@ public class DeleteStudentController {
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
 	
-	@DeleteMapping("/students/{groupNumber}")
+	@DeleteMapping("/students/by-group/{groupNumber}")
 	public ResponseEntity<StatusResponseDto> deleteStudentsByGroup(
 			@PathVariable("groupNumber") String group) {
 		

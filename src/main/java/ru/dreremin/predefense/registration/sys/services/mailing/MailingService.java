@@ -2,7 +2,6 @@ package ru.dreremin.predefense.registration.sys.services.mailing;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.MailParseException;
@@ -66,7 +65,8 @@ public class MailingService {
 			MailingRequestDto dto) {
 		
 		List<Email> addresses = emailRepo.findAllByStudent();
-		List<MailingResponseDto> responseDto = new ArrayList<>(addresses.size());
+		List<MailingResponseDto> responseDto = 
+				new ArrayList<>(addresses.size());
 		
 		for (Email email : addresses) {
 			responseDto.add(sendEmail(

@@ -19,9 +19,9 @@ public class CreateRegistrationController {
 
 	private final CreateRegistrationService service;
 	
-	@PutMapping(value = "/student/registrations/create/{commissionId}")
+	@PutMapping("/student/registrations/create/by-commission-id/{id}")
 	public ResponseEntity<StatusResponseDto> studentRegistration(
-			@PathVariable(value = "commissionId") int commissionId) {
+			@PathVariable(value = "id") int commissionId) {
 		
 		service.createStudentRegistration(commissionId);
 		log.info("CreateRegistrationController."
@@ -29,9 +29,9 @@ public class CreateRegistrationController {
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
 	
-	@PutMapping(value = "/teacher/registrations/create/{commissionId}")
+	@PutMapping("/teacher/registrations/create/by-commission-id/{id}")
 	public ResponseEntity<StatusResponseDto> teacherRegistration(
-			@PathVariable(value = "commissionId") int commissionId) {
+			@PathVariable(value = "id") int commissionId) {
 		service.createTeacherRegistration(commissionId);
 		log.info("CreateRegistrationController."
 				+ "createTeacherRegistration() success");

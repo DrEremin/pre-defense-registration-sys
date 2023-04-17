@@ -1,20 +1,20 @@
 package ru.dreremin.predefense.registration.sys.services.commission;
 
-import java.util.List;
 import java.util.Optional;
-
 import javax.persistence.EntityNotFoundException;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
+
 import ru.dreremin.predefense.registration.sys.models.Commission;
-import ru.dreremin.predefense.registration.sys.repositories.CommissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.NoteRepository;
-import ru.dreremin.predefense.registration.sys.repositories.StudentCommissionRepository;
-import ru.dreremin.predefense.registration.sys.repositories.TeacherCommissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .StudentCommissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .TeacherCommissionRepository;
 
 @RequiredArgsConstructor
 @Service

@@ -2,7 +2,6 @@ package ru.dreremin.predefense.registration.sys.repositories;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,8 +15,9 @@ public interface TeacherCommissionRepository
 	
 	List<TeacherCommission> findAllByTeacherId(long teacherId);
 	
-	Optional<TeacherCommission> findByTeacherIdAndCommissionId(int teacherId, 
-															 int commissionId);
+	Optional<TeacherCommission> findByTeacherIdAndCommissionId(
+			int teacherId, 
+			int commissionId);
 	
 	void deleteAllByTeacherId(int teacherId);
 	

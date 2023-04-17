@@ -6,12 +6,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
+
+import ru.dreremin.predefense.registration.sys.dto.request
+		 .CommissionRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
-import ru.dreremin.predefense.registration.sys.services.commission.UpdateCommissionService;
+import ru.dreremin.predefense.registration.sys.services.commission
+		 .UpdateCommissionService;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,7 +22,8 @@ public class UpdateCommissionController {
 	
 	private final UpdateCommissionService updateCommissionService;
 	
-	@PutMapping(value = "/admin/commissions/update/{id}", 
+	@PutMapping(
+			value = "/admin/commissions/update/by-id/{id}", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> updateCommission(
 			@PathVariable(value = "id") int id,

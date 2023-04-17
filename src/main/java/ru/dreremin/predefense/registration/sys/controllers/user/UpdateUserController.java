@@ -19,7 +19,7 @@ public class UpdateUserController {
 	
 	@PutMapping("/user/update/password")
 	public ResponseEntity<StatusResponseDto> updatePassword(
-			@RequestParam() String value) {
+			@RequestParam(value = "value") String value) {
 		updateUserService.updatePassword(value);
 		log.info("UpdateUserController.updatePassword() success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));

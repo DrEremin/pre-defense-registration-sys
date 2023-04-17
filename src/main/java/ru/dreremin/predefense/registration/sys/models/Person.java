@@ -1,4 +1,4 @@
-	package ru.dreremin.predefense.registration.sys.models;
+package ru.dreremin.predefense.registration.sys.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -48,6 +47,11 @@ public class Person {
 	
 	@Override
 	public String toString() {
-		return String.format("%d %s %s %s", id, lastName, firstName, patronymic);
+		return String.format(
+				"%d %s %s %s", 
+				id, 
+				lastName, 
+				firstName, 
+				patronymic);
 	}
 }

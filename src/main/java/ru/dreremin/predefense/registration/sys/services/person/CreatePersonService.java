@@ -2,9 +2,9 @@ package ru.dreremin.predefense.registration.sys.services.person;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import ru.dreremin.predefense.registration.sys.dto.request.PersonRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;

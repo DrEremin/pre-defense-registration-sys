@@ -20,7 +20,7 @@ public class GetUserController {
 	
 	private final GetUserService getUserService;
 	
-	@GetMapping(value = "/get")
+	@GetMapping("/get")
 	public ResponseEntity<UserResponseDto> getUser(
 			@RequestHeader(value = "Authorization") String jwt) {
 		

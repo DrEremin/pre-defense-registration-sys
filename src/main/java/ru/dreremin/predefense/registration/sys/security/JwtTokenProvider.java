@@ -2,10 +2,8 @@ package ru.dreremin.predefense.registration.sys.security;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;

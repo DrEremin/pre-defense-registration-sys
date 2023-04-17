@@ -9,7 +9,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request
+		 .CommissionRequestDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
@@ -64,11 +65,13 @@ public class UpdateCommissionService {
 		
 		if (dto.getStartDateTime() != null) {
 			dto.setStartDateTime(ZonedDateTime.of(
-					dto.getStartDateTime().toLocalDateTime(), ZoneId.of(zone)));
+					dto.getStartDateTime().toLocalDateTime(), 
+					ZoneId.of(zone)));
 		}
 		if (dto.getEndDateTime() != null) {
 			dto.setEndDateTime(ZonedDateTime.of(
-					dto.getEndDateTime().toLocalDateTime(), ZoneId.of(zone)));
+					dto.getEndDateTime().toLocalDateTime(), 
+					ZoneId.of(zone)));
 		}
 	}
 }

@@ -18,9 +18,9 @@ public class DeleteCommissionController {
 	
 	private final DeleteCommissionService service;
 	
-	@DeleteMapping(value = "/admin/commissions/delete/{commissionId}")
+	@DeleteMapping(value = "/admin/commissions/delete/by-id/{id}")
 	public ResponseEntity<StatusResponseDto> createComission(
-			@PathVariable(value = "commissionId") int commissionId) {
+			@PathVariable(value = "id") int commissionId) {
 		service.deleteComission(commissionId);
 		log.info("DeleteComissionController.deleteComission() is success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));

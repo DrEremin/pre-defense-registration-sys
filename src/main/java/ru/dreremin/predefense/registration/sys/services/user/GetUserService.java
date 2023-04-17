@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 import lombok.RequiredArgsConstructor;
 
-import ru.dreremin.predefense.registration.sys.dto.response.UserResponseDto;
 import ru.dreremin.predefense.registration.sys.security.ActorDetails;
 import ru.dreremin.predefense.registration.sys.services.auth
 		 .ActorDetailsService;
@@ -21,5 +20,4 @@ public class GetUserService {
 				.getClaim("login")
 				.asString());
 	}
-	
 }

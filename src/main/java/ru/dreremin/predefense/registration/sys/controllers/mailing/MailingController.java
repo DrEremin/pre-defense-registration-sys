@@ -1,6 +1,8 @@
 package ru.dreremin.predefense.registration.sys.controllers.mailing;
 
 import javax.validation.Valid;
+
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +26,9 @@ public class MailingController {
 
 	private final MailingService service;
 	
-	@PostMapping("/students")
+	@PostMapping(
+			value = "/students/all", 
+			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<WrapperForListResponseDto<MailingResponseDto>> 
 			sendMailsToStudents(@Valid @RequestBody MailingRequestDto dto) {
 		
@@ -35,7 +39,9 @@ public class MailingController {
 		return ResponseEntity.ok(responseDto);
 	}
 	
-	@PostMapping("/teachers")
+	@PostMapping(
+			value = "/teachers/all",
+			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<WrapperForListResponseDto<MailingResponseDto>> 
 			sendMailsToTeachers(@Valid @RequestBody MailingRequestDto dto) {
 		

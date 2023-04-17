@@ -22,12 +22,17 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
 	private final ObjectMapper mapper;
 	
 	@Override
-	public void handle(HttpServletRequest request, HttpServletResponse response,
-			AccessDeniedException accessDeniedException) throws IOException, ServletException {
+	public void handle(
+			HttpServletRequest request, 
+			HttpServletResponse response,
+			AccessDeniedException accessDeniedException) 
+					throws IOException, ServletException {
 		
 	response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-		StatusResponseDto dto = new StatusResponseDto(403, "User is not authorized");
+		StatusResponseDto dto = new StatusResponseDto(
+				403, 
+				"User is not authorized");
 		response.getWriter().print(mapper.writeValueAsString(dto));
 		
 	}

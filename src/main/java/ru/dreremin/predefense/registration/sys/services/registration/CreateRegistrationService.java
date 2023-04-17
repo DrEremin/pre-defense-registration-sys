@@ -4,18 +4,17 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .EntitiesMismatchException;
 import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
-import ru.dreremin.predefense.registration.sys.exceptions.ExpiredCommissionException;
+import ru.dreremin.predefense.registration.sys.exceptions
+		 .ExpiredCommissionException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Student;
@@ -32,7 +31,6 @@ import ru.dreremin.predefense.registration.sys.repositories
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.security.ActorDetails;
 
-@Slf4j
 @Service
 public class CreateRegistrationService extends Registration {
 	
@@ -120,7 +118,8 @@ public class CreateRegistrationService extends Registration {
 		List<StudentCommission> commissionRegistrations = studentCommissionRepo
 				.findAllByCommissionId(commissionOpt.get().getId());
 		
-		if (commissionRegistrations.size() >= commissionOpt.get().getStudentLimit()) {
+		if (commissionRegistrations.size() 
+				>= commissionOpt.get().getStudentLimit()) {
 			throw new OverLimitException(
 					"The limit of the allowed number of students"
 					+ " in this commission has been reached");

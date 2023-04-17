@@ -2,16 +2,13 @@ package ru.dreremin.predefense.registration.sys.security;
 
 import java.util.Collection;
 import java.util.Collections;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
 import ru.dreremin.predefense.registration.sys.models.Actor;
-import ru.dreremin.predefense.registration.sys.models.Person;
 
 @RequiredArgsConstructor
 @Getter

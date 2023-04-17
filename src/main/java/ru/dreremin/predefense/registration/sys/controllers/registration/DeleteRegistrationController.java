@@ -19,7 +19,7 @@ public class DeleteRegistrationController {
 	
 	private final DeleteRegistrationService service;
 	
-	@DeleteMapping(value = "/student/registrations/delete")
+	@DeleteMapping("/student/registrations/delete")
 	public ResponseEntity<StatusResponseDto> deleteStudentRegistration() {
 		
 		service.deleteStudentRegistration();
@@ -28,8 +28,7 @@ public class DeleteRegistrationController {
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
 	
-	@DeleteMapping(value = "/teacher/registrations/delete/{commissionId}", 
-			consumes = "application/json")
+	@DeleteMapping("/teacher/registrations/delete/by-commission-id/{id}")
 	public ResponseEntity<StatusResponseDto> deleteTeacherRegistration(
 			@PathVariable(value = "commissionId") int commissionId) {
 		

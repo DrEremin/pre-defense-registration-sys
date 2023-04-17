@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import ru.dreremin.predefense.registration.sys.dto.response.TeacherResponseDto;
-import ru.dreremin.predefense.registration.sys.dto.response.WrapperForListResponseDto;
+import ru.dreremin.predefense.registration.sys.dto.response
+		 .WrapperForListResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;

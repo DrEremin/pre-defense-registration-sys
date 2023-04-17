@@ -3,9 +3,9 @@ package ru.dreremin.predefense.registration.sys.services.teacher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import ru.dreremin.predefense.registration.sys.dto.request.TeacherRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;

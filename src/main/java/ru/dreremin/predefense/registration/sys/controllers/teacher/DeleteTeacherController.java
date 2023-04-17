@@ -18,7 +18,7 @@ public class DeleteTeacherController {
 
 	private final DeleteTeacherService deleteTeacherService;
 	
-	@DeleteMapping("/admin/users/delete/teacher/{login}")
+	@DeleteMapping("/admin/users/delete/teacher/by-login/{login}")
 	public ResponseEntity<StatusResponseDto> deleteTeacher(
 			@PathVariable(value = "login") String login) {
 		

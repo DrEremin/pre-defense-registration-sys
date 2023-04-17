@@ -22,7 +22,8 @@ public class CreateStudentController {
 
 	private final CreateStudentService studentService;
 	
-	@PutMapping(value = "/admin/users/create/student", 
+	@PutMapping(
+			value = "/admin/users/create/student", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> createStudent(
 			@Valid @RequestBody StudentRequestDto studentRequestDto) {

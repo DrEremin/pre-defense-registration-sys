@@ -1,5 +1,6 @@
 package ru.dreremin.predefense.registration.sys.controllers.teacher;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,7 +21,9 @@ public class UpdateTeacherController {
 	
 	private final UpdateTeacherService updateTeacherService;
 	
-	@PutMapping(value = "/admin/users/update/teacher/{login}")
+	@PutMapping(
+			value = "/admin/users/update/teacher/by-login/{login}",
+			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> updateTeacher(
 			@PathVariable(value = "login") String login, 
 			@RequestBody TeacherRequestDto dto) {

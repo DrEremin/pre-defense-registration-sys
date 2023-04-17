@@ -17,9 +17,9 @@ public class ReadNoteController {
 	
 	private final ReadNoteService readNoteService;
 	
-	@GetMapping(value = "/admin/read/note/{commissionId}")
+	@GetMapping(value = "/admin/read/note/by-commission-id/{id}")
 	public ResponseEntity<NoteResponseDto> readNote(
-			@PathVariable(value = "commissionId") int id) {
+			@PathVariable(value = "id") int id) {
 		
 		NoteResponseDto dto = readNoteService.readNote(id);
 		
