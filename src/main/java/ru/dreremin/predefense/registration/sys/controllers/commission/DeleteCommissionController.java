@@ -1,5 +1,7 @@
 package ru.dreremin.predefense.registration.sys.controllers.commission;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +22,10 @@ public class DeleteCommissionController {
 	
 	@DeleteMapping(value = "/admin/commissions/delete/by-id/{id}")
 	public ResponseEntity<StatusResponseDto> createComission(
-			@PathVariable(value = "id") int commissionId) {
+			@PathVariable(value = "id") 
+			@Min(1) 
+			@Max(Integer.MAX_VALUE) 
+			int commissionId) {
 		service.deleteComission(commissionId);
 		log.info("DeleteComissionController.deleteComission() is success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));

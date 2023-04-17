@@ -1,5 +1,7 @@
 package ru.dreremin.predefense.registration.sys.controllers.note;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +21,10 @@ public class ReadNoteController {
 	
 	@GetMapping(value = "/admin/read/note/by-commission-id/{id}")
 	public ResponseEntity<NoteResponseDto> readNote(
-			@PathVariable(value = "id") int id) {
+			@PathVariable(value = "id") 
+			@Min(1) 
+			@Max(Integer.MAX_VALUE) 
+			int id) {
 		
 		NoteResponseDto dto = readNoteService.readNote(id);
 		

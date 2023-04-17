@@ -1,5 +1,7 @@
 package ru.dreremin.predefense.registration.sys.controllers.commission;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,10 @@ public class UpdateCommissionController {
 			value = "/admin/commissions/update/by-id/{id}", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> updateCommission(
-			@PathVariable(value = "id") int id,
+			@PathVariable(value = "id")
+			@Min(1) 
+			@Max(Integer.MAX_VALUE) 
+			int id,
 			@RequestBody CommissionRequestDto dto) {
 		
 		updateCommissionService.updateCommission(id, dto);

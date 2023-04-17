@@ -1,5 +1,7 @@
 package ru.dreremin.predefense.registration.sys.controllers.registration;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +32,10 @@ public class DeleteRegistrationController {
 	
 	@DeleteMapping("/teacher/registrations/delete/by-commission-id/{id}")
 	public ResponseEntity<StatusResponseDto> deleteTeacherRegistration(
-			@PathVariable(value = "commissionId") int commissionId) {
+			@PathVariable(value = "id") 
+			@Min(1) 
+			@Max(Integer.MAX_VALUE) 
+			int commissionId) {
 		
 		service.deleteTeacherRegistration(commissionId);
 		log.info("DeleteRegistrationController."

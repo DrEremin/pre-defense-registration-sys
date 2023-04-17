@@ -1,6 +1,8 @@
 package ru.dreremin.predefense.registration.sys.controllers.commission;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,7 +86,11 @@ public class ReadCommissionController {
 	
 	@GetMapping(value = "/admin/commissions/read/by-id/{id}")
 	public ResponseEntity<CommissionResponseDto> 
-			getComissionById(@PathVariable("id") int id) {
+			getComissionById(
+					@PathVariable("id")
+					@Min(1) 
+					@Max(Integer.MAX_VALUE) 
+					int id) {
 		
 		CommissionResponseDto commission = service
 				.getCommissionById(id);

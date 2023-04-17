@@ -1,5 +1,7 @@
 package ru.dreremin.predefense.registration.sys.controllers.registration;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,7 +23,10 @@ public class CreateRegistrationController {
 	
 	@PutMapping("/student/registrations/create/by-commission-id/{id}")
 	public ResponseEntity<StatusResponseDto> studentRegistration(
-			@PathVariable(value = "id") int commissionId) {
+			@PathVariable(value = "id") 
+			@Min(1) 
+			@Max(Integer.MAX_VALUE) 
+			int commissionId) {
 		
 		service.createStudentRegistration(commissionId);
 		log.info("CreateRegistrationController."
@@ -31,7 +36,10 @@ public class CreateRegistrationController {
 	
 	@PutMapping("/teacher/registrations/create/by-commission-id/{id}")
 	public ResponseEntity<StatusResponseDto> teacherRegistration(
-			@PathVariable(value = "id") int commissionId) {
+			@PathVariable(value = "id") 
+			@Min(1) 
+			@Max(Integer.MAX_VALUE) 
+			int commissionId) {
 		service.createTeacherRegistration(commissionId);
 		log.info("CreateRegistrationController."
 				+ "createTeacherRegistration() success");
