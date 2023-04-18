@@ -42,7 +42,7 @@ public class DeleteTeacherService {
 		
 		if (teacherOpt.isEmpty()) {
 			throw new EntityNotFoundException(
-					"User with this id is not a teacher");
+					"User with this ID is not a teacher");
 		}
 		teacherComissionRepository.deleteAllByTeacherId(
 				teacherOpt.get().getId());
