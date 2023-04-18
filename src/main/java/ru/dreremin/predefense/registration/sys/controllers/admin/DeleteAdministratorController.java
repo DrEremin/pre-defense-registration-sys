@@ -1,5 +1,8 @@
 package ru.dreremin.predefense.registration.sys.controllers.admin;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,11 +21,11 @@ public class DeleteAdministratorController {
 	
 	private final DeleteAdministratorService deleteAdministratorService;
 	
-	@DeleteMapping("/admin/users/delete/admin/by-login/{login}")
+	@DeleteMapping("/admin/users/delete/admin/by-id/{id}")
 	public ResponseEntity<StatusResponseDto> deleteAdmin(
-			@PathVariable(value = "login") String login) {
+			@PathVariable(value = "id") @Min(0) @Max(Long.MAX_VALUE) long id) {
 		
-		deleteAdministratorService.deleteAdmin(login);
+		deleteAdministratorService.deleteAdmin(id);
 		log.info("DeleteAdministratorController.deleteAdmin() is success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}

@@ -18,29 +18,29 @@ import ru.dreremin.predefense.registration.sys.repositories
 @Service
 public class DeleteAdministratorService {
 
-	private final AdministratorRepository adminRepo;
-	private final ActorRepository actorRepo;
+	private final AdministratorRepository administratorRepository;
+	private final ActorRepository actorRepository;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, 
 			rollbackFor = { UsernameNotFoundException.class, 
 					EntityNotFoundException.class })
-	public void deleteAdmin(String login) {
+	public void deleteAdmin(long actorId) {
 		
-		Optional<Actor> actorOpt = actorRepo.findByLogin(login);
+		Optional<Actor> actorOpt = actorRepository.findById(actorId);
 		
 		if (actorOpt.isEmpty()) {
 			throw new UsernameNotFoundException(
-					"User with this login does not exist");
+					"User with this id does not exist");
 		}
 		
-		Optional<Administrator> adminOpt = adminRepo.findByActorId(
-				actorOpt.get().getId());
+		Optional<Administrator> administratorOpt = administratorRepository
+				.findByActorId(actorId);
 		
-		if (adminOpt.isEmpty()) {
+		if (administratorOpt.isEmpty()) {
 			throw new EntityNotFoundException(
-					"Administrator with this login does not exist");
+					"User with this id is not an administrator");
 		}
-		adminRepo.delete(adminOpt.get());
-		actorRepo.delete(actorOpt.get());
+		administratorRepository.delete(administratorOpt.get());
+		actorRepository.delete(actorOpt.get());
 	}
 }
