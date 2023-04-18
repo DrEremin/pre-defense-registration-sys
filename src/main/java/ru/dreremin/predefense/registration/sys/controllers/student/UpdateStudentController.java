@@ -1,5 +1,8 @@
 package ru.dreremin.predefense.registration.sys.controllers.student;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,13 +25,13 @@ public class UpdateStudentController {
 	private final UpdateStudentService updateStudentService;
 	
 	@PutMapping(
-			value = "/admin/users/update/student/by-login/{login}",
+			value = "/admin/users/update/student/by-id/{id}",
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> updateStudent(
-			@PathVariable(value = "login") String login, 
+			@PathVariable(value = "id") @Min(1) @Max(Long.MAX_VALUE) long id, 
 			@RequestBody StudentRequestDto dto) {
 		
-		updateStudentService.updateStudent(login, dto);
+		updateStudentService.updateStudent(id, dto);
 		log.info("UpdateStudentController.updateStudent() success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}

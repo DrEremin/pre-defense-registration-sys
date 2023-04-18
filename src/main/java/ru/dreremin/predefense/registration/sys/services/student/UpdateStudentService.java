@@ -33,9 +33,9 @@ public class UpdateStudentService {
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class})
-	public void updateStudent(String login, StudentRequestDto dto) {
+	public void updateStudent(long actorId, StudentRequestDto dto) {
 		
-		Actor actor = actorRepository.findByLogin(login).orElseThrow(
+		Actor actor = actorRepository.findById(actorId).orElseThrow(
 				() -> new EntityNotFoundException(
 						"User with this ID does not exist"));
 		
@@ -46,9 +46,9 @@ public class UpdateStudentService {
 			actor.setPassword(passwordEncoder.encode(dto.getPassword()));
 		}
 		
-		Person person = personRepository.findByActorId(actor.getId())
+		Person person = personRepository.findByActorId(actorId)
 				.orElseThrow(() -> new EntityNotFoundException(
-						"Person with this login does not exist"));
+						"Person with this user ID does not exist"));
 		
 		if (dto.getLastName() != null) {
 			person.setLastName(dto.getLastName());
@@ -71,7 +71,7 @@ public class UpdateStudentService {
 		
 		Student student = studentRepository.findByPersonId(person.getId())
 				.orElseThrow(() -> new EntityNotFoundException(
-						"Student with this login does not exist"));
+						"Student with this user ID does not exist"));
 		
 		if (dto.getGroupNumber() != null) {
 			student.setGroupNumber(dto.getGroupNumber());
