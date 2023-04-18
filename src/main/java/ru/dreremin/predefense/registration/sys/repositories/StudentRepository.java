@@ -33,6 +33,20 @@ public interface StudentRepository extends JpaRepository<Student, Long>{
 				+ "on a.id = p.actorId "
 			+ "join Student s "
 				+ "on p.id = s.personId "
+			+ "where a.id = :id")
+	Optional<Student> findByActorId(@Param("id") long id);
+	
+	@Query("select new Student("
+			+ "s.id, "
+			+ "s.personId, "
+			+ "s.groupNumber, "
+			+ "s.studyDirection, "
+			+ "s.studyType) "
+			+ "from Actor a "
+			+ "join Person p "
+				+ "on a.id = p.actorId "
+			+ "join Student s "
+				+ "on p.id = s.personId "
 			+ "where a.login = :username")
 	Optional<Student> findByActorLogin(@Param("username") String login);
 	

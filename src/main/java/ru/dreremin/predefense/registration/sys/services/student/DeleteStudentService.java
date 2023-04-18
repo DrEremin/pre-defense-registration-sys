@@ -22,25 +22,26 @@ import ru.dreremin.predefense.registration.sys.services.person
 @Service
 public class DeleteStudentService {
 	
-	private final ActorRepository actorRepo;
-	private final StudentRepository studentRepo;
-	private final StudentCommissionRepository studentComissionRepo;
+	private final ActorRepository actorRepositroy;
+	private final StudentRepository studentRepository;
+	private final StudentCommissionRepository studentComissionRepository;
 	private final DeletePersonService deletePersonService;
 	
-	public void deleteStudentByLogin(String login) {
+	public void deleteStudentById(long actorId) {
 		
-		Optional<Actor> actorOpt = actorRepo.findByLogin(login);
+		Optional<Actor> actorOpt = actorRepositroy.findById(actorId);
 		
 		if (actorOpt.isEmpty()) {
 			throw new UsernameNotFoundException(
-					"User with this login does not exist");
+					"User with this id does not exist");
 		}
 		
-		Optional<Student> studentOpt = studentRepo.findByActorLogin(login);
+		Optional<Student> studentOpt = studentRepository
+				.findByActorId(actorId);
 		
 		if (studentOpt.isEmpty()) {
 			throw new EntityNotFoundException(
-					"Student with this login does not exist");
+					"User with this id is not a student");
 		}
 		
 		deleteStudent(studentOpt.get().getId());
@@ -51,7 +52,7 @@ public class DeleteStudentService {
 					EntityNotFoundException.class })
 	public void deleteAllStudents() {
 		
-		List<Student> students = studentRepo.findAll();
+		List<Student> students = studentRepository.findAll();
 		
 		for (Student student : students) {
 			deleteStudent(student.getId());
@@ -63,7 +64,7 @@ public class DeleteStudentService {
 					EntityNotFoundException.class })
 	public void deleteStudentsByGroup(String group) {
 		
-		List<Student> students = studentRepo.findAllByGroupNumber(group);
+		List<Student> students = studentRepository.findAllByGroupNumber(group);
 		
 		if (students.size() == 0) {
 			throw new EntityNotFoundException(
@@ -80,11 +81,11 @@ public class DeleteStudentService {
 					EntityNotFoundException.class })
 	private void deleteStudent(long id) {
 
-		Actor actor = actorRepo.findByStudentId(id).get();
+		Actor actor = actorRepositroy.findByStudentId(id).get();
 		
-		studentComissionRepo.deleteAllByStudentId(id);
-		studentRepo.deleteById(id);
+		studentComissionRepository.deleteAllByStudentId(id);
+		studentRepository.deleteById(id);
 		deletePersonService.deletePersonAndEmail(actor.getId());
-		actorRepo.delete(actor);
+		actorRepositroy.delete(actor);
 	}
 }
