@@ -35,6 +35,18 @@ public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 			+ "t.id, "
 			+ "t.personId, "
 			+ "t.jobTitle) "
+			+ "from Actor a "
+			+ "join Person p "
+				+ "on a.id = p.actorId "
+			+ "join Teacher t "
+				+ "on p.id = t.personId "
+			+ "where a.id = :id")
+	Optional<Teacher> findByActorId(@Param("id") long id);
+	
+	@Query("select new Teacher("
+			+ "t.id, "
+			+ "t.personId, "
+			+ "t.jobTitle) "
 			+ "from Teacher t join Person p "
 				+ "on t.personId = p.id "
 			+ "order by p.lastName")

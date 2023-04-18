@@ -21,32 +21,33 @@ import ru.dreremin.predefense.registration.sys.services.person
 @Service
 public class DeleteTeacherService {
 
-	private final ActorRepository actorRepo;
-	private final TeacherRepository teacherRepo;
-	private final TeacherCommissionRepository teacherComissionRepo;
+	private final ActorRepository actorRepository;
+	private final TeacherRepository teacherRepostory;
+	private final TeacherCommissionRepository teacherComissionRepository;
 	private final DeletePersonService deletePersonService;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, 
 			rollbackFor = { UsernameNotFoundException.class, 
 					EntityNotFoundException.class })
-	public void deleteTeacher(String login) {
+	public void deleteTeacherById(long actorId) {
 		
-		Optional<Actor> actorOpt = actorRepo.findByLogin(login);
+		Optional<Actor> actorOpt = actorRepository.findById(actorId);
 		
 		if (actorOpt.isEmpty()) {
 			throw new UsernameNotFoundException(
-					"User with this login does not exist");
+					"User with this id does not exist");
 		}
 		
-		Optional<Teacher> teacherOpt = teacherRepo.findByActorLogin(login);
+		Optional<Teacher> teacherOpt = teacherRepostory.findByActorId(actorId);
 		
 		if (teacherOpt.isEmpty()) {
 			throw new EntityNotFoundException(
-					"Teacher with this login does not exist");
+					"User with this id is not a teacher");
 		}
-		teacherComissionRepo.deleteAllByTeacherId(teacherOpt.get().getId());
-		teacherRepo.delete(teacherOpt.get());
+		teacherComissionRepository.deleteAllByTeacherId(
+				teacherOpt.get().getId());
+		teacherRepostory.delete(teacherOpt.get());
 		deletePersonService.deletePersonAndEmail(actorOpt.get().getId());
-		actorRepo.delete(actorOpt.get());
+		actorRepository.delete(actorOpt.get());
 	}
 }
