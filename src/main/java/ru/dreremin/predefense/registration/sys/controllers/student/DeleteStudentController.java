@@ -38,14 +38,5 @@ public class DeleteStudentController {
 		log.info("DeleteStudentController.deleteAllStudents() is success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
-	
-	@DeleteMapping("/students/by-group/{groupNumber}")
-	public ResponseEntity<StatusResponseDto> deleteStudentsByGroup(
-			@PathVariable("groupNumber") String group) {
-		
-		deleteStudentService.deleteStudentsByGroup(group);
-		log.info("DeleteStudentController.deleteStudentsByGroup() is success");
-		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
-	}
 }
 

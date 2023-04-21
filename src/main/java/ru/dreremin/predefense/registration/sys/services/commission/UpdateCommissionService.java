@@ -13,6 +13,7 @@ import ru.dreremin.predefense.registration.sys.dto.request
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories.StudentCommissionRepository;
 import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
 
 @RequiredArgsConstructor
@@ -20,6 +21,8 @@ import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
 public class UpdateCommissionService {
 
 	private final CommissionRepository commissionRepository;
+	
+	private final StudentCommissionRepository studentCommissionRepository;
 	
 	private final ZonedDateTimeProvider zonedDateTimeProvider;
 	
@@ -53,6 +56,8 @@ public class UpdateCommissionService {
 		}
 		setDateTimeFields(dto, commission);
 	}
+	
+	
 	
 	private void setDateTimeFields(
 			CommissionRequestDto dto, 

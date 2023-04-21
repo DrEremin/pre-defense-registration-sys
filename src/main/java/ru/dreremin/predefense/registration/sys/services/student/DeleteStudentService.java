@@ -62,23 +62,6 @@ public class DeleteStudentService {
 	@Transactional(isolation = Isolation.SERIALIZABLE, 
 			rollbackFor = { UsernameNotFoundException.class, 
 					EntityNotFoundException.class })
-	public void deleteStudentsByGroup(String group) {
-		
-		List<Student> students = studentRepository.findAllByGroupNumber(group);
-		
-		if (students.size() == 0) {
-			throw new EntityNotFoundException(
-					"Group with this number does not exist");
-		}
-		
-		for (Student student : students) {
-			deleteStudent(student.getId());
-		}
-	}
-	
-	@Transactional(isolation = Isolation.SERIALIZABLE, 
-			rollbackFor = { UsernameNotFoundException.class, 
-					EntityNotFoundException.class })
 	private void deleteStudent(long id) {
 
 		Actor actor = actorRepositroy.findByStudentId(id).get();
