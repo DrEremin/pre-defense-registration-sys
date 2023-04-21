@@ -271,7 +271,7 @@ public class ReadCommissionService {
 				.getAuthentication().getPrincipal()).getActor();
 		
 		if (!actor.getRole().equals(role.getRole())) {
-			throw new AccessDeniedException("User is not 1 authorized");
+			throw new AccessDeniedException("User is not authorized");
 		}
 		return actor;
 	}

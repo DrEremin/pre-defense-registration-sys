@@ -21,28 +21,15 @@ public class CreateRegistrationController {
 
 	private final CreateRegistrationService service;
 	
-	@PostMapping("/student/registrations/create/by-commission-id/{id}")
-	public ResponseEntity<StatusResponseDto> studentRegistration(
+	@PostMapping("/user/registrations/create/{id}")
+	public ResponseEntity<StatusResponseDto> createRegistration(
 			@PathVariable(value = "id") 
 			@Min(1) 
 			@Max(Integer.MAX_VALUE) 
 			int commissionId) {
-		
-		service.createStudentRegistration(commissionId);
+		service.createRegistration(commissionId);
 		log.info("CreateRegistrationController."
-				+ "createStudentRegistration() is success");
-		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
-	}
-	
-	@PostMapping("/teacher/registrations/create/by-commission-id/{id}")
-	public ResponseEntity<StatusResponseDto> teacherRegistration(
-			@PathVariable(value = "id") 
-			@Min(1) 
-			@Max(Integer.MAX_VALUE) 
-			int commissionId) {
-		service.createTeacherRegistration(commissionId);
-		log.info("CreateRegistrationController."
-				+ "createTeacherRegistration() success");
+				+ "createRegistration() success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
 }

@@ -4,6 +4,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
+
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .ExpiredCommissionException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
+import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentCommission;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
@@ -30,6 +33,7 @@ import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.security.ActorDetails;
+import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
 @Service
 public class CreateRegistrationService extends Registration {
@@ -49,6 +53,17 @@ public class CreateRegistrationService extends Registration {
 				teacherRepo);
 	}
 	
+	public void createRegistration(int commissionId) {
+		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getActor();
+		if (actor.getRole().equals(Role.STUDENT.getRole())) {
+			createStudentRegistration(commissionId, actor.getLogin());
+		}
+		if (actor.getRole().equals(Role.TEACHER.getRole())) {
+			createTeacherRegistration(commissionId, actor.getLogin());
+		}
+	}
+	
 	@Transactional(
 			isolation = Isolation.SERIALIZABLE,
             rollbackFor = { 
@@ -57,14 +72,10 @@ public class CreateRegistrationService extends Registration {
             		EntitiesMismatchException.class,
             		UniquenessViolationException.class,
             		ExpiredCommissionException.class})
-	public void createStudentRegistration(int commissionId) {
+	private void createStudentRegistration(int commissionId, String login) {
 		
-		Authentication authentication = SecurityContextHolder.getContext()
-				.getAuthentication();
-		ActorDetails actorDetails = (ActorDetails) authentication
-				.getPrincipal();
-		Optional<Student> studentOpt = studentRepo.findByActorLogin(
-				actorDetails.getUsername());
+		Optional<Student> studentOpt = studentRepo.findByActorLogin(login);
+		
 		if (studentOpt.isEmpty()) {
 			throw new EntityNotFoundException(
 					"Student with this login does not exist");
@@ -82,24 +93,20 @@ public class CreateRegistrationService extends Registration {
             		EntityNotFoundException.class,
             		UniquenessViolationException.class,
             		ExpiredCommissionException.class})
-	public void createTeacherRegistration(int comissionId) {
+	private void createTeacherRegistration(int commissionId, String login) {
 		
-		Authentication authentication = SecurityContextHolder.getContext()
-				.getAuthentication();
-		ActorDetails actorDetails = (ActorDetails) authentication
-				.getPrincipal();
-		Optional<Teacher> teacherOpt = teacherRepo.findByActorLogin(
-				actorDetails.getUsername());
+		Optional<Teacher> teacherOpt = teacherRepo.findByActorLogin(login);
+		
 		if (teacherOpt.isEmpty()) {
 			throw new EntityNotFoundException(
 					"Teacher with this login does not exist");
 		}
 		teacher = teacherOpt.get();
-		setComissionOpt(comissionId);
+		setComissionOpt(commissionId);
 		checkingPossibilityOfTeacherRegistration();
 		teacherCommissionRepo.save(new TeacherCommission(
 				teacher.getId(), 
-				comissionId));
+				commissionId));
 	}
 	
 	private void checkingPossibilityOfStudentRegistration() {
