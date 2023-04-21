@@ -15,6 +15,7 @@ import ru.dreremin.predefense.registration.sys.models.Administrator;
 import ru.dreremin.predefense.registration.sys.repositories.ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .AdministratorRepository;
+import ru.dreremin.predefense.registration.sys.util.Role;
 
 @Slf4j
 @Service
@@ -39,7 +40,7 @@ public class CreateAdministratorService {
 		Actor actor = actorRepo.save(new Actor(
 				dto.getLogin(), 
 				encodedPassword, 
-				"ROLE_ADMIN"));
+				Role.ADMIN.getRole()));
 		administratorRepo.save(new Administrator(actor.getId()));
 		log.info("The student created successfully");
 	}

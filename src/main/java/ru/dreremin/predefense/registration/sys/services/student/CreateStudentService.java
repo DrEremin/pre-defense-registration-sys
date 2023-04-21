@@ -13,6 +13,7 @@ import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.services.person
 		 .CreatePersonService;
 import ru.dreremin.predefense.registration.sys.util.EntitiesFactory;
+import ru.dreremin.predefense.registration.sys.util.Role;
 
 @Slf4j
 @Service
@@ -28,8 +29,8 @@ public class CreateStudentService {
 	public void createStudent(StudentRequestDto dto) 
 			throws UniquenessViolationException{
 		
-		long personId = createPersonService.createPerson(dto, "ROLE_STUDENT")
-				.getId();
+		long personId = createPersonService.createPerson(
+				dto, Role.STUDENT.getRole()).getId();
 		
 		studentRepo.save(EntitiesFactory.createStudent(dto, personId));
 		log.info("The student created successfully");
