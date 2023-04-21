@@ -11,12 +11,12 @@ public class NoteRequestDto {
 	@NotNull
 	private final Integer commissionId;
 	
-	@JsonProperty(value = "noteContent")
+	@JsonProperty(value = "content")
 	@NotNull
-	private final String noteContent;
+	private final String content;
 	
 	public NoteRequestDto(Integer commissionId, String noteContent) {
 		this.commissionId = commissionId;
-		this.noteContent = noteContent.strip();
+		this.content = noteContent.strip();
 	}
 }

@@ -60,7 +60,8 @@ public class ReadCommissionController {
 							@Min(0)
 							@Max(Integer.MAX_VALUE)
 							int page, 
-							@RequestParam(value = "size", defaultValue = "10") 
+							@RequestParam(value = "amountOfItemsOnPage", 
+									defaultValue = "10") 
 							@Min(0)
 							@Max(Integer.MAX_VALUE)
 							int size) {
@@ -87,7 +88,8 @@ public class ReadCommissionController {
 							@Min(0)
 							@Max(Integer.MAX_VALUE)
 							int page, 
-							@RequestParam(value = "size", defaultValue = "10") 
+							@RequestParam(value = "amountOfItemsOnPage", 
+									defaultValue = "10") 
 							@Min(0)
 							@Max(Integer.MAX_VALUE)
 							int size) {
@@ -112,7 +114,8 @@ public class ReadCommissionController {
 					@Min(0)
 					@Max(Integer.MAX_VALUE)
 					int page, 
-					@RequestParam(value = "size", defaultValue = "10") 
+					@RequestParam(value = "amountOfItemsOnPage", 
+							defaultValue = "10") 
 					@Min(0)
 					@Max(Integer.MAX_VALUE)
 					int size,
