@@ -24,8 +24,8 @@ public class StudentResponseDto {
 	@JsonProperty(value = "studyType")
 	private final String studyType;
 	
-	@JsonProperty(value = "groupNumber")
-	private final String groupNumber;
+	@JsonProperty(value = "group")
+	private final String group;
 	
 	@JsonProperty(value = "email")
 	private final String email;

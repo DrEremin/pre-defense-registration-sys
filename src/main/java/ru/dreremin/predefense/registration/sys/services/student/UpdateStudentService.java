@@ -73,8 +73,8 @@ public class UpdateStudentService {
 				.orElseThrow(() -> new EntityNotFoundException(
 						"Student with this user ID does not exist"));
 		
-		if (dto.getGroupNumber() != null) {
-			student.setGroupNumber(dto.getGroupNumber());
+		if (dto.getGroup() != null) {
+			student.setGroupNumber(dto.getGroup());
 		}
 		if (dto.getStudyDirection() != null) {
 			student.setStudyDirection(dto.getStudyDirection());

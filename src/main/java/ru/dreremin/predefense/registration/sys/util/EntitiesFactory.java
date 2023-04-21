@@ -21,7 +21,7 @@ public class EntitiesFactory {
 	public static Student createStudent(StudentRequestDto dto, long personId) {
 		return new Student(
 				personId, 
-				dto.getGroupNumber(), 
+				dto.getGroup(), 
 				dto.getStudyDirection(), 
 				dto.getStudyType());
 	}

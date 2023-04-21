@@ -18,10 +18,10 @@ public class StudentRequestDto extends PersonRequestDto {
 	@Size(max = 20)
 	private final String studyType;
 	
-	@JsonProperty(value = "groupNumber")
+	@JsonProperty(value = "group")
 	@NotEmpty
 	@Size(max = 10)
-	private final String groupNumber;
+	private final String group;
 	
 	public StudentRequestDto (
 			String login,
@@ -32,11 +32,11 @@ public class StudentRequestDto extends PersonRequestDto {
 			String email,
 			String studyDirection,
 			String studyType,
-			String groupNumber) {
+			String group) {
 		super(login, password, lastName, firstName, patronymic, email);
 		this.studyDirection = studyDirection;
 		this.studyType = studyType;
-		this.groupNumber = groupNumber;
+		this.group = group;
 		
 	}
 }
