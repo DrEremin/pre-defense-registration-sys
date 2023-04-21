@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.util;
+package ru.dreremin.predefense.registration.sys.util.enums;
 
 public enum Role {
 	

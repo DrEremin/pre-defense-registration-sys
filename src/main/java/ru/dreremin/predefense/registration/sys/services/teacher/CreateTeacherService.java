@@ -13,7 +13,7 @@ import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.services.person
 		 .CreatePersonService;
-import ru.dreremin.predefense.registration.sys.util.Role;
+import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
 @Slf4j
 @Service

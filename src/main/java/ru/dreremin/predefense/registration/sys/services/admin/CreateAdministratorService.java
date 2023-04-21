@@ -15,7 +15,7 @@ import ru.dreremin.predefense.registration.sys.models.Administrator;
 import ru.dreremin.predefense.registration.sys.repositories.ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .AdministratorRepository;
-import ru.dreremin.predefense.registration.sys.util.Role;
+import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
 @Slf4j
 @Service

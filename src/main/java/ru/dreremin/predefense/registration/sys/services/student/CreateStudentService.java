@@ -13,7 +13,7 @@ import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.services.person
 		 .CreatePersonService;
 import ru.dreremin.predefense.registration.sys.util.EntitiesFactory;
-import ru.dreremin.predefense.registration.sys.util.Role;
+import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
 @Slf4j
 @Service

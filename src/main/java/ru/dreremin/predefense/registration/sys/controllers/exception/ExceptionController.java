@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mail.MailException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication
 		  .AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,6 +33,7 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .InvalidJwtTokenException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .NegativeTimePeriodException;
+import ru.dreremin.predefense.registration.sys.exceptions.NotReadableRequestParameterException;
 import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
@@ -149,6 +151,15 @@ public class ExceptionController {
 				HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(NotReadableRequestParameterException.class)
+	public ResponseEntity<StatusResponseDto> 
+			handleNotReadableRequestParameterException(
+					NotReadableRequestParameterException e) {
+		return new ResponseEntity<>(
+				new StatusResponseDto(400, e.getMessage()), 
+				HttpStatus.BAD_REQUEST);
+	}
+	
 	/**
 	 * JWT Exceptions
 	 */
@@ -228,6 +239,14 @@ public class ExceptionController {
 			AuthenticationException e) {
 		return new ResponseEntity<>(
 				new StatusResponseDto(403, "User is not authorized"), 
+				HttpStatus.FORBIDDEN);
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<StatusResponseDto> handleAccessDeniedException(
+			AccessDeniedException e) {
+		return new ResponseEntity<>(
+				new StatusResponseDto(403, e.getMessage()), 
 				HttpStatus.FORBIDDEN);
 	}
 	

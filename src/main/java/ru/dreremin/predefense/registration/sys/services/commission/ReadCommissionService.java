@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import javax.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -22,6 +25,7 @@ import ru.dreremin.predefense.registration.sys.dto.response.StudentResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response.TeacherResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .WrapperForPageResponseDto;
+import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.models.Student;
@@ -40,6 +44,7 @@ import ru.dreremin.predefense.registration.sys.services.student
 import ru.dreremin.predefense.registration.sys.services.teacher
 		 .ReadTeacherService;
 import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
+import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
 @RequiredArgsConstructor
 @Service
@@ -69,6 +74,7 @@ public class ReadCommissionService {
 				.getAuthentication();
 		ActorDetails actorDetails = (ActorDetails) authentication
 				.getPrincipal();
+		
 		Optional<Student> studentOpt = studentRepo.findByActorLogin(
 				actorDetails.getUsername());
 		
@@ -94,16 +100,19 @@ public class ReadCommissionService {
 	} 
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
-			EntityNotFoundException.class })
+			EntityNotFoundException.class, AccessDeniedException.class })
 	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
 			getActualComissionsListForStudent(PageRequest pageRequest) {
 		
-		Authentication authentication = SecurityContextHolder.getContext()
-				.getAuthentication();
-		ActorDetails actorDetails = (ActorDetails) authentication
-				.getPrincipal();
+		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getActor();
+		
+		if (!actor.getRole().equals(Role.STUDENT.getRole())) {
+			throw new AccessDeniedException("User is not authorized");
+		}
+	
 		Optional<Student> studentOpt = studentRepo.findByActorLogin(
-				actorDetails.getUsername());
+				actor.getLogin());
 		
 		if (studentOpt.isEmpty()) {
 			throw new EntityNotFoundException(
@@ -124,16 +133,19 @@ public class ReadCommissionService {
 	}
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
-			EntityNotFoundException.class })
+			EntityNotFoundException.class, AccessDeniedException.class })
 	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
 			getActualComissionsListForTeacher(PageRequest pageRequest) {
 		
-		Authentication authentication = SecurityContextHolder.getContext()
-				.getAuthentication();
-		ActorDetails actorDetails = (ActorDetails) authentication
-				.getPrincipal();
+		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getActor();
+		
+		if (!actor.getRole().equals(Role.TEACHER.getRole())) {
+			throw new AccessDeniedException("User is not authorized");
+		}
+		
 		Optional<Teacher> teacherOpt = teacherRepo.findByActorLogin(
-				actorDetails.getUsername());
+				actor.getLogin());
 		
 		if (teacherOpt.isEmpty()) {
 			throw new EntityNotFoundException(
@@ -157,6 +169,13 @@ public class ReadCommissionService {
 					ZonedDateTime startDateTime, 
 					ZonedDateTime endDateTime,
 					PageRequest pageRequest) {
+		
+		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getActor();
+		
+		if (!actor.getRole().equals(Role.ADMIN.getRole())) {
+			throw new AccessDeniedException("User is not authorized");
+		}
 		
 		Page<Commission> commissions = commissionRepo
 				.findAllByStartDateTimeBetweenOrderByStartDateTime(
