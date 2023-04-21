@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,8 @@ import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.services.commission
 		 .ReadCommissionService;
 import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
-import ru.dreremin.predefense.registration.sys.util.enums.CommissionsReadingType;
+import ru.dreremin.predefense.registration.sys.util.enums
+		 .CommissionsReadingType;
 
 //@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 @RequiredArgsConstructor
@@ -33,18 +33,6 @@ public class ReadCommissionController {
 	private final ReadCommissionService service;
 	
 	private final ZonedDateTimeProvider provider;
-	
-	@GetMapping("/student/commissions/read/current")
-	public ResponseEntity<CommissionResponseDto> 
-			getCurrentComissionOfStudent() {
-		
-		CommissionResponseDto responseDto = 
-				service.getCurrentComissionOfStudent();
-		
-		log.info("ReadComissionController.getCurrentComissionOfStudent() "
-				+ "is success");
-		return ResponseEntity.ok(responseDto);
-	}
 	
 	@GetMapping("/user/commissions/read/list")
 	public ResponseEntity<WrapperForPageResponseDto
@@ -110,18 +98,19 @@ public class ReadCommissionController {
 		}
 	}
 	
-	@GetMapping(value = "/admin/commissions/read/by-id/{id}")
-	public ResponseEntity<CommissionResponseDto> 
-			getComissionById(
-					@PathVariable("id")
-					@Min(1) 
+	@GetMapping(value = "/user/commissions/read/one")
+	public ResponseEntity<CommissionResponseDto> getComission(
+					@RequestParam(
+							value = "id", 
+							required = false, 
+							defaultValue = "0")
+					@Min(0) 
 					@Max(Integer.MAX_VALUE) 
 					int id) {
-		
-		CommissionResponseDto commission = service
-				.getCommissionById(id, true, true, true);
-		
-		log.info("ReadComissionController.getCommissionById() is success");
+		CommissionResponseDto commission = id == 0 
+				? service.getCurrentComissionOfStudent() 
+				: service.getCommissionById(id, true, true, true);
+		log.info("ReadComissionController.getCommission() is success");
 		return ResponseEntity.ok(commission);
 	}
 }

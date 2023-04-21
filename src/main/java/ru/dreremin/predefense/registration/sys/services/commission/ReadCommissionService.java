@@ -11,14 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response.StudentResponseDto;
@@ -45,7 +43,7 @@ import ru.dreremin.predefense.registration.sys.services.teacher
 		 .ReadTeacherService;
 import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
 import ru.dreremin.predefense.registration.sys.util.enums.Role;
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReadCommissionService {
@@ -70,19 +68,14 @@ public class ReadCommissionService {
 			EntityNotFoundException.class })
 	public CommissionResponseDto getCurrentComissionOfStudent() {
 		
-		Authentication authentication = SecurityContextHolder.getContext()
-				.getAuthentication();
-		ActorDetails actorDetails = (ActorDetails) authentication
-				.getPrincipal();
-		
 		Optional<Student> studentOpt = studentRepo.findByActorLogin(
-				actorDetails.getUsername());
+				authorityConfirmation(Role.STUDENT).getLogin());
 		
 		if (studentOpt.isEmpty()) {
 			throw new EntityNotFoundException(
 					"Student with this login does not exist");
 		}
-		
+		log.debug("getCurrentComissionOfStudent()");
 		Optional<StudentCommission> studentComissionOpt = 
 				studentCommissionRepo.findByStudentIdAndActualTime(
 						studentOpt.get().getId(), ZonedDateTime.now());
@@ -94,25 +87,16 @@ public class ReadCommissionService {
 		
 		Commission commission = commissionRepo.findById(studentComissionOpt
 				.get().getCommissionId()).get();
-		
-		
-		return getCommissionById(commission.getId(), true, true, true);
+		return getCommission(commission, true, true, true);
 	} 
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class, AccessDeniedException.class })
 	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
 			getActualComissionsListForStudent(PageRequest pageRequest) {
-		
-		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getActor();
-		
-		if (!actor.getRole().equals(Role.STUDENT.getRole())) {
-			throw new AccessDeniedException("User is not authorized");
-		}
 	
 		Optional<Student> studentOpt = studentRepo.findByActorLogin(
-				actor.getLogin());
+				authorityConfirmation(Role.STUDENT).getLogin());
 		
 		if (studentOpt.isEmpty()) {
 			throw new EntityNotFoundException(
@@ -137,15 +121,8 @@ public class ReadCommissionService {
 	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
 			getActualComissionsListForTeacher(PageRequest pageRequest) {
 		
-		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getActor();
-		
-		if (!actor.getRole().equals(Role.TEACHER.getRole())) {
-			throw new AccessDeniedException("User is not authorized");
-		}
-		
 		Optional<Teacher> teacherOpt = teacherRepo.findByActorLogin(
-				actor.getLogin());
+				authorityConfirmation(Role.TEACHER).getLogin());
 		
 		if (teacherOpt.isEmpty()) {
 			throw new EntityNotFoundException(
@@ -170,12 +147,7 @@ public class ReadCommissionService {
 					ZonedDateTime endDateTime,
 					PageRequest pageRequest) {
 		
-		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getActor();
-		
-		if (!actor.getRole().equals(Role.ADMIN.getRole())) {
-			throw new AccessDeniedException("User is not authorized");
-		}
+		authorityConfirmation(Role.ADMIN);
 		
 		Page<Commission> commissions = commissionRepo
 				.findAllByStartDateTimeBetweenOrderByStartDateTime(
@@ -192,30 +164,30 @@ public class ReadCommissionService {
 				getResult(commissions));
 	}
 	
-	public CommissionResponseDto getCommissionById(
-			int id, 
+	private CommissionResponseDto getCommission(
+			Commission commission, 
 			boolean withTeachers, 
 			boolean withStudents,
 			boolean withNote) {
-		
-		Commission commission = commissionRepo.findById(id).orElseThrow(
-				() -> new EntityNotFoundException(
-						"Commission with this ID does not exist"));	
+			
 		List<TeacherResponseDto> teachersDto = (withTeachers) 
-				? getListOfTeacherResponseDto(id) : new ArrayList<>();
+				? getListOfTeacherResponseDto(commission.getId()) 
+				: new ArrayList<>();
 		List<StudentResponseDto> studentsDto = (withStudents) 
-				? getListOfStudentResponseDto(id) : new ArrayList<>();
+				? getListOfStudentResponseDto(commission.getId()) 
+				: new ArrayList<>();
 		String startDateTime = zonedDateTimeProvider.convertToString(
 				commission.getStartDateTime());
 		String endDateTime = zonedDateTimeProvider.convertToString(
 				commission.getEndDateTime());
 		String note = withNote 
-				? noteRepo.findByCommissionId(id).orElse(new Note(id, ""))
+				? noteRepo.findByCommissionId(commission.getId())
+						.orElse(new Note(commission.getId(), ""))
 						.getNoteContent() 
 				: "";
 		
 		return new CommissionResponseDto(
-				id, 
+				commission.getId(), 
 				startDateTime, 
 				endDateTime, 
 				commission.getStudyDirection(), 
@@ -225,6 +197,29 @@ public class ReadCommissionService {
 				teachersDto,
 				studentsDto,
 				note);
+	}
+	
+	public CommissionResponseDto getCommissionById(
+			int id, 
+			boolean withTeachers, 
+			boolean withStudents,
+			boolean withNote) {
+		
+		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getActor();
+		
+		if (!actor.getRole().equals(Role.ADMIN.getRole())) {
+			throw new AccessDeniedException("User is not authorized");
+		}
+		
+		Commission commission = commissionRepo.findById(id).orElseThrow(
+				() -> new EntityNotFoundException(
+						"Commission with this ID does not exist"));	
+		return getCommission(
+				commission, 
+				withTeachers, 
+				withStudents, 
+				withNote);
 	}
 	
 	private List<TeacherResponseDto> getListOfTeacherResponseDto(
@@ -264,9 +259,20 @@ public class ReadCommissionService {
 		
 		for (Commission commission : commissions) {
 			
-			resultDto.add(getCommissionById(
-					commission.getId(), false, false, false));
+			resultDto.add(getCommission(
+					commission, false, false, false));
 		}
 		return Map.entry(page, resultDto);
+	}
+	
+	private Actor authorityConfirmation(Role role) {
+		
+		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getActor();
+		
+		if (!actor.getRole().equals(role.getRole())) {
+			throw new AccessDeniedException("User is not 1 authorized");
+		}
+		return actor;
 	}
 }  
