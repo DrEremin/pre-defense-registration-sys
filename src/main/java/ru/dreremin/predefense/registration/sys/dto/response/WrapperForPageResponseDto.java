@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class WrapperForPageResponseDto<T, E> {
 
-	@JsonProperty(value = "listResponseDto")
-	private final List<E> listResponseDto;
+	@JsonProperty(value = "items")
+	private final List<E> items;
 	
 	@JsonProperty(value = "page")
 	private final int pageNumber;
@@ -20,7 +20,7 @@ public class WrapperForPageResponseDto<T, E> {
 	private final int numberOfItemsPerPage;
 	
 	public WrapperForPageResponseDto(Map.Entry<Page<T>, List<E>> entry) {
-		listResponseDto = entry.getValue();
+		items = entry.getValue();
 		pageNumber = entry.getKey().getNumber();
 		numberOfItemsTotal = entry.getKey().getTotalElements();
 		numberOfItemsPerPage = entry.getKey().getNumberOfElements();

@@ -13,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 
 import ru.dreremin.predefense.registration.sys.dto.request.MailingRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.response.MailingResponseDto;
-import ru.dreremin.predefense.registration.sys.dto.response
-		 .WrapperForListResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 
@@ -61,7 +59,7 @@ public class MailingService {
 		}
 	}
 	
-	public WrapperForListResponseDto<MailingResponseDto> sendMailsToStudents(
+	public List<MailingResponseDto> sendMailsToStudents(
 			MailingRequestDto dto) {
 		
 		List<Email> addresses = emailRepo.findAllByStudent();
@@ -74,10 +72,10 @@ public class MailingService {
 					dto.getSubject(), 
 					dto.getContent()));
 		}
-		return new WrapperForListResponseDto<>(responseDto);
+		return responseDto;
 	}
 	
-	public WrapperForListResponseDto<MailingResponseDto> sendMailsToTeachers(
+	public List<MailingResponseDto> sendMailsToTeachers(
 			MailingRequestDto dto) {
 		
 		List<Email> emails = emailRepo.findAllByTeacher();
@@ -89,7 +87,7 @@ public class MailingService {
 					dto.getSubject(), 
 					dto.getContent()));
 		}
-		return new WrapperForListResponseDto<>(responseDto);
+		return responseDto;
 	}
 }
 

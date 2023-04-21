@@ -1,5 +1,7 @@
 package ru.dreremin.predefense.registration.sys.controllers.mailing;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.MediaType;
@@ -13,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import ru.dreremin.predefense.registration.sys.dto.request.MailingRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.response.MailingResponseDto;
-import ru.dreremin.predefense.registration.sys.dto.response
-		 .WrapperForListResponseDto;
 import ru.dreremin.predefense.registration.sys.services.mailing.MailingService;
 
 //@CrossOrigin(origins = "http://localhost:3002")
@@ -29,10 +29,10 @@ public class MailingController {
 	@PostMapping(
 			value = "/students/all", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<WrapperForListResponseDto<MailingResponseDto>> 
+	public ResponseEntity<List<MailingResponseDto>> 
 			sendMailsToStudents(@Valid @RequestBody MailingRequestDto dto) {
 		
-		WrapperForListResponseDto<MailingResponseDto> responseDto = 
+		List<MailingResponseDto> responseDto = 
 				service.sendMailsToStudents(dto);
 		
 		log.info("MailingController.sendMailsToStudents() is success");
@@ -42,10 +42,10 @@ public class MailingController {
 	@PostMapping(
 			value = "/teachers/all",
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<WrapperForListResponseDto<MailingResponseDto>> 
+	public ResponseEntity<List<MailingResponseDto>> 
 			sendMailsToTeachers(@Valid @RequestBody MailingRequestDto dto) {
 		
-		WrapperForListResponseDto<MailingResponseDto> responseDto = 
+		List<MailingResponseDto> responseDto = 
 				service.sendMailsToTeachers(dto);
 		
 		log.info("MailingController.sendMailsToTeachers() is success");
