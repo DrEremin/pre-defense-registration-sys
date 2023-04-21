@@ -34,14 +34,14 @@ public class WriteNoteService {
 				dto.getCommissionId());
 		
 		if (noteOpt.isEmpty()) {
-			if (dto.getNoteContent().length() > 0) { 
+			if (dto.getContent().length() > 0) { 
 				noteRepository.save(new Note(
 						dto.getCommissionId(), 
-						dto.getNoteContent()));
+						dto.getContent()));
 			}
 		} else {
-			if (dto.getNoteContent().length() > 0) {
-				noteOpt.get().setNoteContent(dto.getNoteContent());
+			if (dto.getContent().length() > 0) {
+				noteOpt.get().setNoteContent(dto.getContent());
 			} else {
 				noteRepository.delete(noteOpt.get());
 			}
