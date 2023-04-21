@@ -1,9 +1,7 @@
 package ru.dreremin.predefense.registration.sys.services.commission;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,42 +16,34 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import ru.dreremin.predefense.registration.sys.dto.request
-		 .TimePeriodRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CommissionResponseDto;
-import ru.dreremin.predefense.registration.sys.dto.response
-		 .CurrentCommissionResponseDto;
+import ru.dreremin.predefense.registration.sys.dto.response.StudentResponseDto;
+import ru.dreremin.predefense.registration.sys.dto.response.TeacherResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .WrapperForPageResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentCommission;
-import ru.dreremin.predefense.registration.sys.models.StudentEntry;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
-import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.NoteRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .StudentCommissionRepository;
-import ru.dreremin.predefense.registration.sys.repositories
-		 .StudentEntryRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
-import ru.dreremin.predefense.registration.sys.repositories
-		 .TeacherEntryRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.security.ActorDetails;
+import ru.dreremin.predefense.registration.sys.services.student
+		 .ReadStudentService;
+import ru.dreremin.predefense.registration.sys.services.teacher
+		 .ReadTeacherService;
 import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
 
 @RequiredArgsConstructor
 @Service
 public class ReadCommissionService {
-
-	private final StudentEntryRepository studentEntryRepo;
-	
-	private final TeacherEntryRepository teacherEntryRepo;
 		
 	private final StudentCommissionRepository studentCommissionRepo;
 	
@@ -67,9 +57,13 @@ public class ReadCommissionService {
 	
 	private final ZonedDateTimeProvider zonedDateTimeProvider;
 	
+	private final ReadTeacherService readTeacherService;
+	
+	private final ReadStudentService readStudentService;
+	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
-	public CurrentCommissionResponseDto getCurrentComissionOfStudent() {
+	public CommissionResponseDto getCurrentComissionOfStudent() {
 		
 		Authentication authentication = SecurityContextHolder.getContext()
 				.getAuthentication();
@@ -95,11 +89,8 @@ public class ReadCommissionService {
 		Commission commission = commissionRepo.findById(studentComissionOpt
 				.get().getCommissionId()).get();
 		
-		List<StudentEntry> students = studentEntryRepo.findAllByCommissionId(
-				commission.getId(), Sort.by(Sort.Order.asc("p.lastName")));
 		
-		Collections.sort(students);
-		return new CurrentCommissionResponseDto(commission, students);
+		return getCommissionById(commission.getId(), true, true, true);
 	} 
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
@@ -129,7 +120,7 @@ public class ReadCommissionService {
 			throw new EntityNotFoundException("Аctual commissions not found");
 		}
 		return new WrapperForPageResponseDto<>(
-				getResult(actualCommissions, false));
+				getResult(actualCommissions));
 	}
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
@@ -158,43 +149,95 @@ public class ReadCommissionService {
 			throw new EntityNotFoundException("Аctual commissions not found");
 		}
 		return new WrapperForPageResponseDto<>(
-				getResult(actualCommissions, true));
+				getResult(actualCommissions));
 	}
 	
 	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
 			getCommissionListByTimePeriod(
-					TimePeriodRequestDto dto, 
+					ZonedDateTime startDateTime, 
+					ZonedDateTime endDateTime,
 					PageRequest pageRequest) {
 		
 		Page<Commission> commissions = commissionRepo
 				.findAllByStartDateTimeBetweenOrderByStartDateTime(
 						zonedDateTimeProvider
-								.changeTimeZone(dto.getStartDateTime()), 
+								.changeTimeZone(startDateTime), 
 						zonedDateTimeProvider
-								.changeTimeZone(dto.getEndDateTime()),
+								.changeTimeZone(endDateTime),
 						pageRequest);
 		
 		if (commissions.getTotalElements() == 0) {
 			throw new EntityNotFoundException("Commissions not found");
 		}
 		return new WrapperForPageResponseDto<>(
-				getResult(commissions, true));
+				getResult(commissions));
 	}
 	
-	public CommissionResponseDto getCommissionById(int id) {
+	public CommissionResponseDto getCommissionById(
+			int id, 
+			boolean withTeachers, 
+			boolean withStudents,
+			boolean withNote) {
 		
-		Optional<Commission> commissionOpt = commissionRepo.findById(id);
+		Commission commission = commissionRepo.findById(id).orElseThrow(
+				() -> new EntityNotFoundException(
+						"Commission with this ID does not exist"));	
+		List<TeacherResponseDto> teachersDto = (withTeachers) 
+				? getListOfTeacherResponseDto(id) : new ArrayList<>();
+		List<StudentResponseDto> studentsDto = (withStudents) 
+				? getListOfStudentResponseDto(id) : new ArrayList<>();
+		String startDateTime = zonedDateTimeProvider.convertToString(
+				commission.getStartDateTime());
+		String endDateTime = zonedDateTimeProvider.convertToString(
+				commission.getEndDateTime());
+		String note = withNote 
+				? noteRepo.findByCommissionId(id).orElse(new Note(id, ""))
+						.getNoteContent() 
+				: "";
 		
-		if (commissionOpt.isEmpty()) {
-			throw new EntityNotFoundException(
-					"Commission with this ID does not exist");
-		}	
-		return getResultDto(List.of(commissionOpt.get()), true).get(0);
+		return new CommissionResponseDto(
+				id, 
+				startDateTime, 
+				endDateTime, 
+				commission.getStudyDirection(), 
+				commission.getPresenceFormat(), 
+				commission.getLocation(), 
+				commission.getStudentLimit(), 
+				teachersDto,
+				studentsDto,
+				note);
+	}
+	
+	private List<TeacherResponseDto> getListOfTeacherResponseDto(
+			int commissionId) {
+		
+		List<Teacher> teachers = teacherRepo.findAllByCommissionId(
+				commissionId, Sort.by(Sort.Order.asc("p.lastName")));
+		List<TeacherResponseDto> teachersDto = new ArrayList<>(
+				teachers.size());
+		
+		for (Teacher teacher : teachers) {
+			teachersDto.add(readTeacherService.getTeacherResponseDto(teacher));
+		}
+		return teachersDto;
+	}
+	
+	private List<StudentResponseDto> getListOfStudentResponseDto(
+			int commissionId) {
+		
+		List<Student> students = studentRepo.findAllByCommissionId(
+				commissionId, Sort.by(Sort.Order.asc("p.lastName")));
+		List<StudentResponseDto> studentsDto = new ArrayList<>(
+				students.size());
+		
+		for (Student student : students) {
+			studentsDto.add(readStudentService.getStudentResponseDto(student));
+		}
+		return studentsDto;
 	}
 	
 	private Map.Entry<Page<Commission>, List<CommissionResponseDto>> getResult(
-			Page<Commission> page, 
-			boolean isNote) {
+			Page<Commission> page) {
 		
 		List<Commission> commissions = page.getContent();
 		List<CommissionResponseDto> resultDto = new ArrayList<>(
@@ -202,60 +245,9 @@ public class ReadCommissionService {
 		
 		for (Commission commission : commissions) {
 			
-			List<TeacherEntry> teachers = teacherEntryRepo
-					.findAllByCommissionId(
-							commission.getId(), 
-							Sort.by(Sort.Order.asc("p.lastName")));
-			String note;
-			
-			if (isNote) {
-				Optional<Note> noteOpt = noteRepo.findByCommissionId(
-						commission.getId());
-				note = noteOpt.isPresent() 
-						? noteOpt.get().getNoteContent() : "";
-			} else {
-				note = null;
-			}
-			resultDto.add(new CommissionResponseDto(
-					commission, 
-					teachers, 
-					note));
+			resultDto.add(getCommissionById(
+					commission.getId(), false, false, false));
 		}
 		return Map.entry(page, resultDto);
-	}
-	
-	private List<CommissionResponseDto> getResultDto(
-			List<Commission> commissions, 
-			boolean isNote) {
-		
-		
-		
-		List<CommissionResponseDto> resultDto = new ArrayList<>(
-				commissions.size());
-		
-		for (Commission commission : commissions) {
-			
-			List<TeacherEntry> teachers = teacherEntryRepo
-					.findAllByCommissionId(
-							commission.getId(), 
-							Sort.by(Sort.Order.asc("p.lastName")));
-			String note;
-			
-			Collections.sort(teachers);
-			if (isNote) {
-				Optional<Note> noteOpt = noteRepo.findByCommissionId(
-						commission.getId());
-				note = noteOpt.isPresent() 
-						? noteOpt.get().getNoteContent() : "";
-			} else {
-				note = null;
-			}
-			
-			resultDto.add(new CommissionResponseDto(
-					commission, 
-					teachers, 
-					note));
-		}
-		return resultDto;
 	}
 }  

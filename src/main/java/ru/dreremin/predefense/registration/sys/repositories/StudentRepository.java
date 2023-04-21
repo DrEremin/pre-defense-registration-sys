@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import ru.dreremin.predefense.registration.sys.models.Student;
+import ru.dreremin.predefense.registration.sys.models.Teacher;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long>{
@@ -75,4 +77,20 @@ public interface StudentRepository extends JpaRepository<Student, Long>{
 			+ "order by p.lastName asc")
 	Page<Student> findAllByGroupNumberOrderByLastName(
 			@Param("groupNumber") String groupNumber, Pageable pageable);
+	
+	@Query("select new Student("
+			+ "s.id, "
+			+ "s.personId, "
+			+ "s.groupNumber, "
+			+ "s.studyDirection, "
+			+ "s.studyType) "
+			+ "from Commission c "
+			+ "join StudentCommission sc "
+				+ "on c.id = sc.commissionId "
+			+ "join Student s "
+				+ "on sc.studentId = s.id "
+			+ "join Person p "
+				+ "on s.personId = p.id "
+			+ "where c.id = :id")
+	List<Student> findAllByCommissionId(@Param("id") int id, Sort sort);
 }

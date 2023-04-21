@@ -61,7 +61,7 @@ public class ReadStudentService {
 		return Map.entry(page, result);
 	}
 	
-	private StudentResponseDto getStudentResponseDto(Student student) {
+	public StudentResponseDto getStudentResponseDto(Student student) {
 		
 		Person person = personRepository.findById(student.getPersonId())
 				.orElseThrow(() -> new EntityNotFoundException(

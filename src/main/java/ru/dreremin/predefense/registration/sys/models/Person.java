@@ -45,6 +45,19 @@ public class Person {
 		this.actorId = actorId;
 	}
 	
+	public Person(
+			long id,
+			String lastName, 
+			String firstName, 
+			String patronymic, 
+			long actorId) {
+		this.id = id;
+		this.lastName = lastName;
+		this.firstName = firstName;
+		this.patronymic = patronymic;
+		this.actorId = actorId;
+	}
+	
 	@Override
 	public String toString() {
 		return String.format(

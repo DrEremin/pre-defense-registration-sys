@@ -60,7 +60,7 @@ public class ReadTeacherService {
 		return Map.entry(page, result);
 	}
 	
-	private TeacherResponseDto getTeacherResponseDto(Teacher teacher) {
+	public TeacherResponseDto getTeacherResponseDto(Teacher teacher) {
 		
 		Person person = personRepository.findById(teacher.getPersonId())
 				.orElseThrow(() -> new EntityNotFoundException(

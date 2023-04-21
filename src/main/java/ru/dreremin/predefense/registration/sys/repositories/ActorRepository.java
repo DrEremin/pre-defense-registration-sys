@@ -31,6 +31,17 @@ public interface ActorRepository extends JpaRepository<Actor, Long>{
 			+ "where s.id = :studentId")
 	Optional<Actor> findByStudentId(@Param("studentId") long id);
 	
+	@Query("select new Actor("
+			+ "a.id, "
+			+ "a.login, "
+			+ "a.password, "
+			+ "a.role) "
+			+ "from Teacher t "
+			+ "join Person p on t.personId = p.id "
+			+ "join Actor a on p.actorId = a.id "
+			+ "where t.id = :teacherId")
+	Optional<Actor> findByTeacherId(@Param("teacherId") long id);
+	
 	@Query("select ac "
 			+ "from Actor ac "
 			+ "join Administrator ad "

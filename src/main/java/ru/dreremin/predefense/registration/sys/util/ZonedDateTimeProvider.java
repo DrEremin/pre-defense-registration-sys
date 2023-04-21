@@ -33,12 +33,15 @@ public class ZonedDateTimeProvider {
 	
 	public String convertToString(ZonedDateTime zonedDateTime) {
 		
-		return ZonedDateTime.of(
+		String stringZonedDateTime = ZonedDateTime.of(
 				zonedDateTime.toLocalDateTime(), 
 				ZoneId.of("UTC+00:00"))
 						.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-		
+		return stringZonedDateTime.substring(
+				0, stringZonedDateTime.length() - 1) + "+00:00";
 	}
+	
+	
 	
 	public ZonedDateTime parseFromString(String zonedDateTime) {
 		return ZonedDateTime.parse(

@@ -7,8 +7,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,12 +21,8 @@ import ru.dreremin.predefense.registration.sys.dto.request
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
-		 .CurrentCommissionResponseDto;
-import ru.dreremin.predefense.registration.sys.dto.response
 		 .WrapperForPageResponseDto;
-import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Commission;
-import ru.dreremin.predefense.registration.sys.security.ActorDetails;
 import ru.dreremin.predefense.registration.sys.services.commission
 		 .ReadCommissionService;
 
@@ -41,10 +35,10 @@ public class ReadCommissionController {
 	private final ReadCommissionService service;
 	
 	@GetMapping("/student/commissions/read/current")
-	public ResponseEntity<CurrentCommissionResponseDto> 
+	public ResponseEntity<CommissionResponseDto> 
 			getCurrentComissionOfStudent() {
 		
-		CurrentCommissionResponseDto responseDto = 
+		CommissionResponseDto responseDto = 
 				service.getCurrentComissionOfStudent();
 		
 		log.info("ReadComissionController.getCurrentComissionOfStudent() "
@@ -124,7 +118,8 @@ public class ReadCommissionController {
 		dto.periodValidation();
 		WrapperForPageResponseDto<Commission, CommissionResponseDto> result = 
 				service.getCommissionListByTimePeriod(
-						dto, 
+						dto.getStartDateTime(), 
+						dto.getEndDateTime(),
 						PageRequest.of(
 								page, 
 								size, 
@@ -145,7 +140,7 @@ public class ReadCommissionController {
 					int id) {
 		
 		CommissionResponseDto commission = service
-				.getCommissionById(id);
+				.getCommissionById(id, true, true, true);
 		
 		log.info("ReadComissionController.getCommissionById() is success");
 		return ResponseEntity.ok(commission);

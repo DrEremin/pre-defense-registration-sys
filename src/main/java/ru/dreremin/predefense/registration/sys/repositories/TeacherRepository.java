@@ -1,8 +1,10 @@
 package ru.dreremin.predefense.registration.sys.repositories;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -51,4 +53,18 @@ public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 				+ "on t.personId = p.id "
 			+ "order by p.lastName")
 	Page<Teacher> findAllOrderByLastName(Pageable pageable);
+	
+	@Query("select new Teacher("
+			+ "t.id, "
+			+ "t.personId, "
+			+ "t.jobTitle) "
+			+ "from Commission c "
+			+ "join TeacherCommission tc "
+				+ "on c.id = tc.commissionId "
+			+ "join Teacher t "
+				+ "on tc.teacherId = t.id "
+			+ "join Person p "
+				+ "on t.personId = p.id "
+			+ "where c.id = :id")
+	List<Teacher> findAllByCommissionId(@Param("id") int id, Sort sort);
 }
