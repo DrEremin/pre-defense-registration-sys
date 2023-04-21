@@ -191,7 +191,7 @@ public class ReadCommissionService {
 		
 		if (commissionOpt.isEmpty()) {
 			throw new EntityNotFoundException(
-					"Commission with this id does not exist");
+					"Commission with this ID does not exist");
 		}	
 		return getResultDto(List.of(commissionOpt.get()), true).get(0);
 	}

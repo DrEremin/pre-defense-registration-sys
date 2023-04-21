@@ -1,10 +1,9 @@
 package ru.dreremin.predefense.registration.sys.controllers.teacher;
 
 import javax.validation.Valid;
-
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ public class CreateTeacherController {
 
 	private final CreateTeacherService teacherService;
 	
-	@PutMapping(value = "/admin/users/create/teacher", 
+	@PostMapping(value = "/admin/users/create/teacher", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> createTeacher(
 			@Valid @RequestBody TeacherRequestDto teacherRequestDto) {

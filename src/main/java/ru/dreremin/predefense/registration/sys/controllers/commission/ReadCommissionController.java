@@ -7,6 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +26,9 @@ import ru.dreremin.predefense.registration.sys.dto.response
 		 .CurrentCommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .WrapperForPageResponseDto;
+import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Commission;
+import ru.dreremin.predefense.registration.sys.security.ActorDetails;
 import ru.dreremin.predefense.registration.sys.services.commission
 		 .ReadCommissionService;
 

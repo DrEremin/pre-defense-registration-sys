@@ -35,7 +35,7 @@ public class DeleteTeacherService {
 		
 		if (actorOpt.isEmpty()) {
 			throw new UsernameNotFoundException(
-					"User with this id does not exist");
+					"User with this ID does not exist");
 		}
 		
 		Optional<Teacher> teacherOpt = teacherRepostory.findByActorId(actorId);

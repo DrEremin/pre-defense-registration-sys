@@ -33,7 +33,7 @@ public class DeleteStudentService {
 		
 		if (actorOpt.isEmpty()) {
 			throw new UsernameNotFoundException(
-					"User with this id does not exist");
+					"User with this ID does not exist");
 		}
 		
 		Optional<Student> studentOpt = studentRepository
@@ -41,7 +41,7 @@ public class DeleteStudentService {
 		
 		if (studentOpt.isEmpty()) {
 			throw new EntityNotFoundException(
-					"User with this id is not a student");
+					"User with this ID is not a student");
 		}
 		
 		deleteStudent(studentOpt.get().getId());

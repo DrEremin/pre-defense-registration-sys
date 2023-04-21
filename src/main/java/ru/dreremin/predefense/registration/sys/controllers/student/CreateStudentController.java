@@ -3,7 +3,7 @@ package ru.dreremin.predefense.registration.sys.controllers.student;
 import javax.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class CreateStudentController {
 
 	private final CreateStudentService studentService;
 	
-	@PutMapping(
+	@PostMapping(
 			value = "/admin/users/create/student", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> createStudent(

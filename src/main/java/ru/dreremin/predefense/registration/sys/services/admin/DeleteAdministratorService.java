@@ -30,7 +30,7 @@ public class DeleteAdministratorService {
 		
 		if (actorOpt.isEmpty()) {
 			throw new UsernameNotFoundException(
-					"User with this id does not exist");
+					"User with this ID does not exist");
 		}
 		
 		Optional<Administrator> administratorOpt = administratorRepository
@@ -38,7 +38,7 @@ public class DeleteAdministratorService {
 		
 		if (administratorOpt.isEmpty()) {
 			throw new EntityNotFoundException(
-					"User with this id is not an administrator");
+					"User with this ID is not an administrator");
 		}
 		administratorRepository.delete(administratorOpt.get());
 		actorRepository.delete(actorOpt.get());

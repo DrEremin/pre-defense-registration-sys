@@ -1,7 +1,7 @@
 package ru.dreremin.predefense.registration.sys.controllers.commission;
 
 import javax.validation.Valid;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class CreateCommissionController {
 	
 	private final CreateCommissionService service;
 	
-	@PutMapping(value = "/admin/commissions/create", 
+	@PostMapping(value = "/admin/commissions/create", 
 			consumes = "application/json")
 	public StatusResponseDto createComission(
 			@Valid @RequestBody CommissionRequestDto dto) {

@@ -4,7 +4,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class CreateRegistrationController {
 
 	private final CreateRegistrationService service;
 	
-	@PutMapping("/student/registrations/create/by-commission-id/{id}")
+	@PostMapping("/student/registrations/create/by-commission-id/{id}")
 	public ResponseEntity<StatusResponseDto> studentRegistration(
 			@PathVariable(value = "id") 
 			@Min(1) 
@@ -34,7 +34,7 @@ public class CreateRegistrationController {
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
 	
-	@PutMapping("/teacher/registrations/create/by-commission-id/{id}")
+	@PostMapping("/teacher/registrations/create/by-commission-id/{id}")
 	public ResponseEntity<StatusResponseDto> teacherRegistration(
 			@PathVariable(value = "id") 
 			@Min(1) 
