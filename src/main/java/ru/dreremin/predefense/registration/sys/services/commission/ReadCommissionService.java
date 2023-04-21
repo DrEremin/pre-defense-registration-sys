@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,15 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import ru.dreremin.predefense.registration.sys.dto.request
 		 .TimePeriodRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CurrentCommissionResponseDto;
-import ru.dreremin.predefense.registration.sys.dto.response
-		 .WrapperForListResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .WrapperForPageResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
@@ -48,8 +45,8 @@ import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherEntryRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.security.ActorDetails;
+import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReadCommissionService {
@@ -68,8 +65,7 @@ public class ReadCommissionService {
 	
 	private final TeacherRepository teacherRepo;
 	
-	@Value("${spring.zone}")
-	private String zone;
+	private final ZonedDateTimeProvider zonedDateTimeProvider;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
@@ -170,12 +166,12 @@ public class ReadCommissionService {
 					TimePeriodRequestDto dto, 
 					PageRequest pageRequest) {
 		
-		setZone(dto);
-		
 		Page<Commission> commissions = commissionRepo
 				.findAllByStartDateTimeBetweenOrderByStartDateTime(
-						dto.getStartDateTime(), 
-						dto.getEndDateTime(),
+						zonedDateTimeProvider
+								.changeTimeZone(dto.getStartDateTime()), 
+						zonedDateTimeProvider
+								.changeTimeZone(dto.getEndDateTime()),
 						pageRequest);
 		
 		if (commissions.getTotalElements() == 0) {
@@ -261,13 +257,5 @@ public class ReadCommissionService {
 					note));
 		}
 		return resultDto;
-	}
-	
-	private void setZone(TimePeriodRequestDto dto) {
-		
-		dto.setStartDateTime(ZonedDateTime.of(
-				dto.getStartDateTime().toLocalDateTime(), ZoneId.of(zone)));
-		dto.setStartDateTime(ZonedDateTime.of(
-				dto.getStartDateTime().toLocalDateTime(), ZoneId.of(zone)));
 	}
 }  

@@ -1,5 +1,7 @@
 package ru.dreremin.predefense.registration.sys.controllers.exception;
 
+import java.time.format.DateTimeParseException;
+
 import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -137,6 +139,14 @@ public class ExceptionController {
 		return new ResponseEntity<>(
 				new StatusResponseDto(409, e.getMessage()), 
 				HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(DateTimeParseException.class)
+	public ResponseEntity<StatusResponseDto> handleDateTimeParseException(
+			DateTimeParseException e) {
+		return new ResponseEntity<>(
+				new StatusResponseDto(400, "Incorrect zoned date time format"), 
+				HttpStatus.BAD_REQUEST);
 	}
 	
 	/**

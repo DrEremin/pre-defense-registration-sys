@@ -6,9 +6,6 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
-import ru.dreremin.predefense.registration.sys.exceptions
-		 .NegativeTimePeriodException;
-
 @Getter
 public class CommissionRequestDto {
 	
@@ -53,20 +50,11 @@ public class CommissionRequestDto {
 		this.studentLimit = studentLimit;
 	}
 	
-	public void setStartDateTime(ZonedDateTime startTimestamp) {
-		this.startDateTime = startTimestamp;
+	public void setStartDateTime(ZonedDateTime startDateTime) {
+		this.startDateTime = startDateTime;
 	}
 	
-	public void setEndDateTime(ZonedDateTime endTimestamp) {
-		this.endDateTime = endTimestamp;
-	}
-	
-	public void periodValidation() throws NegativeTimePeriodException {
-		if (this.endDateTime.toLocalDateTime().compareTo(
-				this.startDateTime.toLocalDateTime()) < 0) {
-			throw new NegativeTimePeriodException(
-					"The end date-time is earlier than start date-time");
-		}
-		
+	public void setEndDateTime(ZonedDateTime endDateTime) {
+		this.endDateTime = endDateTime;
 	}
 }

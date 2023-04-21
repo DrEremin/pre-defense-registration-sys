@@ -24,7 +24,6 @@ public class CreateCommissionController {
 			consumes = "application/json")
 	public StatusResponseDto createComission(
 			@Valid @RequestBody CommissionRequestDto dto) {
-		dto.periodValidation();
 		service.createComission(dto);
 		log.info("CreateComissionController.createComission() success");
 		return new StatusResponseDto(200, "Ok");
