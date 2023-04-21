@@ -3,12 +3,12 @@ package ru.dreremin.predefense.registration.sys.services.registration;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentCommission;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
@@ -22,6 +22,7 @@ import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.security.ActorDetails;
+import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
 @Service
 public class DeleteRegistrationService extends Registration {
@@ -45,18 +46,25 @@ public class DeleteRegistrationService extends Registration {
 				teacherRepo);
 	}
 	
+	public void deleteRegistration(int commissionId) {
+		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getActor();
+		if (actor.getRole().equals(Role.STUDENT.getRole())) {
+			deleteStudentRegistration(actor.getLogin());
+		}
+		if (actor.getRole().equals(Role.TEACHER.getRole())) {
+			deleteTeacherRegistration(commissionId, actor.getLogin());
+		}
+	}
+	
 	@Transactional(
 			isolation = Isolation.SERIALIZABLE,
             rollbackFor = { 
             		EntityNotFoundException.class })
-	public void deleteStudentRegistration() {
+	private void deleteStudentRegistration(String login) {
 		
-		Authentication authentication = SecurityContextHolder.getContext()
-				.getAuthentication();
-		ActorDetails actorDetails = (ActorDetails) authentication
-				.getPrincipal();
-		Optional<Student> studentOpt = studentRepo.findByActorLogin(
-				actorDetails.getUsername());
+		Optional<Student> studentOpt = studentRepo.findByActorLogin(login);
+		
 		if (studentOpt.isEmpty()) {
 			throw new EntityNotFoundException(
 					"Student with this login does not exist");
@@ -70,14 +78,10 @@ public class DeleteRegistrationService extends Registration {
 			isolation = Isolation.SERIALIZABLE,
             rollbackFor = { 
             		EntityNotFoundException.class })
-	public void deleteTeacherRegistration(int comissionId) {
+	private void deleteTeacherRegistration(int comissionId, String login) {
 		
-		Authentication authentication = SecurityContextHolder.getContext()
-				.getAuthentication();
-		ActorDetails actorDetails = (ActorDetails) authentication
-				.getPrincipal();
-		Optional<Teacher> teacherOpt = teacherRepo.findByActorLogin(
-				actorDetails.getUsername());
+		Optional<Teacher> teacherOpt = teacherRepo.findByActorLogin(login);
+		
 		if (teacherOpt.isEmpty()) {
 			throw new EntityNotFoundException(
 					"Teacher with this login does not exist");

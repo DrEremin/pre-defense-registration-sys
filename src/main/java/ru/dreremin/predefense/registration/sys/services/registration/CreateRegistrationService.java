@@ -4,9 +4,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
-
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;

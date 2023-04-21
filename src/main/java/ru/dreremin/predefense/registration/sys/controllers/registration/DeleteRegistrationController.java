@@ -21,25 +21,15 @@ public class DeleteRegistrationController {
 	
 	private final DeleteRegistrationService service;
 	
-	@DeleteMapping("/student/registrations/delete")
-	public ResponseEntity<StatusResponseDto> deleteStudentRegistration() {
-		
-		service.deleteStudentRegistration();
-		log.info("DeleteRegistrationController."
-				+ "deleteStudentRegistration() is success");
-		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
-	}
-	
-	@DeleteMapping("/teacher/registrations/delete/by-commission-id/{id}")
-	public ResponseEntity<StatusResponseDto> deleteTeacherRegistration(
+	@DeleteMapping("/user/registrations/delete/{id}")
+	public ResponseEntity<StatusResponseDto> createRegistration(
 			@PathVariable(value = "id") 
 			@Min(1) 
 			@Max(Integer.MAX_VALUE) 
 			int commissionId) {
-		
-		service.deleteTeacherRegistration(commissionId);
+		service.deleteRegistration(commissionId);
 		log.info("DeleteRegistrationController."
-				+ "deleteTeacherRegistration() is success");
+				+ "deleteRegistration() success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
 }
