@@ -13,16 +13,16 @@ public class WrapperForPageResponseDto<T, E> {
 	@JsonProperty(value = "page")
 	private final int pageNumber;
 	
-	@JsonProperty(value = "numberOfItemsTotal")
-	private final long numberOfItemsTotal;
+	@JsonProperty(value = "totalAmountOfItems")
+	private final long totalAmountOfItems;
 	
-	@JsonProperty(value = "numberOfItemsPerPage")
-	private final int numberOfItemsPerPage;
+	@JsonProperty(value = "amountOfItemsOnPage")
+	private final int amountOfItemsOnPage;
 	
 	public WrapperForPageResponseDto(Map.Entry<Page<T>, List<E>> entry) {
 		items = entry.getValue();
 		pageNumber = entry.getKey().getNumber();
-		numberOfItemsTotal = entry.getKey().getTotalElements();
-		numberOfItemsPerPage = entry.getKey().getNumberOfElements();
+		totalAmountOfItems = entry.getKey().getTotalElements();
+		amountOfItemsOnPage = entry.getKey().getNumberOfElements();
 	}
 }
