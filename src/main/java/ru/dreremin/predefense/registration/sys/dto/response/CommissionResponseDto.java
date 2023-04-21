@@ -31,6 +31,9 @@ public class CommissionResponseDto {
 	@JsonProperty(value = "location")
 	protected final String location;
 	
+	@JsonProperty(value = "studentLimit")
+	protected final short studentLimit; 
+	
 	@JsonProperty(value = "teachers")
 	protected final List<TeacherEntry> teachers;
 	
@@ -46,6 +49,7 @@ public class CommissionResponseDto {
 		this.studyDirection = commission.getStudyDirection();
 		this.presenceFormat = commission.getPresenceFormat();
 		this.location = commission.getLocation();
+		this.studentLimit = commission.getStudentLimit();
 		this.teachers = teachers;
 		this.note = note;
 	}

@@ -1,6 +1,9 @@
 package ru.dreremin.predefense.registration.sys.dto.request;
 
 import java.time.ZonedDateTime;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,6 +35,8 @@ public class CommissionRequestDto {
 	private final String location;
 	
 	@JsonProperty(value = "studentLimit")
+	@Max(Short.MAX_VALUE)
+	@Min(0)
 	@NotNull
 	private final Short studentLimit;
 	
