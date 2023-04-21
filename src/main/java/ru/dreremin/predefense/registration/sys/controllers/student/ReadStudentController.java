@@ -6,7 +6,6 @@ import javax.validation.constraints.Min;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
@@ -42,29 +41,6 @@ public class ReadStudentController {
 				readStudentService.getAllStudents(PageRequest.of(page, size));
 		
 		log.info("ReadStudentController.getAllStudents() success");
-		return ResponseEntity.ok(students);
-	}
-	
-	@GetMapping("/admin/users/read/students/by-group/{groupNumber}")
-	public ResponseEntity<WrapperForPageResponseDto<
-			Student, StudentResponseDto>> getAllStudentsByGroupNumber(
-					@RequestParam(value = "page", defaultValue = "0") 
-					@Min(0)
-					@Max(Integer.MAX_VALUE)
-					int page, 
-					@RequestParam(value = "size", defaultValue = "10") 
-					@Min(0)
-					@Max(Integer.MAX_VALUE)
-					int size,
-					@PathVariable ("groupNumber") String groupNumber) {
-		
-		WrapperForPageResponseDto<Student, StudentResponseDto> students = 
-				readStudentService.getAllStudentsByGroupNumber(
-						groupNumber, 
-						PageRequest.of(page, size));
-		
-		log.info("ReadStudentController.getAllStudentsByGroupNumber() "
-				+ "success");
 		return ResponseEntity.ok(students);
 	}
 }

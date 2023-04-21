@@ -44,19 +44,6 @@ public class ReadStudentService {
 				"Not a single student was found"));
 	}
 	
-	public WrapperForPageResponseDto<Student, StudentResponseDto> 
-			getAllStudentsByGroupNumber(
-					String groupNumber, 
-					PageRequest pageRequest) {
-		
-		Page<Student> students = studentRepository
-				.findAllByGroupNumberOrderByLastName(groupNumber, pageRequest);
-
-		return new WrapperForPageResponseDto<>(getPageOfStudentResponseDto(
-				students, 
-				"No student with this group was found"));
-	}
-	
 	private Map.Entry<Page<Student>, List<StudentResponseDto>> 
 			getPageOfStudentResponseDto(
 			Page<Student> page, 
