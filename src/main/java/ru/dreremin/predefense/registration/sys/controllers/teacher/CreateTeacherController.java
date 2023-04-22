@@ -21,7 +21,7 @@ public class CreateTeacherController {
 
 	private final CreateTeacherService teacherService;
 	
-	@PostMapping(value = "/admin/users/create/teacher", 
+	@PostMapping(value = "/users/teacher/create", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> createTeacher(
 			@Valid @RequestBody TeacherRequestDto teacherRequestDto) {

@@ -34,7 +34,7 @@ public class ReadCommissionController {
 	
 	private final ZonedDateTimeProvider provider;
 	
-	@GetMapping("/user/commissions/read/list")
+	@GetMapping("/commissions/read")
 	public ResponseEntity<WrapperForPageResponseDto
 	<Commission, CommissionResponseDto>> getCommissionsList(
 			@RequestParam(value = "page", defaultValue = "0") 
@@ -98,7 +98,7 @@ public class ReadCommissionController {
 		}
 	}
 	
-	@GetMapping(value = "/user/commissions/read/one")
+	@GetMapping(value = "/commission/read")
 	public ResponseEntity<CommissionResponseDto> getComission(
 					@RequestParam(
 							value = "id", 

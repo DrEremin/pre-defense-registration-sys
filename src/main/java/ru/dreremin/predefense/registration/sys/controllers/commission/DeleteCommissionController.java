@@ -20,7 +20,7 @@ public class DeleteCommissionController {
 	
 	private final DeleteCommissionService service;
 	
-	@DeleteMapping(value = "/admin/commissions/delete/by-id/{id}")
+	@DeleteMapping(value = "/commission/delete/{id}")
 	public ResponseEntity<StatusResponseDto> createComission(
 			@PathVariable(value = "id") 
 			@Min(1) 

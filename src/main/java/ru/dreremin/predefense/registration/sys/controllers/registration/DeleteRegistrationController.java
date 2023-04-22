@@ -4,7 +4,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +21,10 @@ public class DeleteRegistrationController {
 	
 	private final DeleteRegistrationService service;
 	
-	@DeleteMapping("/user/registrations/delete/{id}")
+	@DeleteMapping("/registrations/delete")
 	public ResponseEntity<StatusResponseDto> createRegistration(
-			@PathVariable(value = "id") 
-			@Min(1) 
+			@RequestParam(value = "id", required = false, defaultValue = "0") 
+			@Min(0) 
 			@Max(Integer.MAX_VALUE) 
 			int commissionId) {
 		service.deleteRegistration(commissionId);

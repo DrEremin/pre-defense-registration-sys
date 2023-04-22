@@ -20,7 +20,7 @@ public class DeleteTeacherController {
 
 	private final DeleteTeacherService deleteTeacherService;
 	
-	@DeleteMapping("/admin/users/delete/teacher/by-id/{id}")
+	@DeleteMapping("/users/teacher/delete/{id}")
 	public ResponseEntity<StatusResponseDto> deleteTeacherById(
 			@PathVariable(value = "id") @Min(1) @Max(Long.MAX_VALUE) long id) {
 		

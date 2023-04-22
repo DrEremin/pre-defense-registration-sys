@@ -25,9 +25,18 @@ import ru.dreremin.predefense.registration.sys.services.auth
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private final ActorDetailsService actorDetailsService;
+	
 	private final JwtFilter jwtFilter;
+	
 	private final RestAuthenticationEntryPoint authEntryPoint;
+	
 	private final RestAccessDeniedHandler acessDeniedHandler;
+	
+	private final String ADMIN = "ADMIN";
+	
+	private final String STUDENT = "STUDENT";
+	
+	private final String TEACHER = "TEACHER";
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) 
@@ -41,10 +50,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.csrf().disable()                             
 				.authorizeRequests()
-				.antMatchers("/admin/**").hasRole("ADMIN")
-				.antMatchers("/teacher/**").hasRole("TEACHER")
-				.antMatchers("/student/**").hasRole("STUDENT")
-				.antMatchers("/user/**").permitAll()
+				.antMatchers("/users/admin/create").hasRole(ADMIN)
+				.antMatchers("/users/student/create").hasRole(ADMIN)
+				.antMatchers("/users/teacher/create").hasRole(ADMIN)
+				.antMatchers("/users/admin/delete/**").hasRole(ADMIN)
+				.antMatchers("/users/student/delete/**").hasRole(ADMIN)
+				.antMatchers("/users/teacher/delete/**").hasRole(ADMIN)
+				.antMatchers("/users/students/delete/all").hasRole(ADMIN)
+				.antMatchers("/commission/create").hasRole(ADMIN)
+				.antMatchers("/commission/delete/**").hasRole(ADMIN)
+				.antMatchers("/mailing/**").hasRole(ADMIN)
+				.antMatchers("/users/admins/read/all").hasRole(ADMIN)
+				.antMatchers("/users/teachers/read/all").hasRole(ADMIN)
+				.antMatchers("/users/students/read/all").hasRole(ADMIN)
+				.antMatchers("/commission/update/**").hasRole(ADMIN)
+				.antMatchers("/users/teacher/update/**").hasRole(ADMIN)
+				.antMatchers("/users/student/update/**").hasRole(ADMIN)
+				.antMatchers("/users/admin/update/password").hasRole(ADMIN)
+				.antMatchers("/note/write").hasRole(TEACHER)
+				.antMatchers("/registrations/create/**")
+						.hasAnyRole(TEACHER, STUDENT)
+				.antMatchers("/registrations/delete")
+						.hasAnyRole(TEACHER, STUDENT)
+				.antMatchers("/commission/read").hasAnyRole(ADMIN, STUDENT)
+				.antMatchers("/commissions/read")
+						.hasAnyRole(ADMIN, STUDENT, TEACHER)
+				.antMatchers("/user/get").hasAnyRole(ADMIN, STUDENT, TEACHER)
+				.antMatchers("/user/login").permitAll()
 				.and()
 				.formLogin().disable()                    
 				.sessionManagement()

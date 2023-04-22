@@ -17,12 +17,12 @@ import ru.dreremin.predefense.registration.sys.services.student
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/users/delete")
+@RequestMapping("/users")
 public class DeleteStudentController {
 
 	private final DeleteStudentService deleteStudentService;
 	
-	@DeleteMapping("/student/by-id/{id}")
+	@DeleteMapping("/student/delete/{id}")
 	public ResponseEntity<StatusResponseDto> deleteStudentById(
 			@PathVariable(value = "id") @Min(1) @Max(Long.MAX_VALUE) long id) {
 		
@@ -31,7 +31,7 @@ public class DeleteStudentController {
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
 	
-	@DeleteMapping("/students/all")
+	@DeleteMapping("/students/delete/all")
 	public ResponseEntity<StatusResponseDto> deleteAllStudents() {
 		
 		deleteStudentService.deleteAllStudents();

@@ -21,7 +21,7 @@ import ru.dreremin.predefense.registration.sys.services.mailing.MailingService;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/mailing")
+@RequestMapping("/mailing")
 public class MailingController {
 
 	private final MailingService service;

@@ -23,7 +23,7 @@ public class CreateAdministratorController {
 	private final CreateAdministratorService adminService;
 	
 	@PostMapping(
-			value = "/admin/users/create/admin", 
+			value = "/users/admin/create", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> createAdmin(
 			@Valid @RequestBody AdminRequestDto adminRequestDto) {

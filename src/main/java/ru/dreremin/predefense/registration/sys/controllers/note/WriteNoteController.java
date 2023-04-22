@@ -21,7 +21,7 @@ public class WriteNoteController {
 	private final WriteNoteService writeNoteService;
 
 	@PutMapping(
-			value = "/teacher/write/note", 
+			value = "/note/write", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> writeNote(
 			@Valid @RequestBody NoteRequestDto dto) {

@@ -21,7 +21,7 @@ public class DeleteAdministratorController {
 	
 	private final DeleteAdministratorService deleteAdministratorService;
 	
-	@DeleteMapping("/admin/users/delete/admin/by-id/{id}")
+	@DeleteMapping("/users/admin/delete/{id}")
 	public ResponseEntity<StatusResponseDto> deleteAdmin(
 			@PathVariable(value = "id") @Min(0) @Max(Long.MAX_VALUE) long id) {
 		

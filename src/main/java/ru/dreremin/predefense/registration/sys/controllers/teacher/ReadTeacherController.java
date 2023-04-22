@@ -24,18 +24,17 @@ public class ReadTeacherController {
 
 	private final ReadTeacherService readTeacherService;
 	
-	@GetMapping("/admin/users/read/teachers/all")
-	public ResponseEntity<WrapperForPageResponseDto<
-			Teacher, TeacherResponseDto>> 
-			getAllTeachers(
-					@RequestParam(value = "page", defaultValue = "0") 
-					@Min(0)
-					@Max(Integer.MAX_VALUE)
-					int page, 
-					@RequestParam(value = "size", defaultValue = "10") 
-					@Min(0)
-					@Max(Integer.MAX_VALUE)
-					int size) {
+	@GetMapping("/users/teachers/read/all")
+	public ResponseEntity<WrapperForPageResponseDto
+			<Teacher, TeacherResponseDto>> getAllTeachers(
+			@RequestParam(value = "page", defaultValue = "0") 
+			@Min(0)
+			@Max(Integer.MAX_VALUE)
+			int page, 
+			@RequestParam(value = "size", defaultValue = "10") 
+			@Min(0)
+			@Max(Integer.MAX_VALUE)
+			int size) {
 		
 		WrapperForPageResponseDto<Teacher, TeacherResponseDto> teachers = 
 				readTeacherService.getAllTeachers(PageRequest.of(page, size));

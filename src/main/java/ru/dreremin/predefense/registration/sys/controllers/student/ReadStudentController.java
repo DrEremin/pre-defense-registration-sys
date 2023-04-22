@@ -25,7 +25,7 @@ public class ReadStudentController {
 
 	private final ReadStudentService readStudentService;
 	
-	@GetMapping("/admin/users/read/students/all")
+	@GetMapping("/users/students/read/all")
 	public ResponseEntity<WrapperForPageResponseDto<
 			Student, StudentResponseDto>> getAllStudents(
 					@RequestParam(value = "page", defaultValue = "0") 
