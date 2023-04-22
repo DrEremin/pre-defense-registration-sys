@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 @Getter
-public class AdminRequestDto extends AuthenticationRequestDto {
+public class AdministratorRequestDto extends AuthenticationRequestDto {
 
 	@JsonCreator
-	public AdminRequestDto(String login, String password) { 
+	public AdministratorRequestDto(String login, String password) { 
 		super(login, password); 
 	}
 }

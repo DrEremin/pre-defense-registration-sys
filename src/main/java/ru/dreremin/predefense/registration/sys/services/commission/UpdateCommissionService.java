@@ -107,8 +107,8 @@ public class UpdateCommissionService {
 				.findAllByCommissionIdAndActualTime(id, ZonedDateTime.now());
 		if (registrations.size() > 0) {
 			throw new EntitiesMismatchException(
-					"Inconsistency of study direction  between commission and "
-					+ "the student");
+						"Inconsistency of study direction  between commission and "
+						+ "the student");
 		}
 	}
 	

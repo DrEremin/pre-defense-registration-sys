@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import ru.dreremin.predefense.registration.sys.dto.request.AdminRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.AdministratorRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
 import ru.dreremin.predefense.registration.sys.services.admin
 		 .CreateAdministratorService;
@@ -26,8 +26,8 @@ public class CreateAdministratorController {
 			value = "/users/admin/create", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> createAdmin(
-			@Valid @RequestBody AdminRequestDto adminRequestDto) {
-		adminService.createAdmin(adminRequestDto);
+			@Valid @RequestBody AdministratorRequestDto administratorRequestDto) {
+		adminService.createAdmin(administratorRequestDto);
 		log.info("CreateAdministratorController.createStudent() success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
