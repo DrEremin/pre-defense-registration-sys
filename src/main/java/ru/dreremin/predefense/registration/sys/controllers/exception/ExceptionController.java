@@ -32,7 +32,8 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .InvalidJwtTokenException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .NegativeTimePeriodException;
-import ru.dreremin.predefense.registration.sys.exceptions.NotReadableRequestParameterException;
+import ru.dreremin.predefense.registration.sys.exceptions
+		 .NotReadableRequestParameterException;
 import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;

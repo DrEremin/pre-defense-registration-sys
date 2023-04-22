@@ -28,7 +28,7 @@ public class PersonRequestDto extends AuthenticationRequestDto{
 	@JsonProperty(value = "email")
 	@NotEmpty
 	@Email(message = "Invalid format email")
-	@Size(max = 40)
+	@Size(min = 8, max = 40)
 	protected final String email;
 	
 	@JsonCreator
