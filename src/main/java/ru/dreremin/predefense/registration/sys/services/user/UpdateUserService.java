@@ -8,8 +8,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import ru.dreremin.predefense.registration.sys.dto.request
-		 .AuthenticationRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.PasswordRequestDto;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.repositories.ActorRepository;
 
@@ -22,13 +21,13 @@ public class UpdateUserService {
 	private final PasswordEncoder passwordEncoder; 
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE)
-	public void updatePassword(AuthenticationRequestDto dto) {
+	public void updatePassword(PasswordRequestDto dto, long id) {
 		
-		Optional<Actor> actorOpt = actorRepository.findByLogin(dto.getLogin());
+		Optional<Actor> actorOpt = actorRepository.findById(id);
 		
 		if (actorOpt.isEmpty()) {
 			throw new EntityNotFoundException(
-					"User with this login does not exist");
+					"User with this ID does not exist");
 		}
 		actorOpt.get().setPassword(passwordEncoder.encode(dto.getPassword()));
 	}

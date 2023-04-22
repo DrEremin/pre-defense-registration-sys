@@ -1,7 +1,6 @@
 package ru.dreremin.predefense.registration.sys.controllers.exception;
 
 import java.time.format.DateTimeParseException;
-
 import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;

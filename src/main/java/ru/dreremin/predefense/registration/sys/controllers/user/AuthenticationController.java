@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.controllers.auth;
+package ru.dreremin.predefense.registration.sys.controllers.user;
 
 import javax.validation.Valid;
 

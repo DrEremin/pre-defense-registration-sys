@@ -8,17 +8,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class AuthenticationRequestDto extends PasswordRequestDto{
-	
-	@JsonProperty(value = "login")
+public class PasswordRequestDto {
+
+	@JsonProperty(value = "password")
 	@NotEmpty
-	@NotNull
 	@Size(min = 2, max = 20)
-	protected final String login;
+	@NotNull
+	protected final String password;
 	
 	@JsonCreator
-	public AuthenticationRequestDto(String login, String password) {
-		super(password);
-		this.login = login;
+	public PasswordRequestDto(String password) {
+		this.password = password;
 	}
 }

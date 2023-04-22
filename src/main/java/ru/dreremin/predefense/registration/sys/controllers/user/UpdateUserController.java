@@ -1,15 +1,18 @@
 package ru.dreremin.predefense.registration.sys.controllers.user;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import ru.dreremin.predefense.registration.sys.dto.request
-		 .AuthenticationRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.PasswordRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
 import ru.dreremin.predefense.registration.sys.services.user.UpdateUserService;
 
@@ -22,8 +25,14 @@ public class UpdateUserController {
 	
 	@PatchMapping("/user/update/password")
 	public ResponseEntity<StatusResponseDto> updatePassword(
-			@RequestBody @Valid AuthenticationRequestDto dto) {
-		updateUserService.updatePassword(dto);
+			@RequestParam(value = "id")
+			@Min(1)
+			@Max(Long.MAX_VALUE)
+			long id, 
+			@RequestBody 
+			@Valid 
+			PasswordRequestDto dto) {
+		updateUserService.updatePassword(dto, id);
 		log.info("UpdateUserController.updatePassword() success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
