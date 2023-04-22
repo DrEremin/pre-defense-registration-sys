@@ -1,7 +1,7 @@
 package ru.dreremin.predefense.registration.sys.services.commission;
 
 import java.time.ZonedDateTime;
-
+import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -10,10 +10,17 @@ import lombok.RequiredArgsConstructor;
 
 import ru.dreremin.predefense.registration.sys.dto.request
 		 .CommissionRequestDto;
+import ru.dreremin.predefense.registration.sys.exceptions
+		 .EntitiesMismatchException;
+import ru.dreremin.predefense.registration.sys.exceptions
+		 .NegativeTimePeriodException;
+import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
 import ru.dreremin.predefense.registration.sys.models.Commission;
+import ru.dreremin.predefense.registration.sys.models.StudentCommission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
-import ru.dreremin.predefense.registration.sys.repositories.StudentCommissionRepository;
+import ru.dreremin.predefense.registration.sys.repositories
+		 .StudentCommissionRepository;
 import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
 
 @RequiredArgsConstructor
@@ -27,7 +34,10 @@ public class UpdateCommissionService {
 	private final ZonedDateTimeProvider zonedDateTimeProvider;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
-			EntityNotFoundException.class})
+			EntityNotFoundException.class,
+			NegativeTimePeriodException.class,
+			EntitiesMismatchException.class,
+			OverLimitException.class})
 	public void updateCommission(int id, CommissionRequestDto dto) {
 		
 		Commission commission = commissionRepository.findById(
@@ -42,47 +52,72 @@ public class UpdateCommissionService {
 			CommissionRequestDto dto, 
 			Commission commission) {
 		
-		if (dto.getStudyDirection() != null) {
-			commission.setStudyDirection(dto.getStudyDirection());
-		}
+		setDateTimeFields(
+				dto.getStartDateTime(), 
+				dto.getEndDateTime(), 
+				commission);
 		if (dto.getPresenceFormat() != null) {
 			commission.setPresenceFormat(dto.getPresenceFormat());
+		}
+		if (dto.getStudyDirection() != null) {
+			checkingPossibilityOfUpdateStudyDirection(commission.getId());
+			commission.setStudyDirection(dto.getStudyDirection());
 		}
 		if (dto.getLocation() != null) {
 			commission.setLocation(dto.getLocation());
 		}
 		if (dto.getStudentLimit() != null) {
+			checkingPossibilityOfUpdateStudentLimit(
+					commission.getId(), 
+					dto.getStudentLimit());
 			commission.setStudentLimit(dto.getStudentLimit());
 		}
-		setDateTimeFields(dto, commission);
 	}
 	
-	
-	
 	private void setDateTimeFields(
-			CommissionRequestDto dto, 
+			ZonedDateTime startDateTime,
+			ZonedDateTime endDateTime, 
 			Commission commission) {
 		
-		ZonedDateTime startDateTime = dto.getStartDateTime();
-		ZonedDateTime endDateTime = dto.getEndDateTime();
+		startDateTime = startDateTime != null 
+				? zonedDateTimeProvider.changeTimeZone(startDateTime) 
+				: null;
+		endDateTime = endDateTime != null 
+				? zonedDateTimeProvider.changeTimeZone(endDateTime) 
+				: null;
 		
 		if (startDateTime != null && endDateTime != null) {
 			zonedDateTimeProvider.periodValidation(startDateTime, endDateTime);
-			commission.setStartDateTime(zonedDateTimeProvider.changeTimeZone(
-					startDateTime));
-			commission.setEndDateTime(zonedDateTimeProvider.changeTimeZone(
-					endDateTime));
+			commission.setStartDateTime(startDateTime);
+			commission.setEndDateTime(endDateTime);
 		} else if (startDateTime != null && endDateTime == null) {
-			startDateTime = zonedDateTimeProvider.changeTimeZone(
-					startDateTime);
 			zonedDateTimeProvider.periodValidation(
 					startDateTime, commission.getEndDateTime());
 			commission.setStartDateTime(startDateTime);
 		} else if (startDateTime == null && endDateTime != null) {
-			endDateTime = zonedDateTimeProvider.changeTimeZone(endDateTime);
 			zonedDateTimeProvider.periodValidation(
 					commission.getStartDateTime(), endDateTime);
 			commission.setEndDateTime(endDateTime);
+		}
+	}
+	
+	private void checkingPossibilityOfUpdateStudyDirection(int id) {
+		
+		List<StudentCommission> registrations = studentCommissionRepository
+				.findAllByCommissionIdAndActualTime(id, ZonedDateTime.now());
+		if (registrations.size() > 0) {
+			throw new EntitiesMismatchException(
+					"Inconsistency of study direction  between commission and "
+					+ "the student");
+		}
+	}
+	
+	private void checkingPossibilityOfUpdateStudentLimit(int id, short limit) {
+		List<StudentCommission> registrations = studentCommissionRepository
+				.findAllByCommissionIdAndActualTime(id, ZonedDateTime.now());
+		if (registrations.size() > limit) {
+			throw new OverLimitException("Student registration limit is less "
+					+ "than the amount of existing registrations");
 		}
 	}
 }

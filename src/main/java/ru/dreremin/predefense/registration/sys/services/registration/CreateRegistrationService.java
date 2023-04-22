@@ -125,8 +125,8 @@ public class CreateRegistrationService extends Registration {
 		if (commissionRegistrations.size() 
 				>= commissionOpt.get().getStudentLimit()) {
 			throw new OverLimitException(
-					"The limit of the allowed number of students"
-					+ " in this commission has been reached");
+					"The limit of amount of student registrations for this "
+					+ "commission has been reached");
 		}
 		
 		List<StudentCommission> actualRegistrations = studentCommissionRepo

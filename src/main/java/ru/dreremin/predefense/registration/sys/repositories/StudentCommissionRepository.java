@@ -16,6 +16,19 @@ public interface StudentCommissionRepository
 
 	List<StudentCommission> findAllByCommissionId(int commissionId);
 	
+	@Query("select new StudentCommission("
+			+ "sc.id, "
+			+ "sc.studentId, "
+			+ "sc.commissionId) "
+			+ "from Commission c "
+			+ "join StudentCommission sc "
+				+ "on c.id = sc.commissionId "
+			+ "where c.id = :id "
+				+ "and c.startDateTime >= :start")
+	List<StudentCommission> findAllByCommissionIdAndActualTime(
+			@Param(value = "id") int id, 
+			@Param("start") ZonedDateTime startDateTime);
+	
 	Optional<StudentCommission> findByStudentId(long studentId);
 	
 	@Query("select new StudentCommission("
