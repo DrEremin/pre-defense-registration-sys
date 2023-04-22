@@ -24,7 +24,7 @@ public class DeleteAdministratorService {
 	@Transactional(isolation = Isolation.SERIALIZABLE, 
 			rollbackFor = { UsernameNotFoundException.class, 
 					EntityNotFoundException.class })
-	public void deleteAdmin(long actorId) {
+	public void deleteAdminById(long actorId) {
 		
 		Optional<Actor> actorOpt = actorRepository.findById(actorId);
 		

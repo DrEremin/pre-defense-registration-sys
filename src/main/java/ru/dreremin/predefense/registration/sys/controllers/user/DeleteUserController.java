@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.controllers.teacher;
+package ru.dreremin.predefense.registration.sys.controllers.user;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -10,22 +10,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
-import ru.dreremin.predefense.registration.sys.services.teacher
-		 .DeleteTeacherService;
+import ru.dreremin.predefense.registration.sys.services.user.DeleteUserService;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class DeleteTeacherController {
+public class DeleteUserController {
 
-	private final DeleteTeacherService deleteTeacherService;
+	private final DeleteUserService deleteUserService;
 	
-	@DeleteMapping("/users/teacher/delete/{id}")
-	public ResponseEntity<StatusResponseDto> deleteTeacherById(
-			@PathVariable(value = "id") @Min(1) @Max(Long.MAX_VALUE) long id) {
+	@DeleteMapping("/user/delete/{id}")
+	public ResponseEntity<StatusResponseDto> deleteUser(
+			@PathVariable (value = "id") 
+			@Min(1) 
+			@Max(Long.MAX_VALUE) 
+			long id) {
 		
-		deleteTeacherService.deleteTeacherById(id);
-		log.info("DeleteTeacherController.deleteTeacherById() is success");
+		deleteUserService.deleteUser(id);
+		log.info("DeleteUserController.deleteUser() success");
 		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
 }

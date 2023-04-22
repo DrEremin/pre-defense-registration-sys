@@ -20,7 +20,7 @@ public class UpdateUserController {
 
 	private final UpdateUserService updateUserService;
 	
-	@PatchMapping("/users/admin/update/password")
+	@PatchMapping("/user/update/password")
 	public ResponseEntity<StatusResponseDto> updatePassword(
 			@RequestBody @Valid AuthenticationRequestDto dto) {
 		updateUserService.updatePassword(dto);
