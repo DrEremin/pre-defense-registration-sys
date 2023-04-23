@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentCommission;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
@@ -47,13 +46,13 @@ public class DeleteRegistrationService extends Registration {
 	}
 	
 	public void deleteRegistration(int commissionId) {
-		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getActor();
-		if (actor.getRole().equals(Role.STUDENT.getRole())) {
-			deleteStudentRegistration(actor.getLogin());
+		ActorDetails user = (ActorDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+		if (user.getRole().equals(Role.STUDENT.getRole())) {
+			deleteStudentRegistration(user.getUsername());
 		}
-		if (actor.getRole().equals(Role.TEACHER.getRole())) {
-			deleteTeacherRegistration(commissionId, actor.getLogin());
+		if (user.getRole().equals(Role.TEACHER.getRole())) {
+			deleteTeacherRegistration(commissionId, user.getUsername());
 		}
 	}
 	

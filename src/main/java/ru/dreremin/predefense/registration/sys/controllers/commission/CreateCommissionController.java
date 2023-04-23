@@ -20,7 +20,7 @@ public class CreateCommissionController {
 	
 	private final CreateCommissionService service;
 	
-	@PostMapping(value = "/commission/create", 
+	@PostMapping(value = "/commission", 
 			consumes = "application/json")
 	public StatusResponseDto createComission(
 			@Valid @RequestBody CommissionRequestDto dto) {

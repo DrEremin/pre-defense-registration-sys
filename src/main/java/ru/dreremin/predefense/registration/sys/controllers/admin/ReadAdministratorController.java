@@ -26,7 +26,7 @@ public class ReadAdministratorController {
 	
 	private final ReadAdministratorService readAdministratorService;
 	
-	@GetMapping("users/admins/read/all")
+	@GetMapping("/admin/list")
 	public ResponseEntity<WrapperForPageResponseDto<
 			Actor, AdministratorResponseDto>> getAllStudents(
 					@RequestParam(value = "page", defaultValue = "0") 

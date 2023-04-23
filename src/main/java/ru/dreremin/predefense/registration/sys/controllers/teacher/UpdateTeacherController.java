@@ -24,7 +24,7 @@ public class UpdateTeacherController {
 	private final UpdateTeacherService updateTeacherService;
 	
 	@PatchMapping(
-			value = "/users/teacher/update/{id}",
+			value = "/teacher/{id}",
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> updateTeacher(
 			@PathVariable(value = "id") @Min(1) @Max(Long.MAX_VALUE) long id, 

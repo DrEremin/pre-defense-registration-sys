@@ -19,7 +19,7 @@ public class DeleteUserController {
 
 	private final DeleteUserService deleteUserService;
 	
-	@DeleteMapping("/user/delete/{id}")
+	@DeleteMapping("/user/{id}")
 	public ResponseEntity<StatusResponseDto> deleteUser(
 			@PathVariable (value = "id") 
 			@Min(1) 

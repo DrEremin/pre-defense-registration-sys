@@ -16,7 +16,6 @@ import ru.dreremin.predefense.registration.sys.exceptions
 		 .ExpiredCommissionException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
-import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentCommission;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
@@ -51,13 +50,15 @@ public class CreateRegistrationService extends Registration {
 	}
 	
 	public void createRegistration(int commissionId) {
-		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getActor();
-		if (actor.getRole().equals(Role.STUDENT.getRole())) {
-			createStudentRegistration(commissionId, actor.getLogin());
+		
+		ActorDetails user = (ActorDetails) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal();
+		
+		if (user.getRole().equals(Role.STUDENT.getRole())) {
+			createStudentRegistration(commissionId, user.getUsername());
 		}
-		if (actor.getRole().equals(Role.TEACHER.getRole())) {
-			createTeacherRegistration(commissionId, actor.getLogin());
+		if (user.getRole().equals(Role.TEACHER.getRole())) {
+			createTeacherRegistration(commissionId, user.getUsername());
 		}
 	}
 	

@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class ReadCommissionController {
 	
 	private final ZonedDateTimeProvider provider;
 	
-	@GetMapping("/commissions/read")
+	@GetMapping("/commission/list")
 	public ResponseEntity<WrapperForPageResponseDto
 	<Commission, CommissionResponseDto>> getCommissionsList(
 			@RequestParam(value = "page", defaultValue = "0") 
@@ -98,18 +99,22 @@ public class ReadCommissionController {
 		}
 	}
 	
-	@GetMapping(value = "/commission/read")
-	public ResponseEntity<CommissionResponseDto> getComission(
-					@RequestParam(
-							value = "id", 
-							required = false, 
-							defaultValue = "0")
+	@GetMapping(value = "/commission")
+	public ResponseEntity<CommissionResponseDto> getCurrentComission() {
+		CommissionResponseDto commission = service
+				.getCurrentComissionOfStudent();
+		log.info("ReadComissionController.getCommission() is success");
+		return ResponseEntity.ok(commission);
+	}
+	
+	@GetMapping(value = "/commission/{id}")
+	public ResponseEntity<CommissionResponseDto> getComissionById(
+					@PathVariable(value = "id")
 					@Min(0) 
 					@Max(Integer.MAX_VALUE) 
 					int id) {
-		CommissionResponseDto commission = id == 0 
-				? service.getCurrentComissionOfStudent() 
-				: service.getCommissionById(id, true, true, true);
+		CommissionResponseDto commission = service
+				.getCommissionById(id, true, true, true);
 		log.info("ReadComissionController.getCommission() is success");
 		return ResponseEntity.ok(commission);
 	}

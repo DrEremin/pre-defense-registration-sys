@@ -19,7 +19,7 @@ public class DeleteStudentController {
 
 	private final DeleteStudentService deleteStudentService;
 	
-	@DeleteMapping("/users/students/delete/all")
+	@DeleteMapping("/student")
 	public ResponseEntity<StatusResponseDto> deleteAllStudents() {
 		
 		deleteStudentService.deleteAllStudents();

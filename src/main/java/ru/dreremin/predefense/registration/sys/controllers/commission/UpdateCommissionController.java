@@ -25,7 +25,7 @@ public class UpdateCommissionController {
 	private final UpdateCommissionService updateCommissionService;
 	
 	@PatchMapping(
-			value = "commission/update/{id}", 
+			value = "commission/{id}", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> updateCommission(
 			@PathVariable(value = "id")
