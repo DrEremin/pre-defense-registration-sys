@@ -19,7 +19,6 @@ import ru.dreremin.predefense.registration.sys.services.auth
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user")
 public class AuthenticationController {
 	
 	private final AuthenticationService authenticationService;

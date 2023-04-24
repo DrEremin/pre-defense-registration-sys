@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import ru.dreremin.predefense.registration.sys.dto.request.PersonRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .NotReadableRequestParameterException;
+import ru.dreremin.predefense.registration.sys.exceptions.UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
@@ -39,9 +40,15 @@ public class UpdatePersonService {
 						"User with this ID does not exist"));
 		
 		if (dto.getLogin() != null) {
+			if (actorRepository.findByLogin(dto.getLogin()).isPresent()) {
+				throw new UniquenessViolationException(
+						"User with this login already exists");
+			}
+			checkLengthOfLoginOrPassword(dto.getLogin(), "\"login\"");
 			actor.setLogin(dto.getLogin());
 		}
 		if (dto.getPassword() != null) {
+			checkLengthOfLoginOrPassword(dto.getLogin(), "\"password\"");
 			actor.setPassword(passwordEncoder.encode(dto.getPassword()));
 		}
 		
@@ -77,6 +84,15 @@ public class UpdatePersonService {
 				|| address.length() > 40) {
 			throw new NotReadableRequestParameterException(
 					"Invalid format request body field \"email\"");
+		}
+	}
+	
+	private void checkLengthOfLoginOrPassword(
+			String verifiable, 
+			String message) {
+		if (verifiable.length() < 2 || verifiable.length() > 20) {
+			throw new NotReadableRequestParameterException(
+					"Invalid format request body field " + message);
 		}
 	}
 }
