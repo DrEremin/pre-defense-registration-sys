@@ -1,7 +1,6 @@
 package ru.dreremin.predefense.registration.sys.services.person;
 
 import javax.persistence.EntityNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 import ru.dreremin.predefense.registration.sys.dto.request.PersonRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .NotReadableRequestParameterException;
-import ru.dreremin.predefense.registration.sys.exceptions.UniquenessViolationException;
+import ru.dreremin.predefense.registration.sys.exceptions
+		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Actor;
 import ru.dreremin.predefense.registration.sys.models.Email;
 import ru.dreremin.predefense.registration.sys.models.Person;
@@ -28,8 +28,6 @@ public class UpdatePersonService {
 	
 	private final EmailRepository emailRepository;
 	
-	private final PasswordEncoder passwordEncoder;
-	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class, 
 			NotReadableRequestParameterException.class})
@@ -44,12 +42,11 @@ public class UpdatePersonService {
 				throw new UniquenessViolationException(
 						"User with this login already exists");
 			}
-			checkLengthOfLoginOrPassword(dto.getLogin(), "\"login\"");
+			if (dto.getLogin().length() < 2 || dto.getLogin().length() > 20) {
+				throw new NotReadableRequestParameterException(
+						"Invalid format request body field \"login\"");
+			}
 			actor.setLogin(dto.getLogin());
-		}
-		if (dto.getPassword() != null) {
-			checkLengthOfLoginOrPassword(dto.getLogin(), "\"password\"");
-			actor.setPassword(passwordEncoder.encode(dto.getPassword()));
 		}
 		
 		Person person = personRepository.findByActorId(actorId)
@@ -84,15 +81,6 @@ public class UpdatePersonService {
 				|| address.length() > 40) {
 			throw new NotReadableRequestParameterException(
 					"Invalid format request body field \"email\"");
-		}
-	}
-	
-	private void checkLengthOfLoginOrPassword(
-			String verifiable, 
-			String message) {
-		if (verifiable.length() < 2 || verifiable.length() > 20) {
-			throw new NotReadableRequestParameterException(
-					"Invalid format request body field " + message);
 		}
 	}
 }

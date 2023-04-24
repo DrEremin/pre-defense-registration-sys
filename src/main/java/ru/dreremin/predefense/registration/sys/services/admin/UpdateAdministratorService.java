@@ -1,7 +1,6 @@
 package ru.dreremin.predefense.registration.sys.services.admin;
 
 import javax.persistence.EntityNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +19,7 @@ import ru.dreremin.predefense.registration.sys.repositories.ActorRepository;
 @Service
 public class UpdateAdministratorService {
 	
-	private final ActorRepository actorRepository;
-	
-	private final PasswordEncoder passwordEncoder; 
+	private final ActorRepository actorRepository; 
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = { 
 			EntityNotFoundException.class,  
@@ -35,26 +32,18 @@ public class UpdateAdministratorService {
 		Actor actor = actorRepository.findById(actorId)
 				.orElseThrow(() -> new EntityNotFoundException(
 						"User with this ID does not exsits"));
-		if (dto.getLogin() != null) {
-			if (actorRepository.findByLogin(dto.getLogin()).isPresent()) {
+		String newLogin = dto.getLogin();
+		
+		if (newLogin != null) {
+			if (actorRepository.findByLogin(newLogin).isPresent()) {
 				throw new UniquenessViolationException(
 						"User with this login already exists");
 			}
-			checkLengthOfLoginOrPassword(dto.getLogin(), "\"login\"");
-			actor.setLogin(dto.getLogin());
-		}
-		if (dto.getPassword() != null) {
-			checkLengthOfLoginOrPassword(dto.getLogin(), "\"password\"");
-			actor.setPassword(passwordEncoder.encode(dto.getPassword()));
-		}
-	}
-	
-	private void checkLengthOfLoginOrPassword(
-			String verifiable, 
-			String message) {
-		if (verifiable.length() < 2 || verifiable.length() > 20) {
-			throw new NotReadableRequestParameterException(
-					"Invalid format request body field " + message);
+			if (newLogin.length() < 2 || newLogin.length() > 20) {
+				throw new NotReadableRequestParameterException(
+						"Invalid format request body field \"login\"");
+			}
+			actor.setLogin(newLogin);
 		}
 	}
 }
