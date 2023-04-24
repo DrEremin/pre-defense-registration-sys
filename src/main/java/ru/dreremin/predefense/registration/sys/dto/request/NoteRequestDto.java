@@ -1,5 +1,6 @@
 package ru.dreremin.predefense.registration.sys.dto.request;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,6 +11,7 @@ public class NoteRequestDto {
 	
 	@JsonProperty(value = "content")
 	@NotNull
+	@NotEmpty
 	private final String content;
 	
 	@JsonCreator
