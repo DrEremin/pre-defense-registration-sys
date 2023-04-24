@@ -1,5 +1,6 @@
 package ru.dreremin.predefense.registration.sys.controllers.mailing;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,39 +17,33 @@ import lombok.extern.slf4j.Slf4j;
 import ru.dreremin.predefense.registration.sys.dto.request.MailingRequestDto;
 import ru.dreremin.predefense.registration.sys.dto.response.MailingResponseDto;
 import ru.dreremin.predefense.registration.sys.services.mailing.MailingService;
+import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
 //@CrossOrigin(origins = "http://localhost:3002")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/mailing")
 public class MailingController {
 
 	private final MailingService service;
 	
 	@PostMapping(
-			value = "/students/all", 
+			value = "/mailing", 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MailingResponseDto>> 
-			sendMailsToStudents(@Valid @RequestBody MailingRequestDto dto) {
+			sendMails(@Valid @RequestBody MailingRequestDto dto) {
 		
-		List<MailingResponseDto> responseDto = 
-				service.sendMailsToStudents(dto);
+		List<MailingResponseDto> responseDto;
 		
-		log.info("MailingController.sendMailsToStudents() is success");
-		return ResponseEntity.ok(responseDto);
-	}
-	
-	@PostMapping(
-			value = "/teachers/all",
-			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<MailingResponseDto>> 
-			sendMailsToTeachers(@Valid @RequestBody MailingRequestDto dto) {
+		if (dto.getRecipientRole().equals(Role.STUDENT.getRole())) {
+			responseDto = service.sendMailsToStudents(dto);
+		} else if (dto.getRecipientRole().equals(Role.TEACHER.getRole())) {
+			responseDto = service.sendMailsToTeachers(dto);
+		} else {
+			responseDto = new ArrayList<>();
+		}
 		
-		List<MailingResponseDto> responseDto = 
-				service.sendMailsToTeachers(dto);
-		
-		log.info("MailingController.sendMailsToTeachers() is success");
+		log.info("MailingController.sendMails() is success");
 		return ResponseEntity.ok(responseDto);
 	}
 }

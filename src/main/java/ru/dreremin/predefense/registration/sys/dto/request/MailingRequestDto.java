@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class MailingRequestDto {
 
-	@JsonProperty(value = "subject")
+	@JsonProperty(value = "title")
 	@NotNull
 	@NotEmpty
 	private String subject;
@@ -18,8 +18,17 @@ public class MailingRequestDto {
 	@NotEmpty
 	private String content;
 	
-	public MailingRequestDto (String subject, String content) {
+	@JsonProperty(value = "recipientRole")
+	@NotNull
+	@NotEmpty
+	private String recipientRole;
+	
+	public MailingRequestDto (
+			String subject, 
+			String content, 
+			String recipientRole) {
 		this.subject = subject;
 		this.content = content;
+		this.recipientRole = recipientRole;
 	}
 }
