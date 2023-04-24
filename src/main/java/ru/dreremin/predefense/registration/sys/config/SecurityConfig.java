@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/commission/{id}").hasRole(ADMIN)
 				.antMatchers("/mailing").hasRole(ADMIN)
 				.antMatchers("/user/**").hasRole(ADMIN)
-				.antMatchers("/note/write").hasRole(TEACHER)
+				.antMatchers("/note/commission/**").hasRole(TEACHER)
 				.antMatchers("/registration/commission/**")
 						.hasAnyRole(TEACHER, STUDENT)
 				.antMatchers("/commission/list")
