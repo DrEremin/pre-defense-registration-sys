@@ -1,13 +1,15 @@
 package ru.dreremin.predefense.registration.sys.services.commission;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import javax.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
@@ -17,13 +19,14 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response.StudentResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response.TeacherResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .WrapperForPageResponseDto;
-import ru.dreremin.predefense.registration.sys.models.Actor;
+import ru.dreremin.predefense.registration.sys.exceptions.NegativeTimePeriodException;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.models.Student;
@@ -42,7 +45,7 @@ import ru.dreremin.predefense.registration.sys.services.student
 import ru.dreremin.predefense.registration.sys.services.teacher
 		 .ReadTeacherService;
 import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
-import ru.dreremin.predefense.registration.sys.util.enums.Role;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -69,7 +72,7 @@ public class ReadCommissionService {
 	public CommissionResponseDto getCurrentComissionOfStudent() {
 		
 		Optional<Student> studentOpt = studentRepo.findByActorLogin(
-				authorityConfirmation(Role.STUDENT).getLogin());
+				getActorDetails().getUsername());
 		
 		if (studentOpt.isEmpty()) {
 			throw new EntityNotFoundException(
@@ -96,7 +99,7 @@ public class ReadCommissionService {
 			getActualComissionsListForStudent(PageRequest pageRequest) {
 	
 		Optional<Student> studentOpt = studentRepo.findByActorLogin(
-				authorityConfirmation(Role.STUDENT).getLogin());
+				getActorDetails().getUsername());
 		
 		if (studentOpt.isEmpty()) {
 			throw new EntityNotFoundException(
@@ -121,14 +124,6 @@ public class ReadCommissionService {
 	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
 			getActualComissionsListForTeacher(PageRequest pageRequest) {
 		
-		Optional<Teacher> teacherOpt = teacherRepo.findByActorLogin(
-				authorityConfirmation(Role.TEACHER).getLogin());
-		
-		if (teacherOpt.isEmpty()) {
-			throw new EntityNotFoundException(
-					"Teacher with this login does not exist");
-		}
-		
 		Page<Commission> actualCommissions = commissionRepo
 				.findAllActualCommissionsForTeacher(
 						ZonedDateTime.now(), 
@@ -143,23 +138,39 @@ public class ReadCommissionService {
 	
 	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
 			getCommissionListByTimePeriod(
-					ZonedDateTime startDateTime, 
-					ZonedDateTime endDateTime,
+					String start, 
+					String end,
 					PageRequest pageRequest) {
 		
-		authorityConfirmation(Role.ADMIN);
+		ZonedDateTime startDateTime, endDateTime;
+		Page<Commission> commissions;
 		
-		Page<Commission> commissions = commissionRepo
+		try {
+			startDateTime = zonedDateTimeProvider.parseFromString(start);
+		} catch (DateTimeParseException e) {
+			startDateTime = null;
+		}
+		try {
+			endDateTime = zonedDateTimeProvider.parseFromString(end);
+		} catch (DateTimeParseException e) {
+			endDateTime = null;
+		}
+		if (startDateTime == null && endDateTime == null) {
+			commissions = new PageImpl<>(new ArrayList<>(), pageRequest, 0);
+			return new WrapperForPageResponseDto<>(getResult(commissions));
+		} else if (startDateTime != null && endDateTime == null) {
+			endDateTime = ZonedDateTime.now();
+		} else if (startDateTime == null && endDateTime != null) {
+			startDateTime = ZonedDateTime.of(
+					1970, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC+00:00"));
+		}
+		commissions = commissionRepo
 				.findAllByStartDateTimeBetweenOrderByStartDateTime(
 						zonedDateTimeProvider
 								.changeTimeZone(startDateTime), 
 						zonedDateTimeProvider
 								.changeTimeZone(endDateTime),
 						pageRequest);
-		
-		if (commissions.getTotalElements() == 0) {
-			throw new EntityNotFoundException("Commissions not found");
-		}
 		return new WrapperForPageResponseDto<>(
 				getResult(commissions));
 	}
@@ -204,13 +215,6 @@ public class ReadCommissionService {
 			boolean withTeachers, 
 			boolean withStudents,
 			boolean withNote) {
-		
-		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getActor();
-		
-		if (!actor.getRole().equals(Role.ADMIN.getRole())) {
-			throw new AccessDeniedException("User is not authorized");
-		}
 		
 		Commission commission = commissionRepo.findById(id).orElseThrow(
 				() -> new EntityNotFoundException(
@@ -265,14 +269,8 @@ public class ReadCommissionService {
 		return Map.entry(page, resultDto);
 	}
 	
-	private Actor authorityConfirmation(Role role) {
-		
-		Actor actor = ((ActorDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getActor();
-		
-		if (!actor.getRole().equals(role.getRole())) {
-			throw new AccessDeniedException("User is not authorized");
-		}
-		return actor;
+	public ActorDetails getActorDetails() {
+		return (ActorDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
 	}
 }  

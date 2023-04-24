@@ -16,14 +16,11 @@ import ru.dreremin.predefense.registration.sys.dto.response
 		 .CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .WrapperForPageResponseDto;
-import ru.dreremin.predefense.registration.sys.exceptions
-		 .NotReadableRequestParameterException;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.services.commission
 		 .ReadCommissionService;
 import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
-import ru.dreremin.predefense.registration.sys.util.enums
-		 .CommissionsReadingType;
+import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
 //@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 @RequiredArgsConstructor
@@ -55,35 +52,31 @@ public class ReadCommissionController {
 					value = "endDateTime", 
 					required = false, 
 					defaultValue = "")
-			String endDateTime,
-			@RequestParam(value = "type")
-			String commissionsReadingType) {
-		try {
-			
-			CommissionsReadingType type = CommissionsReadingType
-					.valueOf(commissionsReadingType);
+			String endDateTime) {
+		
 			WrapperForPageResponseDto<Commission, CommissionResponseDto> 
-			result = null;
+					result = null;
 	
-			switch(type) {
-				case ACTUAL_TEACHER:
+			switch(Role.parseFromString(service.getActorDetails().getRole())) {
+				case TEACHER:
 					result = service.getActualComissionsListForTeacher(
 							PageRequest.of(
 									page, 
 									size, 
 									Sort.by(Sort.Order.asc("startDateTime"))));
 					break;
-				case ACTUAL_STUDENT:
+				case STUDENT:
 					result = service.getActualComissionsListForStudent(
 							PageRequest.of(
 									page, 
 									size, 
 									Sort.by(Sort.Order.asc("startDateTime"))));
 					break;
-				case PERIOD_ADMIN:
+				case ADMIN:
+					
 					result = service.getCommissionListByTimePeriod(
-							provider.parseFromString(startDateTime), 
-							provider.parseFromString(endDateTime), 
+							startDateTime, 
+							endDateTime, 
 							PageRequest.of(
 									page, 
 									size, 
@@ -93,10 +86,6 @@ public class ReadCommissionController {
 			log.info("ReadComissionController.getCommissionsList()"
 					+ "is success");
 			return ResponseEntity.ok(result);
-		} catch (IllegalArgumentException | NullPointerException e) {
-			throw new NotReadableRequestParameterException(
-					"Incorrect parameter \"type\"");
-		}
 	}
 	
 	@GetMapping(value = "/commission")
@@ -118,4 +107,6 @@ public class ReadCommissionController {
 		log.info("ReadComissionController.getCommission() is success");
 		return ResponseEntity.ok(commission);
 	}
+	
+	
 }

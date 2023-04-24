@@ -1,6 +1,7 @@
 package ru.dreremin.predefense.registration.sys.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders
 		  .AuthenticationManagerBuilder;
@@ -51,22 +52,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()                             
 				.authorizeRequests()
 				.antMatchers("/admin").hasRole(ADMIN)
-				.antMatchers("/admin/list").hasRole(ADMIN)
 				.antMatchers("/admin/**").hasRole(ADMIN)
 				.antMatchers("/student").hasRole(ADMIN)
-				.antMatchers("/student/list").hasRole(ADMIN)
 				.antMatchers("/student/**").hasRole(ADMIN)
 				.antMatchers("/teacher").hasRole(ADMIN)
-				.antMatchers("/teacher/list").hasRole(ADMIN)
 				.antMatchers("/teacher/**").hasRole(ADMIN)
-				.antMatchers("/commission").hasRole(STUDENT)
-				.antMatchers("/commission/{id}").hasRole(ADMIN)
+				.antMatchers(HttpMethod.GET, "/commission").hasRole(STUDENT)
+				.antMatchers(HttpMethod.POST, "/commission").hasRole(ADMIN)
+				.antMatchers(HttpMethod.DELETE, "/commission/**")
+						.hasRole(ADMIN)
+				.antMatchers(HttpMethod.PATCH, "/commission/**")
+						.hasRole(ADMIN)
 				.antMatchers("/mailing").hasRole(ADMIN)
 				.antMatchers("/user/**").hasRole(ADMIN)
 				.antMatchers("/note/commission/**").hasRole(TEACHER)
 				.antMatchers("/registration/commission/**")
 						.hasAnyRole(TEACHER, STUDENT)
-				.antMatchers("/commission/list")
+				.antMatchers(HttpMethod.GET, "/commission/list")
 						.hasAnyRole(ADMIN, STUDENT, TEACHER)
 				.antMatchers("/user").hasAnyRole(ADMIN, STUDENT, TEACHER)
 				.antMatchers("/login").permitAll()
@@ -79,7 +81,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.addFilterBefore(jwtFilter, 
 				UsernamePasswordAuthenticationFilter.class);
 	}
-	
 	
 	@Bean
 	public PasswordEncoder getPasswordEncoder() {

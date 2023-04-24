@@ -15,4 +15,8 @@ public enum Role {
 	public String getRole() {
 		return role;
 	}
+	
+	public static Role parseFromString(String string) {
+		return Role.valueOf(string.substring(5, string.length()));
+	}
 }
