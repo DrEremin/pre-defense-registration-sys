@@ -1,5 +1,6 @@
 package ru.dreremin.predefense.registration.sys.controllers.commission;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import org.springframework.data.domain.PageRequest;
@@ -19,8 +20,6 @@ import ru.dreremin.predefense.registration.sys.dto.response
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.services.commission
 		 .ReadCommissionService;
-import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
-import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
 //@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 @RequiredArgsConstructor
@@ -30,19 +29,13 @@ public class ReadCommissionController {
 	
 	private final ReadCommissionService service;
 	
-	private final ZonedDateTimeProvider provider;
-	
 	@GetMapping("/commission/list")
 	public ResponseEntity<WrapperForPageResponseDto
 	<Commission, CommissionResponseDto>> getCommissionsList(
 			@RequestParam(value = "page", defaultValue = "0") 
-			@Min(0)
-			@Max(Integer.MAX_VALUE)
-			int page, 
+			@Valid @Min(0)@Max(Integer.MAX_VALUE) int page, 
 			@RequestParam(value = "amountOfItemsOnPage", defaultValue = "10") 
-			@Min(0)
-			@Max(Integer.MAX_VALUE)
-			int size,
+			@Valid @Min(0) @Max(Integer.MAX_VALUE) int size,
 			@RequestParam(
 					value = "startDateTime", 
 					required = false, 
@@ -55,34 +48,13 @@ public class ReadCommissionController {
 			String endDateTime) {
 		
 			WrapperForPageResponseDto<Commission, CommissionResponseDto> 
-					result = null;
-	
-			switch(Role.parseFromString(service.getActorDetails().getRole())) {
-				case TEACHER:
-					result = service.getActualComissionsListForTeacher(
+					result = service.getCommissionsList(
 							PageRequest.of(
 									page, 
 									size, 
-									Sort.by(Sort.Order.asc("startDateTime"))));
-					break;
-				case STUDENT:
-					result = service.getActualComissionsListForStudent(
-							PageRequest.of(
-									page, 
-									size, 
-									Sort.by(Sort.Order.asc("startDateTime"))));
-					break;
-				case ADMIN:
-					
-					result = service.getCommissionListByTimePeriod(
+									Sort.by(Sort.Order.asc("startDateTime"))), 
 							startDateTime, 
-							endDateTime, 
-							PageRequest.of(
-									page, 
-									size, 
-									Sort.by(Sort.Order.asc("startDateTime"))));
-					break;
-			}
+							endDateTime);
 			log.info("ReadComissionController.getCommissionsList()"
 					+ "is success");
 			return ResponseEntity.ok(result);

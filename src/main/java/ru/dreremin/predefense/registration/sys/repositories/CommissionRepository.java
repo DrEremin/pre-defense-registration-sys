@@ -29,7 +29,7 @@ public interface CommissionRepository
 			+ "from Commission c "
 			+ "where c.startDateTime > :start "
 			+ "and c.studyDirection = :direction")
-	Page<Commission> findAllActualCommissionsForStudent(
+	Page<Commission> findAllActualCommissionsList(
 			@Param("start") ZonedDateTime start, 
 			@Param("direction") String studyDirection,
 			Pageable pageable);
@@ -44,7 +44,7 @@ public interface CommissionRepository
 			+ "c.studentLimit) "
 			+ "from Commission c "
 			+ "where c.startDateTime > :start")
-	Page<Commission> findAllActualCommissionsForTeacher(
+	Page<Commission> findAllActualCommissionsList(
 			@Param("start") ZonedDateTime start, 
 			Pageable pageable);
 	

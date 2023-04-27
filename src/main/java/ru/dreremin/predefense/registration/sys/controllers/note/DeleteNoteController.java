@@ -19,7 +19,7 @@ public class DeleteNoteController {
 	
 	private final DeleteNoteService deleteNoteService;
 	
-	@DeleteMapping("/note/commission/{id}")
+	@DeleteMapping("commission/{id}/note")
 	public ResponseEntity<StatusResponseDto> createNote(
 			@PathVariable(value = "id")
 			@Min(1)

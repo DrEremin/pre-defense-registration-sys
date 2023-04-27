@@ -21,7 +21,7 @@ public class DeleteRegistrationController {
 	
 	private final DeleteRegistrationService service;
 	
-	@DeleteMapping("/registration/commission/{id}")
+	@DeleteMapping("/commission/{id}/registration")
 	public ResponseEntity<StatusResponseDto> createRegistration(
 			@RequestParam(value = "id", required = false, defaultValue = "0") 
 			@Min(0) 

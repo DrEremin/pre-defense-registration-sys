@@ -22,7 +22,7 @@ public class UpdateNoteController {
 
 	private final UpdateNoteService updateNoteService;
 	
-	@PatchMapping("/note/commission/{id}")
+	@PatchMapping("commission/{id}/note")
 	public ResponseEntity<StatusResponseDto> updateNote(
 			@PathVariable(value = "id")
 			@Min(1)

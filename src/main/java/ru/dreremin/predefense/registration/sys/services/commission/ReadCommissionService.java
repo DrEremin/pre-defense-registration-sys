@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -26,7 +25,6 @@ import ru.dreremin.predefense.registration.sys.dto.response.StudentResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response.TeacherResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .WrapperForPageResponseDto;
-import ru.dreremin.predefense.registration.sys.exceptions.NegativeTimePeriodException;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.models.Student;
@@ -45,8 +43,8 @@ import ru.dreremin.predefense.registration.sys.services.student
 import ru.dreremin.predefense.registration.sys.services.teacher
 		 .ReadTeacherService;
 import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
+import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReadCommissionService {
@@ -67,6 +65,63 @@ public class ReadCommissionService {
 	
 	private final ReadStudentService readStudentService;
 	
+	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+			getCommissionsList(
+					PageRequest pageRequest, 
+					String startDateTime, 
+					String endDateTime) {
+		
+		WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+				result = null;
+		
+		switch(Role.parseFromString(getActorDetails().getRole())) {
+			case TEACHER:
+				result = getActualCommissionsList(pageRequest, null);
+				break;
+			case STUDENT:
+				Student student = studentRepo.findByActorLogin(
+						getActorDetails().getUsername()).orElseThrow(
+								() -> new EntityNotFoundException(
+										"Student with this login does not "
+										+ "exist"));
+				result = getActualCommissionsList(
+						pageRequest, 
+						student.getStudyDirection());
+				break;
+			case ADMIN:
+				result = getCommissionsListByTimePeriod(
+					startDateTime, 
+					endDateTime, 
+					pageRequest);
+				break;
+		}
+		
+		return result;
+	}
+	
+	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
+			EntityNotFoundException.class })
+	private WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+			getActualCommissionsList(
+					PageRequest pageRequest, 
+					String studyDirection) {
+		
+		Page<Commission> actualCommissions = studyDirection == null 
+				? commissionRepo.findAllActualCommissionsList(
+						ZonedDateTime.now(), 
+						pageRequest) 
+				: commissionRepo.findAllActualCommissionsList(
+						ZonedDateTime.now(),
+						studyDirection,
+						pageRequest);
+				
+		if (actualCommissions.getTotalElements() == 0) {
+			throw new EntityNotFoundException("Аctual commissions not found");
+		}
+		return new WrapperForPageResponseDto<>(
+				getResult(actualCommissions));
+	}
+	
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
 	public CommissionResponseDto getCurrentComissionOfStudent() {
@@ -78,7 +133,6 @@ public class ReadCommissionService {
 			throw new EntityNotFoundException(
 					"Student with this login does not exist");
 		}
-		log.debug("getCurrentComissionOfStudent()");
 		Optional<StudentCommission> studentComissionOpt = 
 				studentCommissionRepo.findByStudentIdAndActualTime(
 						studentOpt.get().getId(), ZonedDateTime.now());
@@ -93,51 +147,8 @@ public class ReadCommissionService {
 		return getCommission(commission, true, true, true);
 	} 
 	
-	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
-			EntityNotFoundException.class, AccessDeniedException.class })
-	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
-			getActualComissionsListForStudent(PageRequest pageRequest) {
-	
-		Optional<Student> studentOpt = studentRepo.findByActorLogin(
-				getActorDetails().getUsername());
-		
-		if (studentOpt.isEmpty()) {
-			throw new EntityNotFoundException(
-					"Student with this login does not exist");
-		}
-		
-		Page<Commission> actualCommissions = commissionRepo
-				.findAllActualCommissionsForStudent(
-						ZonedDateTime.now().plusHours(3),
-						studentOpt.get().getStudyDirection(),
-						pageRequest);
-		
-		if (actualCommissions.getTotalElements() == 0) {
-			throw new EntityNotFoundException("Аctual commissions not found");
-		}
-		return new WrapperForPageResponseDto<>(
-				getResult(actualCommissions));
-	}
-	
-	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
-			EntityNotFoundException.class, AccessDeniedException.class })
-	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
-			getActualComissionsListForTeacher(PageRequest pageRequest) {
-		
-		Page<Commission> actualCommissions = commissionRepo
-				.findAllActualCommissionsForTeacher(
-						ZonedDateTime.now(), 
-						pageRequest);
-		
-		if (actualCommissions.getTotalElements() == 0) {
-			throw new EntityNotFoundException("Аctual commissions not found");
-		}
-		return new WrapperForPageResponseDto<>(
-				getResult(actualCommissions));
-	}
-	
-	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
-			getCommissionListByTimePeriod(
+	private WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+			getCommissionsListByTimePeriod(
 					String start, 
 					String end,
 					PageRequest pageRequest) {
@@ -181,10 +192,10 @@ public class ReadCommissionService {
 			boolean withStudents,
 			boolean withNote) {
 			
-		List<TeacherResponseDto> teachersDto = (withTeachers) 
+		List<TeacherResponseDto> teachersDto = withTeachers
 				? getListOfTeacherResponseDto(commission.getId()) 
 				: new ArrayList<>();
-		List<StudentResponseDto> studentsDto = (withStudents) 
+		List<StudentResponseDto> studentsDto = withStudents 
 				? getListOfStudentResponseDto(commission.getId()) 
 				: new ArrayList<>();
 		String startDateTime = zonedDateTimeProvider.convertToString(
@@ -269,7 +280,7 @@ public class ReadCommissionService {
 		return Map.entry(page, resultDto);
 	}
 	
-	public ActorDetails getActorDetails() {
+	private ActorDetails getActorDetails() {
 		return (ActorDetails) SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
 	}
