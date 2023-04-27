@@ -39,13 +39,15 @@ public class ReadCommissionController {
 			@RequestParam(
 					value = "startDateTime", 
 					required = false, 
-					defaultValue = "")
-			String startDateTime,
+					defaultValue = "") String startDateTime,
 			@RequestParam(
 					value = "endDateTime", 
 					required = false, 
-					defaultValue = "")
-			String endDateTime) {
+					defaultValue = "") String endDateTime,
+			@RequestParam(
+					value = "my", 
+					required = false, 
+					defaultValue = "") String my) {
 		
 			WrapperForPageResponseDto<Commission, CommissionResponseDto> 
 					result = service.getCommissionsList(
@@ -54,18 +56,11 @@ public class ReadCommissionController {
 									size, 
 									Sort.by(Sort.Order.asc("startDateTime"))), 
 							startDateTime, 
-							endDateTime);
+							endDateTime,
+							my);
 			log.info("ReadComissionController.getCommissionsList()"
 					+ "is success");
 			return ResponseEntity.ok(result);
-	}
-	
-	@GetMapping(value = "/commission")
-	public ResponseEntity<CommissionResponseDto> getCurrentComission() {
-		CommissionResponseDto commission = service
-				.getCurrentComissionOfStudent();
-		log.info("ReadComissionController.getCommission() is success");
-		return ResponseEntity.ok(commission);
 	}
 	
 	@GetMapping(value = "/commission/{id}")
@@ -79,6 +74,4 @@ public class ReadCommissionController {
 		log.info("ReadComissionController.getCommission() is success");
 		return ResponseEntity.ok(commission);
 	}
-	
-	
 }

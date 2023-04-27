@@ -29,7 +29,7 @@ public interface CommissionRepository
 			+ "from Commission c "
 			+ "where c.startDateTime > :start "
 			+ "and c.studyDirection = :direction")
-	Page<Commission> findAllActualCommissionsList(
+	Page<Commission> findAllCommissionsListAfter(
 			@Param("start") ZonedDateTime start, 
 			@Param("direction") String studyDirection,
 			Pageable pageable);
@@ -44,8 +44,42 @@ public interface CommissionRepository
 			+ "c.studentLimit) "
 			+ "from Commission c "
 			+ "where c.startDateTime > :start")
-	Page<Commission> findAllActualCommissionsList(
+	Page<Commission> findAllCommissionsListAfter(
 			@Param("start") ZonedDateTime start, 
+			Pageable pageable);
+	
+	@Query("select new Commission("
+			+ "c.id, "
+			+ "c.startDateTime, "
+			+ "c.endDateTime, "
+			+ "c.presenceFormat, "
+			+ "c.studyDirection, "
+			+ "c.location, "
+			+ "c.studentLimit) "
+			+ "from Commission c "
+			+ "join TeacherCommission tc on c.id = tc.commissionId "
+			+ "join Teacher t on t.id = tc.teacherId "
+			+ "where t.id = :id and c.startDateTime > :start")
+	Page<Commission> findAllByTeacherIdAfter(
+			@Param("id") int teacherId, 
+			@Param("start") ZonedDateTime start,
+			Pageable pageable);
+
+	@Query("select new Commission("
+			+ "c.id, "
+			+ "c.startDateTime, "
+			+ "c.endDateTime, "
+			+ "c.presenceFormat, "
+			+ "c.studyDirection, "
+			+ "c.location, "
+			+ "c.studentLimit) "
+			+ "from Commission c "
+			+ "join StudentCommission sc on c.id = sc.commissionId "
+			+ "join Student s on s.id = sc.studentId "
+			+ "where s.id = :id and c.startDateTime > :start")
+	Page<Commission> findAllByStudentIdAfter(
+			@Param("id") long studentId,
+			@Param("start") ZonedDateTime start,
 			Pageable pageable);
 	
 	Page<Commission> findAllByStartDateTimeBetweenOrderByStartDateTime(

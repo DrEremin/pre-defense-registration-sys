@@ -6,7 +6,6 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response.StudentResponseDto;
@@ -28,13 +26,10 @@ import ru.dreremin.predefense.registration.sys.dto.response
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Note;
 import ru.dreremin.predefense.registration.sys.models.Student;
-import ru.dreremin.predefense.registration.sys.models.StudentCommission;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.NoteRepository;
-import ru.dreremin.predefense.registration.sys.repositories
-		 .StudentCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.security.ActorDetails;
@@ -45,11 +40,10 @@ import ru.dreremin.predefense.registration.sys.services.teacher
 import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
 import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReadCommissionService {
-		
-	private final StudentCommissionRepository studentCommissionRepo;
 	
 	private final CommissionRepository commissionRepo;
 	
@@ -65,125 +59,9 @@ public class ReadCommissionService {
 	
 	private final ReadStudentService readStudentService;
 	
-	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
-			getCommissionsList(
-					PageRequest pageRequest, 
-					String startDateTime, 
-					String endDateTime) {
-		
-		WrapperForPageResponseDto<Commission, CommissionResponseDto> 
-				result = null;
-		
-		switch(Role.parseFromString(getActorDetails().getRole())) {
-			case TEACHER:
-				result = getActualCommissionsList(pageRequest, null);
-				break;
-			case STUDENT:
-				Student student = studentRepo.findByActorLogin(
-						getActorDetails().getUsername()).orElseThrow(
-								() -> new EntityNotFoundException(
-										"Student with this login does not "
-										+ "exist"));
-				result = getActualCommissionsList(
-						pageRequest, 
-						student.getStudyDirection());
-				break;
-			case ADMIN:
-				result = getCommissionsListByTimePeriod(
-					startDateTime, 
-					endDateTime, 
-					pageRequest);
-				break;
-		}
-		
-		return result;
-	}
-	
-	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
-			EntityNotFoundException.class })
-	private WrapperForPageResponseDto<Commission, CommissionResponseDto> 
-			getActualCommissionsList(
-					PageRequest pageRequest, 
-					String studyDirection) {
-		
-		Page<Commission> actualCommissions = studyDirection == null 
-				? commissionRepo.findAllActualCommissionsList(
-						ZonedDateTime.now(), 
-						pageRequest) 
-				: commissionRepo.findAllActualCommissionsList(
-						ZonedDateTime.now(),
-						studyDirection,
-						pageRequest);
-				
-		if (actualCommissions.getTotalElements() == 0) {
-			throw new EntityNotFoundException("Аctual commissions not found");
-		}
-		return new WrapperForPageResponseDto<>(
-				getResult(actualCommissions));
-	}
-	
-	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
-			EntityNotFoundException.class })
-	public CommissionResponseDto getCurrentComissionOfStudent() {
-		
-		Optional<Student> studentOpt = studentRepo.findByActorLogin(
-				getActorDetails().getUsername());
-		
-		if (studentOpt.isEmpty()) {
-			throw new EntityNotFoundException(
-					"Student with this login does not exist");
-		}
-		Optional<StudentCommission> studentComissionOpt = 
-				studentCommissionRepo.findByStudentIdAndActualTime(
-						studentOpt.get().getId(), ZonedDateTime.now());
-		
-		if (studentComissionOpt.isEmpty()) {
-			throw new EntityNotFoundException("This student is not "
-					+ "registered for any actual commission");
-		}
-		
-		Commission commission = commissionRepo.findById(studentComissionOpt
-				.get().getCommissionId()).get();
-		return getCommission(commission, true, true, true);
-	} 
-	
-	private WrapperForPageResponseDto<Commission, CommissionResponseDto> 
-			getCommissionsListByTimePeriod(
-					String start, 
-					String end,
-					PageRequest pageRequest) {
-		
-		ZonedDateTime startDateTime, endDateTime;
-		Page<Commission> commissions;
-		
-		try {
-			startDateTime = zonedDateTimeProvider.parseFromString(start);
-		} catch (DateTimeParseException e) {
-			startDateTime = null;
-		}
-		try {
-			endDateTime = zonedDateTimeProvider.parseFromString(end);
-		} catch (DateTimeParseException e) {
-			endDateTime = null;
-		}
-		if (startDateTime == null && endDateTime == null) {
-			commissions = new PageImpl<>(new ArrayList<>(), pageRequest, 0);
-			return new WrapperForPageResponseDto<>(getResult(commissions));
-		} else if (startDateTime != null && endDateTime == null) {
-			endDateTime = ZonedDateTime.now();
-		} else if (startDateTime == null && endDateTime != null) {
-			startDateTime = ZonedDateTime.of(
-					1970, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC+00:00"));
-		}
-		commissions = commissionRepo
-				.findAllByStartDateTimeBetweenOrderByStartDateTime(
-						zonedDateTimeProvider
-								.changeTimeZone(startDateTime), 
-						zonedDateTimeProvider
-								.changeTimeZone(endDateTime),
-						pageRequest);
-		return new WrapperForPageResponseDto<>(
-				getResult(commissions));
+	private ActorDetails getActorDetails() {
+		return (ActorDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
 	}
 	
 	private CommissionResponseDto getCommission(
@@ -221,20 +99,19 @@ public class ReadCommissionService {
 				note);
 	}
 	
-	public CommissionResponseDto getCommissionById(
-			int id, 
-			boolean withTeachers, 
-			boolean withStudents,
-			boolean withNote) {
+	private Map.Entry<Page<Commission>, List<CommissionResponseDto>> getResult(
+			Page<Commission> page) {
 		
-		Commission commission = commissionRepo.findById(id).orElseThrow(
-				() -> new EntityNotFoundException(
-						"Commission with this ID does not exist"));	
-		return getCommission(
-				commission, 
-				withTeachers, 
-				withStudents, 
-				withNote);
+		List<Commission> commissions = page.getContent();
+		List<CommissionResponseDto> resultDto = new ArrayList<>(
+				commissions.size());
+		
+		for (Commission commission : commissions) {
+			
+			resultDto.add(getCommission(
+					commission, false, false, false));
+		}
+		return Map.entry(page, resultDto);
 	}
 	
 	private List<TeacherResponseDto> getListOfTeacherResponseDto(
@@ -265,23 +142,153 @@ public class ReadCommissionService {
 		return studentsDto;
 	}
 	
-	private Map.Entry<Page<Commission>, List<CommissionResponseDto>> getResult(
-			Page<Commission> page) {
+	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
+			EntityNotFoundException.class })
+	private WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+			getActualCommissionsList(
+					PageRequest pageRequest, 
+					String studyDirection) {
 		
-		List<Commission> commissions = page.getContent();
-		List<CommissionResponseDto> resultDto = new ArrayList<>(
-				commissions.size());
-		
-		for (Commission commission : commissions) {
-			
-			resultDto.add(getCommission(
-					commission, false, false, false));
-		}
-		return Map.entry(page, resultDto);
+		Page<Commission> actualCommissions = studyDirection == null 
+				? commissionRepo.findAllCommissionsListAfter(
+						ZonedDateTime.now(), 
+						pageRequest) 
+				: commissionRepo.findAllCommissionsListAfter(
+						ZonedDateTime.now(),
+						studyDirection,
+						pageRequest);
+		return new WrapperForPageResponseDto<>(
+				getResult(actualCommissions));
 	}
 	
-	private ActorDetails getActorDetails() {
-		return (ActorDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
+	private WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+			getCommissionsListByTimePeriod(
+					String start, 
+					String end,
+					PageRequest pageRequest) {
+
+		ZonedDateTime startDateTime, endDateTime;
+		Page<Commission> commissions;
+		
+		try {
+			startDateTime = zonedDateTimeProvider.parseFromString(start);
+		} catch (DateTimeParseException e) {
+			startDateTime = null;
+		}
+		try {
+			endDateTime = zonedDateTimeProvider.parseFromString(end);
+		} catch (DateTimeParseException e) {
+			endDateTime = null;
+		}
+		if (startDateTime == null && endDateTime == null) {
+			commissions = new PageImpl<>(new ArrayList<>(), pageRequest, 0);
+			return new WrapperForPageResponseDto<>(getResult(commissions));
+		} else if (startDateTime != null && endDateTime == null) {
+			endDateTime = ZonedDateTime.now();
+		} else if (startDateTime == null && endDateTime != null) {
+			startDateTime = ZonedDateTime.of(
+					1970, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC+00:00"));
+		}
+		commissions = commissionRepo
+				.findAllByStartDateTimeBetweenOrderByStartDateTime(
+						zonedDateTimeProvider
+								.changeTimeZone(startDateTime), 
+						zonedDateTimeProvider
+								.changeTimeZone(endDateTime),
+						pageRequest);
+		return new WrapperForPageResponseDto<>(
+				getResult(commissions));
+	}
+	
+	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
+			EntityNotFoundException.class })
+	private WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+			getMyCommissionsList(long id, PageRequest pageRequest) {
+		
+		Page<Commission> actualCommissions = commissionRepo
+				.findAllByStudentIdAfter(
+						id, 
+						ZonedDateTime.now(), 
+						pageRequest);
+		
+		return new WrapperForPageResponseDto<>(
+				getResult(actualCommissions));
+	}
+	
+	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
+			EntityNotFoundException.class })
+	private WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+			getMyCommissionsListForTeacher(int id, PageRequest pageRequest) {
+
+			Page<Commission> actualCommissions = commissionRepo
+					.findAllByTeacherIdAfter(
+							id, 
+							ZonedDateTime.now(), 
+							pageRequest);
+			return new WrapperForPageResponseDto<>(
+					getResult(actualCommissions));
+	}
+	
+	public WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+			getCommissionsList(
+					PageRequest pageRequest, 
+					String startDateTime, 
+					String endDateTime,
+					String my) {
+		
+		WrapperForPageResponseDto<Commission, CommissionResponseDto> 
+				result = null;
+		
+		switch(Role.parseFromString(getActorDetails().getRole())) {
+			case TEACHER:
+		
+				Teacher teacher = teacherRepo.findByActorLogin(
+						getActorDetails().getUsername()).orElseThrow(
+								() -> new EntityNotFoundException(
+										"Teacher with this login does not "
+										+ "exist"));
+				log.debug(String.valueOf(teacher.getId()));
+				result = my.length() == 0 
+						? getActualCommissionsList(pageRequest, null) 
+						: getMyCommissionsListForTeacher(teacher.getId(), pageRequest);
+				break;
+			case STUDENT:
+				
+				Student student = studentRepo.findByActorLogin(
+						getActorDetails().getUsername()).orElseThrow(
+								() -> new EntityNotFoundException(
+										"Student with this login does not "
+										+ "exist"));
+				
+				result = my.length() == 0 
+						? getActualCommissionsList(
+								pageRequest, 
+								student.getStudyDirection()) 
+						: getMyCommissionsList(student.getId(), pageRequest);
+				break;
+			case ADMIN:
+				result = getCommissionsListByTimePeriod(
+					startDateTime, 
+					endDateTime, 
+					pageRequest);
+				break;
+		}
+		return result;
+	} 
+	
+	public CommissionResponseDto getCommissionById(
+			int id, 
+			boolean withTeachers, 
+			boolean withStudents,
+			boolean withNote) {
+		
+		Commission commission = commissionRepo.findById(id).orElseThrow(
+				() -> new EntityNotFoundException(
+						"Commission with this ID does not exist"));	
+		return getCommission(
+				commission, 
+				withTeachers, 
+				withStudents, 
+				withNote);
 	}
 }  
