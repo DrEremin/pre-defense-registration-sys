@@ -23,7 +23,7 @@ public class Actor {
 	@Column(name = "login", length = 20)
 	private String login;
 	
-	@Column(name = "pswrd", length = 20)
+	@Column(name = "pswrd")
 	private String password;
 	
 	@Column(name = "authority")

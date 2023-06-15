@@ -29,8 +29,7 @@ public class EntitiesFactory {
 	public static Commission createCommission(CommissionRequestDto dto) {
 		return new Commission(
 							 dto.getStartDateTime(), 
-							 dto.getEndDateTime(), 
-							 dto.getPresenceFormat(), 
+							 dto.getEndDateTime(),  
 							 dto.getStudyDirection(), 
 							 dto.getLocation(),
 							 dto.getStudentLimit());

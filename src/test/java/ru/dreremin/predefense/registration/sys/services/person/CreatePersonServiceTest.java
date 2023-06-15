@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.services.persons;
+package ru.dreremin.predefense.registration.sys.services.person;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,8 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.PersonDto;
-import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.request.PersonRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.repositories
@@ -24,6 +24,7 @@ import ru.dreremin.predefense.registration.sys.repositories
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 import ru.dreremin.predefense.registration.sys.services.person.CreatePersonService;
+import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
 
 @Slf4j
@@ -41,19 +42,19 @@ class CreatePersonServiceTest {
 	private EmailRepository box;
 	@Autowired
 	private PersonRepository person;
-	private PersonDto currentDto;
-	private PersonDto firstDto;
+	private PersonRequestDto currentDto;
+	private PersonRequestDto firstDto;
 	private Instant time;
 	
 	@BeforeAll
 	void beforeAll() {
-		firstDto = new TeacherDto(
+		firstDto = new TeacherRequestDto(
+				"ivanlogin",
+				"password12345",
 				"Иванов", 
 				"Иван", 
 				"Иванович", 
-				"ivan@mail.ru", 
-				"ivanlogin", 
-				"password12345", 
+				"ivan@mail.ru",   
 				"Профессор");
 	}
 	
@@ -70,40 +71,43 @@ class CreatePersonServiceTest {
 	
 	@Test
 	void createPerson_Success() {
-		assertDoesNotThrow(() -> service.createPerson(firstDto));
+		assertDoesNotThrow(() -> service.createPerson(
+				firstDto, Role.TEACHER.getRole()));
 		assertTrue(autor.existsByLogin("ivanlogin"));
 		assertTrue(box.existsByBox("ivan@mail.ru"));
 	}
 	
 	@Test
 	void createPerson_LoginExists() throws UniquenessViolationException {
-		service.createPerson(firstDto);
-		currentDto = new TeacherDto(
+		service.createPerson(firstDto, Role.TEACHER.getRole());
+		currentDto = new TeacherRequestDto(
+				"ivanlogin", 
+				"password6789",
 				"Петров", 
 				"Петр", 
 				"Петрович", 
-				"petya@mail.ru", 
-				"ivanlogin", 
-				"password6789", 
+				"petya@mail.ru",  
 				"Доцент");
 		assertThrowsExactly(UniquenessViolationException.class, 
-				() -> service.createPerson(currentDto));
+				() -> service.createPerson(
+						currentDto, Role.TEACHER.getRole()));
 		assertFalse(box.existsByBox("petya@mail.ru"));
 	}
 	
 	@Test
 	void createPerson_BoxExists() throws UniquenessViolationException {
-		service.createPerson(firstDto);
-		currentDto = new TeacherDto(
+		service.createPerson(firstDto, Role.TEACHER.getRole());
+		currentDto = new TeacherRequestDto(
+				"sidlogin", 
+				"password0000",
 				"Сидоров", 
 				"Сидр", 
 				"Сидорович", 
-				"ivan@mail.ru", 
-				"sidlogin", 
-				"password0000", 
+				"ivan@mail.ru",  
 				"Ассистент");
 		assertThrowsExactly(UniquenessViolationException.class, 
-				() -> service.createPerson(currentDto));
+				() -> service.createPerson(
+						currentDto, Role.TEACHER.getRole()));
 		assertFalse(autor.existsByLogin("sidlogin"));
 	}
 }

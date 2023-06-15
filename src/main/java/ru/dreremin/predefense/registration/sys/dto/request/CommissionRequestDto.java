@@ -20,10 +20,6 @@ public class CommissionRequestDto {
 	@NotNull
 	private ZonedDateTime endDateTime;
 	
-	@JsonProperty(value = "presenceFormat")
-	@NotNull
-	private final String presenceFormat;
-	
 	@JsonProperty(value = "studyDirection")
 	@NotEmpty
 	@NotNull
@@ -38,18 +34,17 @@ public class CommissionRequestDto {
 	@Max(Short.MAX_VALUE)
 	@Min(0)
 	@NotNull
-	private final Short studentLimit;
+	private final short studentLimit;
 	
-	public CommissionRequestDto(ZonedDateTime startDateTime, 
-						ZonedDateTime endDateTime, 
-						String presenceFormat, 
-						String studyDirection, 
-						String location,
-						Short studentLimit) {
+	public CommissionRequestDto(
+			ZonedDateTime startDateTime, 
+			ZonedDateTime endDateTime,  
+			String studyDirection, 
+			String location,
+			Short studentLimit) {
 		
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
-		this.presenceFormat = presenceFormat;
 		this.studyDirection = studyDirection;
 		this.location = location;
 		this.studentLimit = studentLimit;

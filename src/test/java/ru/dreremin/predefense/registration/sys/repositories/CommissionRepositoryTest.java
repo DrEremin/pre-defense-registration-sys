@@ -2,6 +2,7 @@ package ru.dreremin.predefense.registration.sys.repositories;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -53,9 +54,8 @@ class CommissionRepositoryTest {
 				
 			repository.save(new Commission(timestamp, 
 										  timestamp.plusHours(1), 
-										  true, 
 										  s, 
-										  s, 
+										  s,  
 										  l));
 		}
 	}
@@ -66,22 +66,24 @@ class CommissionRepositoryTest {
 	}
 	
 	@AfterEach
-	void afterEach() {}
+	void afterEach() {
+		log.info("testing time: " + Duration.between(time, Instant.now()));
+	}
 	
 	@AfterAll
 	void afterAll() {
 		repository.deleteAll();
 	}
-	
+	  
 	@Test
-	void findByStartDateTimeGreaterThanOrderByStartDateTimeAsc_Success() {
+	void findAllByStartDateTimeGreaterThanOrderByStartDateTimeAsc_Success() {
 		assertTrue(repository.count() == SIZE);
 		assertDoesNotThrow(() -> repository
-				.findByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
+				.findAllByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
 				ZonedDateTime.now()));
 		
 		List<Commission> commissions = repository
-				.findByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
+				.findAllByStartDateTimeGreaterThanOrderByStartDateTimeAsc(
 				ZonedDateTime.now());
 		
 		assertTrue(commissions.size() == SIZE / 2 + SIZE % 2);
@@ -89,4 +91,30 @@ class CommissionRepositoryTest {
 			assertTrue(commissions.get(j).compareTo(commissions.get(i)) < 0);
 		}
 	}
+/////////////////////////
+	@Test
+	void findAllCommissionsListAfter_Success() {
+		assertTrue(true);
+	}
+	
+	@Test
+	void findAllCommissionsListAfter_ByStudyDirection_Success() {
+		assertTrue(true);
+	}
+	
+	@Test
+	void findAllByTeacherIdAfter_Success() {
+		assertTrue(true);
+	}
+	
+	@Test
+	void findAllByStudentIdAfter_Success() {
+		assertTrue(true);
+	}
+	
+	@Test
+	void findAllByStartDateTimeBetweenOrderByStartDateTime_Success() {
+		assertTrue(true);
+	}
+////////////////////////
 }

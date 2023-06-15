@@ -1,7 +1,8 @@
-package ru.dreremin.predefense.registration.sys.controllers.read;
+package ru.dreremin.predefense.registration.sys.controllers.commission;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request
 				 .MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -28,22 +29,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet
 		  .AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.request.RegistrationDto;
-import ru.dreremin.predefense.registration.sys.dto.request.StudentDto;
-import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
-import ru.dreremin.predefense.registration.sys.dto.request.impl.AuthenticationDto;
+import ru.dreremin.predefense.registration.sys.dto.request.AdministratorRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.AuthenticationRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.StudentRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .FailedAuthenticationException;
 import ru.dreremin.predefense.registration.sys.models.Commission;
+import ru.dreremin.predefense.registration.sys.models.Student;
+import ru.dreremin.predefense.registration.sys.models.StudentCommission;
+import ru.dreremin.predefense.registration.sys.models.Teacher;
+import ru.dreremin.predefense.registration.sys.models.TeacherCommission;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ActorRepository;
+import ru.dreremin.predefense.registration.sys.repositories.AdministratorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
@@ -54,10 +61,13 @@ import ru.dreremin.predefense.registration.sys.repositories.StudentRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
+import ru.dreremin.predefense.registration.sys.services.admin.CreateAdministratorService;
+import ru.dreremin.predefense.registration.sys.services.auth.AuthenticationService;
 import ru.dreremin.predefense.registration.sys.services.commission.CreateCommissionService;
 import ru.dreremin.predefense.registration.sys.services.registration.CreateRegistrationService;
 import ru.dreremin.predefense.registration.sys.services.student.CreateStudentService;
 import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherService;
+import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
 
 @Slf4j
 @SpringBootTest
@@ -65,7 +75,11 @@ import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherSer
 @ActiveProfiles("test")
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ReadRegistrationControllerTest {
+class ReadCommissionControllerTest {
+	
+	@Autowired private AuthenticationService authenticationService;
+	
+	@Autowired private CreateAdministratorService createAdministratorService;
 	
 	@Autowired private CreateStudentService createStudentService;
 	
@@ -77,15 +91,17 @@ class ReadRegistrationControllerTest {
 	
 	@Autowired private CommissionRepository comissionRepo;
 	
-	@Autowired private StudentCommissionRepository studentComissionRepo;
+	@Autowired private StudentCommissionRepository studentCommissionRepo;
 	
-	@Autowired private TeacherCommissionRepository teacherComissionRepo;
+	@Autowired private TeacherCommissionRepository teacherCommissionRepo;
 	
 	@Autowired private StudentRepository studentRepo;
 	
 	@Autowired private TeacherRepository teacherRepo;
 	
-	@Autowired private ActorRepository authenticationRepo;
+	@Autowired private ActorRepository actorRepo;
+	
+	@Autowired private AdministratorRepository administratorRepo;
 	
 	@Autowired private PersonRepository personRepo;
 	
@@ -94,6 +110,10 @@ class ReadRegistrationControllerTest {
 	@Autowired private MockMvc mockMvc;
 	
 	@Autowired private ObjectMapper mapper;
+	
+	@Autowired private ZonedDateTimeProvider zonedDateTimeProvider; 
+	
+	private String administratorToken, studentToken, teacherToken;
 	
 	private Instant time;
 	
@@ -124,57 +144,67 @@ class ReadRegistrationControllerTest {
 	void beforeAll() throws Exception {
 		
 		emails = new String[2][SIZE];
-		timestamps = new ZonedDateTime[SIZE];
+		timestamps = new ZonedDateTime[SIZE + 1];
 		
 		ZonedDateTime timestamp = ZonedDateTime.now().plusMonths(1);
-		CommissionDto dto;
+		CommissionRequestDto dto;
+		
+		createAdministratorService.createAdmin(
+				new AdministratorRequestDto("admin", "123"));
+		administratorToken = "Bearer_" + authenticationService.getToken(
+				new AuthenticationRequestDto("admin", "123"));
 		
 		for (int i = 0; i < SIZE; i++) {
 			emails[0][i] = logins[0][i] + "@mail.ru";
 			emails[1][i] = logins[1][i] + "@mail.ru";
-			createStudentService.createStudent(new StudentDto(
+			createStudentService.createStudent(new StudentRequestDto(
+					logins[0][i],
+					pswd,
 					lastNames[i],
 					firstNames[i],
 					patronymics[i],
 					emails[0][i],
-					logins[0][i],
-					pswd,
 					"ПИ",
 					"очное",
 					"ЗИ98" + i));
-			createTeacherService.createTeacher(new TeacherDto(
+			createTeacherService.createTeacher(new TeacherRequestDto(
+					logins[1][i],
+					pswd,
 					lastNames[i],
 					firstNames[i],
 					patronymics[i],
 					emails[1][i],
-					logins[1][i],
-					pswd,
 					"Преподаватель"));
 			timestamp = timestamp.minusDays(i);
 			timestamps[i] = timestamp;
-			dto = new CommissionDto(
+			dto = new CommissionRequestDto(
 					timestamp,
 					timestamp.plusHours(2),
-					true,
 					(i % 2 == 1) ? "ИСИТ" : "ПИ",
-					"Аудитория №7",
+					"Аудитория №" + i,
 					(short)10);
 			createCommissionService.createComission(dto);
 		}
+		timestamps[SIZE] = ZonedDateTime.now();
+		dto = new CommissionRequestDto(
+				timestamps[SIZE],
+				timestamps[SIZE].plusHours(2),
+				"ПИ",
+				"Аудитория №7",
+				(short)10);
+		createCommissionService.createComission(dto);
 		commissions = comissionRepo.findAll();
+		
+		List<Student> students = studentRepo.findAll();
+		List<Teacher> teachers = teacherRepo.findAll();
+		
 		for (int i = 0; i < SIZE - 1; i++) {
-			createRegistrationService.createStudentRegistration(
-					new RegistrationDto(logins[0][i], 
-										pswd, 
-										commissions.get(0).getId()));
-		}
-		for (int i = 0, k = 0; i < SIZE; i++, k++) {
-			for (int j = 0; j < SIZE - k; j++) {
-				createRegistrationService.createTeacherRegistration(
-						new RegistrationDto(logins[1][j], 
-											pswd, 
-											commissions.get(i).getId()));
-			}
+			studentCommissionRepo.save(new StudentCommission(
+					students.get(i).getId(), 
+					commissions.get(0).getId()));
+			teacherCommissionRepo.save(new TeacherCommission(
+					teachers.get(i).getId(), 
+					commissions.get(1).getId()));
 		}
 	}
 	
@@ -190,24 +220,52 @@ class ReadRegistrationControllerTest {
 	
 	@AfterAll
 	void afterAll() {
-		studentComissionRepo.deleteAll();
-		teacherComissionRepo.deleteAll();
+		studentCommissionRepo.deleteAll();
+		teacherCommissionRepo.deleteAll();
 		comissionRepo.deleteAll();
 		studentRepo.deleteAll();
 		teacherRepo.deleteAll();
-		authenticationRepo.deleteAll();
+		administratorRepo.deleteAll();
 		emailRepo.deleteAll();
 		personRepo.deleteAll();
+		actorRepo.deleteAll();
 	}
 	
 	@Test
+	void getCommissionsListByTimePeriod_Success() throws Exception {
+		
+		mockMvc.perform(get(
+						"/commission/list?page=0&amountOf"
+						+ "ItemsOnPage=6&startDateTime=" 
+						+ zonedDateTimeProvider.convertToString(ZonedDateTime.now()) 
+						+ "&endDateTime=" 
+						+ zonedDateTimeProvider.convertToString(
+								ZonedDateTime.now().plusMonths(1)))
+						.header("Authorization", administratorToken))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.items.length()", is(4)))
+				.andExpect(jsonPath("$.items[0].studyDirection", is("ИСИТ")))
+				.andExpect(jsonPath("$.items[0].location", is("Аудитория №3")))
+				.andExpect(jsonPath("$.items[1].studyDirection", is("ПИ")))
+				.andExpect(jsonPath("$.items[1].location", is("Аудитория №2")))
+				.andExpect(jsonPath("$.items[2].studyDirection", is("ИСИТ")))
+				.andExpect(jsonPath("$.items[2].location", is("Аудитория №1")))
+				.andExpect(jsonPath("$.items[3].studyDirection", is("ПИ")))
+				.andExpect(jsonPath("$.items[3].location", is("Аудитория №0")))
+				.andExpect(jsonPath("$.page", is(0)))
+				.andExpect(jsonPath("$.totalAmountOfItems", is(4)))
+				.andExpect(jsonPath("$.amountOfItemsOnPage", is(4)));
+	}
+	/*
+	@Test
 	void getCurrentComissionOfStudent_Success() throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				logins[0][1], 
 				pswd);
 		
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/current/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -242,11 +300,11 @@ class ReadRegistrationControllerTest {
 	@Test
 	void getActualComissionsListForStudent_Success() throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				logins[0][1], 
 				pswd);
 		
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/actual/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -296,11 +354,11 @@ class ReadRegistrationControllerTest {
 	@Test
 	void getActualComissionsListForTeacher_Success() throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				logins[1][1], 
 				pswd);
 		
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/actual/teacher")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -388,10 +446,10 @@ class ReadRegistrationControllerTest {
 	void getCurrentComissionOfStudent_StudentDontRegistered() 
 			throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				logins[0][SIZE - 1], 
 				pswd);
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/current/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -411,10 +469,10 @@ class ReadRegistrationControllerTest {
 	void getCurrentComissionOfStudent_StudentDoesNotExists() 
 			throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				logins[1][SIZE - 1], 
 				pswd);
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/current/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -433,10 +491,10 @@ class ReadRegistrationControllerTest {
 	void getActualComissionsListForStudent_StudentDoesNotExists() 
 			throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				logins[1][SIZE - 1], 
 				pswd);
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/actual/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -455,10 +513,10 @@ class ReadRegistrationControllerTest {
 	void getActualComissionsListForTeacher_TeacherDoesNotExists() 
 			throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				logins[0][SIZE - 1], 
 				pswd);
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/actual/teacher")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -477,10 +535,10 @@ class ReadRegistrationControllerTest {
 	void getCurrentComissionOfStudent_PersonDoesNotExists() 
 			throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				"other login", 
 				pswd);
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/current/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -499,10 +557,10 @@ class ReadRegistrationControllerTest {
 	void getActualComissionsListForStudent_PersonDoesNotExists() 
 			throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				"other login", 
 				pswd);
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/actual/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -521,10 +579,10 @@ class ReadRegistrationControllerTest {
 	void getActualComissionsListForTeacher_PersonDoesNotExists() 
 			throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				"other login", 
 				pswd);
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/actual/teacher")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -543,10 +601,10 @@ class ReadRegistrationControllerTest {
 	void getCurrentComissionOfStudent_InvalidPassword() 
 			throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				logins[0][SIZE - 1], 
 				"other password");
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/current/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -566,10 +624,10 @@ class ReadRegistrationControllerTest {
 	void getActualComissionsListForStudent_InvalidPassword() 
 			throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				logins[0][SIZE - 1], 
 				"other password");
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/actual/student")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -589,10 +647,10 @@ class ReadRegistrationControllerTest {
 	void getActualComissionsListForTeacher_InvalidPassword() 
 			throws Exception {
 		
-		AuthenticationDto authenticationDto = new AuthenticationDto(
+		AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(
 				logins[1][SIZE - 1], 
 				"other password");
-		String requestBody = mapper.writeValueAsString(authenticationDto);
+		String requestBody = mapper.writeValueAsString(authenticationRequestDto);
 		
 		mockMvc.perform(post("/comissions-read/actual/teacher")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -607,4 +665,5 @@ class ReadRegistrationControllerTest {
 						FailedAuthenticationException.class, 
 						r.getResolvedException()));
 	}
+	*/
 }

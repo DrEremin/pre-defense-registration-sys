@@ -1,15 +1,11 @@
 package ru.dreremin.predefense.registration.sys.controllers.exception;
 
 import java.time.format.DateTimeParseException;
-import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mail.MailException;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication
-		  .AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,6 +17,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.dreremin.predefense.registration.sys.dto.response.StatusResponseDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .EntitiesMismatchException;
@@ -38,6 +35,7 @@ import ru.dreremin.predefense.registration.sys.exceptions.OverLimitException;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 
+@Slf4j
 @ControllerAdvice
 public class ExceptionController {
 
@@ -82,6 +80,10 @@ public class ExceptionController {
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<StatusResponseDto> handleEntityNotFoundException(
 			EntityNotFoundException e) {
+		StackTraceElement[] elements = e.getStackTrace();
+		for (StackTraceElement element : elements) {
+			log.debug(element.toString());
+		}
 		return new ResponseEntity<>(
 				new StatusResponseDto(409, e.getMessage()), 
 				HttpStatus.CONFLICT);
@@ -221,10 +223,7 @@ public class ExceptionController {
 				HttpStatus.FORBIDDEN);
 	}
 	
-	/**
-	 * JWT Exceptions
-	 */
-	
+	/*
 	@ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
 	public ResponseEntity<StatusResponseDto> 
 			handleAuthenticationCredentialsNotFoundException(
@@ -249,5 +248,5 @@ public class ExceptionController {
 				new StatusResponseDto(403, e.getMessage()), 
 				HttpStatus.FORBIDDEN);
 	}
-	
+	*/
 }

@@ -3,7 +3,6 @@ package ru.dreremin.predefense.registration.sys.services.person;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import ru.dreremin.predefense.registration.sys.dto.request.PersonRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions
@@ -17,7 +16,7 @@ import ru.dreremin.predefense.registration.sys.repositories.EmailRepository;
 import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 import ru.dreremin.predefense.registration.sys.util.EntitiesFactory;
 
-@Slf4j
+
 @RequiredArgsConstructor
 @Service
 public class CreatePersonService {
@@ -32,22 +31,17 @@ public class CreatePersonService {
 	
 	public Person createPerson(PersonRequestDto dto, String role) {
 		
-		try{
-			if (actorRepo.existsByLogin(dto.getLogin())) {
-				throw new UniquenessViolationException(
+		
+		if (actorRepo.existsByLogin(dto.getLogin())) {
+			throw new UniquenessViolationException(
 						"The user with this login already exists");
-			}
-			if (emailRepo.existsByBox(dto.getEmail())) {
-				throw new UniquenessViolationException(
-						"The user with this email already exists");
-			}
-		} catch (UniquenessViolationException e) {
-			log.warn(e.getMessage());
-			throw e;
 		}
+		if (emailRepo.existsByBox(dto.getEmail())) {
+			throw new UniquenessViolationException(
+					"The user with this email already exists");
+		}
+		
 		String encodedPassword = passwordEncoder.encode(dto.getPassword());
-		log.debug("raw password" + dto.getPassword());
-		log.debug("encodedPassword" + encodedPassword);
 		Actor actor = actorRepo.save(new Actor(
 				dto.getLogin(), 
 				encodedPassword, 

@@ -23,8 +23,11 @@ import ru.dreremin.predefense.registration.sys.services.person
 public class DeleteStudentService {
 	
 	private final ActorRepository actorRepositroy;
+	
 	private final StudentRepository studentRepository;
+	
 	private final StudentCommissionRepository studentComissionRepository;
+	
 	private final DeletePersonService deletePersonService;
 	
 	public void deleteStudentById(long actorId) {

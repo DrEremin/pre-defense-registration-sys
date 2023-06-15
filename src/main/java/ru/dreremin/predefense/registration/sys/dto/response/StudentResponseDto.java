@@ -1,22 +1,9 @@
 package ru.dreremin.predefense.registration.sys.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public class StudentResponseDto {
-
-	@JsonProperty(value = "id")
-	private final long id;
-	
-	@JsonProperty(value = "lastName")
-	private final String lastName;
-	
-	@JsonProperty(value = "firstName")
-	private final String firstName;
-	
-	@JsonProperty(value = "patronymic")
-	private final String patronymic;
+public class StudentResponseDto extends PersonResponseDto {
 	
 	@JsonProperty(value = "studyDirection")
 	private final String studyDirection;
@@ -27,9 +14,20 @@ public class StudentResponseDto {
 	@JsonProperty(value = "group")
 	private final String group;
 	
-	@JsonProperty(value = "email")
-	private final String email;
-	
-	@JsonProperty(value = "login")
-	private final String login;
+	@JsonCreator
+	public StudentResponseDto(
+			long id, 
+			String lastName, 
+			String firstName, 
+			String patronymic,
+			String studyDirection,
+			String studyType,
+			String group,
+			String email,
+			String login) {
+		super(id, login, lastName, firstName, patronymic, email);
+		this.studyDirection = studyDirection;
+		this.studyType = studyType;
+		this.group = group;
+	}
 }

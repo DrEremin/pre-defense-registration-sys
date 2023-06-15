@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.config;
+	package ru.dreremin.predefense.registration.sys.config;
 
 import java.io.IOException;
 import java.io.PrintWriter;

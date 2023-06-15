@@ -27,7 +27,7 @@ public class CreateStudentService {
 	@Transactional(isolation = Isolation.SERIALIZABLE,
             rollbackFor = { UniquenessViolationException.class })
 	public void createStudent(StudentRequestDto dto) 
-			throws UniquenessViolationException{
+			throws UniquenessViolationException {
 		
 		long personId = createPersonService.createPerson(
 				dto, Role.STUDENT.getRole()).getId();

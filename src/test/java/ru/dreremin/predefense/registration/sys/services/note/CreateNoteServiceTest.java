@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.services.notes;
+package ru.dreremin.predefense.registration.sys.services.note;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,8 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.request.NoteDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.NoteRequestDto;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.NoteRepository;
@@ -34,7 +34,7 @@ import ru.dreremin.predefense.registration.sys.services.note.CreateNoteService;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CreateNoteServiceTest {
-	
+
 	@Autowired private CreateNoteService noteService;
 
 	@Autowired private CreateCommissionService comissionService;
@@ -52,12 +52,11 @@ class CreateNoteServiceTest {
 	@BeforeAll
 	void beforeAll() {
 		str = "placeholder";
-		comissionService.createComission(new CommissionDto(
+		comissionService.createComission(new CommissionRequestDto(
 				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
 				ZonedDateTime.parse("2022-08-03T12:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
-				true,
 				str,
 				str,
 				(short)2));
@@ -78,19 +77,19 @@ class CreateNoteServiceTest {
 	
 	@Test
 	void createNote_Success() {
-		assertDoesNotThrow(
-				() -> noteService.createNote(new NoteDto(comissionId, str)));
+		assertDoesNotThrow(() -> noteService.createNote(
+				comissionId, new NoteRequestDto(str)));
 		assertTrue(noteRepo.count() == 1);
 	}
 	
 	@Test
 	void createNote_ComissionIdDoesNotExists() {
 		try {
-			noteService.createNote(new NoteDto(comissionId + 10, str));
+			noteService.createNote(comissionId + 10, new NoteRequestDto(str));
 		} catch (EntityNotFoundException e) {
 			assertInstanceOf(EntityNotFoundException.class, e);
 			assertEquals(
-					"There is not exists comission with this Id", 
+					"Commission with this ID does not exists", 
 					e.getMessage());
 		}
 		assertTrue(noteRepo.count() == 0);

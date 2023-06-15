@@ -51,10 +51,10 @@ public class ReadStudentService {
 		
 		List<Student> students = page.getContent();
 		List<StudentResponseDto> result = new ArrayList<>(students.size());
-		
+		/*
 		if (page.getTotalElements() == 0) {
 			throw new EntityNotFoundException(message);
-		}
+		}*/
 		for (Student student : students) {
 			result.add(getStudentResponseDto(student));
 		}

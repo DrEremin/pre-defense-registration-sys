@@ -15,6 +15,7 @@ import ru.dreremin.predefense.registration.sys.security.JwtTokenProvider;
 public class AuthenticationService {
 	
 	private final AuthenticationManager authenticationManager;
+	
 	private final JwtTokenProvider jwtTokenProvider;
 	
 	public String getToken(AuthenticationRequestDto dto) {

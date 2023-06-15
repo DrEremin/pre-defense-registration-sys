@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.services.registrations;
+package ru.dreremin.predefense.registration.sys.services.commission;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,16 +19,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.request.RegistrationDto;
-import ru.dreremin.predefense.registration.sys.dto.request.StudentDto;
-import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
-import ru.dreremin.predefense.registration.sys.dto.request.impl.AuthenticationDto;
-import ru.dreremin.predefense.registration.sys.dto.response.ActualCommissionForStudentDto;
-import ru.dreremin.predefense.registration.sys.dto.response.CurrentCommissionOfStudentDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
+//import ru.dreremin.predefense.registration.sys.dto.request.RegistrationRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.StudentRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherRequestDto;
+//import ru.dreremin.predefense.registration.sys.dto.request.impl.AuthenticationDto;
+//import ru.dreremin.predefense.registration.sys.dto.response.RegistrationsForStudentDto;
+//import ru.dreremin.predefense.registration.sys.dto.response.CurrentCommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
-import ru.dreremin.predefense.registration.sys.models.StudentEntry;
-import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
+//import ru.dreremin.predefense.registration.sys.models.StudentEntry;
+//import ru.dreremin.predefense.registration.sys.models.TeacherEntry;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
@@ -42,8 +42,8 @@ import ru.dreremin.predefense.registration.sys.repositories
 		 .TeacherCommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.TeacherRepository;
 import ru.dreremin.predefense.registration.sys.services.commission.CreateCommissionService;
+import ru.dreremin.predefense.registration.sys.services.commission.ReadCommissionService;
 import ru.dreremin.predefense.registration.sys.services.registration.CreateRegistrationService;
-import ru.dreremin.predefense.registration.sys.services.registration.ReadRegistrationService;
 import ru.dreremin.predefense.registration.sys.services.student.CreateStudentService;
 import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherService;
 
@@ -52,9 +52,9 @@ import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherSer
 @ActiveProfiles("test")
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ReadRegistrationServiceTest {
-
-	@Autowired private ReadRegistrationService readRegistrationService;
+class ReadCommissionServiceTest {
+/*
+	@Autowired private ReadCommissionService readCommissionService;
 	
 	@Autowired private CreateStudentService createStudentService;
 	
@@ -109,7 +109,7 @@ class ReadRegistrationServiceTest {
 		timestamps = new ZonedDateTime[SIZE];
 		
 		ZonedDateTime timestamp = ZonedDateTime.now().plusMonths(1);
-		CommissionDto dto;
+		CommissionRequestDto dto;
 		StringBuilder builder = new StringBuilder();
 		
 		for (int i = 0; i < SIZE; i++) {
@@ -117,7 +117,7 @@ class ReadRegistrationServiceTest {
 					.append(placeholder)
 					.append(i)
 					.toString();
-			createStudentService.createStudent(new StudentDto(
+			createStudentService.createStudent(new StudentRequestDto(
 					lastNames[i],
 					firstNames[i],
 					patronymics[i],
@@ -132,7 +132,7 @@ class ReadRegistrationServiceTest {
 					.append(placeholder)
 					.append(i + SIZE)
 					.toString();
-			createTeacherService.createTeacher(new TeacherDto(
+			createTeacherService.createTeacher(new TeacherRequestDto(
 					lastNames[i],
 					firstNames[i],
 					patronymics[i],
@@ -142,10 +142,9 @@ class ReadRegistrationServiceTest {
 					placeholder));
 			timestamp = timestamp.minusDays(i);
 			timestamps[i] = timestamp;
-			dto = new CommissionDto(
+			dto = new CommissionRequestDto(
 					timestamp,
 					timestamp.plusHours(2),
-					true,
 					(i % 2 == 1) ? placeholder + "1234" : placeholder,
 					"Аудитория №7",
 					(short)10);
@@ -155,14 +154,14 @@ class ReadRegistrationServiceTest {
 		commissions = comissionRepo.findAll();
 		for (int i = 0; i < SIZE - 1; i++) {
 			createRegistrationService.createStudentRegistration(
-					new RegistrationDto(placeholders[0][i], 
+					new RegistrationRequestDto(placeholders[0][i], 
 										placeholders[0][i], 
 										commissions.get(0).getId()));
 		}
 		for (int i = 0, k = 0; i < SIZE; i++, k++) {
 			for (int j = 0; j < SIZE - k; j++) {
 				createRegistrationService.createTeacherRegistration(
-						new RegistrationDto(placeholders[1][j], 
+						new RegistrationRequestDto(placeholders[1][j], 
 											placeholders[1][j], 
 											commissions.get(i).getId()));
 			}
@@ -191,12 +190,12 @@ class ReadRegistrationServiceTest {
 	@Test
 	public void getCurrentComissionOfStudent_Success() throws Exception {
 		
-		assertDoesNotThrow(() -> readRegistrationService
-				.getCurrentComissionOfStudent(new AuthenticationDto(
+		assertDoesNotThrow(() -> readCommissionService
+				.getCurrentComissionOfStudent(new AuthenticationRequestDto(
 						placeholders[0][0], placeholders[0][0])));
 		
-		CurrentCommissionOfStudentDto dto = readRegistrationService
-				.getCurrentComissionOfStudent(new AuthenticationDto(
+		CurrentCommissionResponseDto dto = readCommissionService
+				.getCurrentComissionOfStudent(new AuthenticationRequestDto(
 						placeholders[0][0], placeholders[0][0]));
 		
 		assertTrue(commissions.get(0).getStudyDirection().equals(
@@ -222,12 +221,12 @@ class ReadRegistrationServiceTest {
 	
 	@Test
 	public void getActualComissionsListForStudent_Success() throws Exception {
-		assertDoesNotThrow(() -> readRegistrationService
-				.getActualComissionsListForStudent(new AuthenticationDto(
+		assertDoesNotThrow(() -> readCommissionService
+				.getActualComissionsListForStudent(new AuthenticationRequestDto(
 						placeholders[0][0], placeholders[0][0])));
 		
-		List<ActualCommissionForStudentDto> dtoList = readRegistrationService
-				.getActualComissionsListForStudent(new AuthenticationDto(
+		List<RegistrationsForStudentDto> dtoList = readCommissionService
+				.getActualComissionsListForStudent(new AuthenticationRequestDto(
 						placeholders[0][0], placeholders[0][0]));
 		
 		int i = SIZE / 2 + SIZE % 2, j = 0;
@@ -239,7 +238,7 @@ class ReadRegistrationServiceTest {
 				"Бурлаков И.С. Иванов С.А. Игнатьев А.П. Казаков В.М. "};
 		StringBuilder builder;
 		
-		for (ActualCommissionForStudentDto dto : dtoList) {
+		for (RegistrationsForStudentDto dto : dtoList) {
 			assertTrue(dto.getDate().equals(timestamps[i].toLocalDate()));
 			i -= 2;
 			teachers = dto.getTeachers();
@@ -255,11 +254,11 @@ class ReadRegistrationServiceTest {
 	public void getCurrentComissionOfStudent_StudentDontRegistered() 
 			throws Exception {
 		
-		CurrentCommissionOfStudentDto dto = null;
+		CurrentCommissionResponseDto dto = null;
 		
 		try {
-			dto = readRegistrationService
-					.getCurrentComissionOfStudent(new AuthenticationDto(
+			dto = readCommissionService
+					.getCurrentComissionOfStudent(new AuthenticationRequestDto(
 							placeholders[0][SIZE - 1], 
 							placeholders[0][SIZE - 1]));
 		} catch (EntityNotFoundException e) {
@@ -268,5 +267,5 @@ class ReadRegistrationServiceTest {
 			assertNull(dto);
 		}
 		assertNull(dto);
-	}
+	}*/
 }

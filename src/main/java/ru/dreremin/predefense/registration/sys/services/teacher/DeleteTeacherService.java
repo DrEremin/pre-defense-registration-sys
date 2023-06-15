@@ -22,8 +22,11 @@ import ru.dreremin.predefense.registration.sys.services.person
 public class DeleteTeacherService {
 
 	private final ActorRepository actorRepository;
+	
 	private final TeacherRepository teacherRepostory;
+	
 	private final TeacherCommissionRepository teacherComissionRepository;
+	
 	private final DeletePersonService deletePersonService;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, 

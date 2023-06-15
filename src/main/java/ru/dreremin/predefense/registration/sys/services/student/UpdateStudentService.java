@@ -37,11 +37,11 @@ public class UpdateStudentService {
 			EntitiesMismatchException.class})
 	public void updateStudent(long actorId, StudentRequestDto dto) {
 
-		long personId = updatePersonService.updatePerson(actorId, dto);
-		
-		Student student = studentRepository.findByPersonId(personId)
+		Student student = studentRepository.findByActorId(actorId)
 				.orElseThrow(() -> new EntityNotFoundException(
 						"Student with this user ID does not exist"));
+		
+		updatePersonService.updatePerson(actorId, dto);
 		
 		if (dto.getGroup() != null) {
 			student.setGroupNumber(dto.getGroup());

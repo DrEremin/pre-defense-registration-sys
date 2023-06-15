@@ -18,8 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.request.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.StudentRequestDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Student;
 import ru.dreremin.predefense.registration.sys.models.StudentCommission;
@@ -57,9 +57,9 @@ class StudentCommissionRepositoryTest {
 	@Autowired
 	private CreateCommissionService comissionService;
 	
-	private StudentDto studentDto;
+	private StudentRequestDto studentRequestDto;
 	
-	private CommissionDto commissionDto;
+	private CommissionRequestDto commissionRequestDto;
 	
 	private Commission commission;
 	
@@ -77,23 +77,22 @@ class StudentCommissionRepositoryTest {
 		String[] logins = {"1", "2", "3"};
 		
 		for (int i = 0; i < 3; i++) {
-			studentDto = new StudentDto(
-					s, s, s, emails[i], logins[i], s, s, s, s);
-			studentService.createStudent(studentDto);
+			studentRequestDto = new StudentRequestDto(
+					logins[i], s, s, s, s, emails[i], s, s, s);
+			studentService.createStudent(studentRequestDto);
 		}
 		
 		List<Student> students = studentRepo.findAll();
 		
-		commissionDto = new CommissionDto(
+		commissionRequestDto = new CommissionRequestDto(
 				ZonedDateTime.parse(
 						"2022-08-03T10:15:30+03:00[Europe/Moscow]"),
 				ZonedDateTime.parse(
 						"2022-08-03T12:15:30+03:00[Europe/Moscow]"),
-				true,
 				s,
 				s,
 				(short)10);
-		comissionService.createComission(commissionDto);
+		comissionService.createComission(commissionRequestDto);
 		
 		commission = comissionRepo.findAll().get(0);
 		
@@ -123,14 +122,32 @@ class StudentCommissionRepositoryTest {
 	}
 	
 	@Test
-	void findByComissionId_Success() {
-		assertTrue(studentComissionRepo.findByComissionId(
+	void findAllByCommissionId_Success() {
+		assertTrue(studentComissionRepo.findAllByCommissionId(
 				commission.getId()).size() == 3);
 	}
 	
 	@Test
-	void findByComissionId_IdDoesNotExists() {
-		assertTrue(studentComissionRepo.findByComissionId(
+	void findByCommissionId_IdDoesNotExists() {
+		assertTrue(studentComissionRepo.findAllByCommissionId(
 				commission.getId() + 1).size() == 0);
 	}
+	
+/////////////////////////////////
+	
+	@Test
+	void findAllByCommissionIdAndActualTime_Success() {
+		assertTrue(true);
+	}
+	
+	@Test
+	void findByStudentIdAndActualTime_Success() {
+		assertTrue(true);
+	}
+	
+	@Test
+	void findAllActualRegistrations_Success() {
+		assertTrue(true);
+	}
+///////////////////////////////////////
 }

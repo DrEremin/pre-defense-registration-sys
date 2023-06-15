@@ -21,7 +21,7 @@ public class CreateRegistrationController {
 
 	private final CreateRegistrationService service;
 	
-	@PostMapping("/commission/{id}/registration")
+	@PostMapping("/registration/commission/{id}")
 	public ResponseEntity<StatusResponseDto> createRegistration(
 			@PathVariable(value = "id") 
 			@Min(1) 

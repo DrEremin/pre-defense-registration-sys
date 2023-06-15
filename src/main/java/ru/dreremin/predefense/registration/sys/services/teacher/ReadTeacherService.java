@@ -50,10 +50,10 @@ public class ReadTeacherService {
 		
 		List<Teacher> teachers = page.getContent();
 		List<TeacherResponseDto> result = new ArrayList<>(teachers.size());
-		
+		/*
 		if (page.getTotalElements() == 0) {
 			throw new EntityNotFoundException(message);
-		}
+		}*/
 		for (Teacher teacher : teachers) {
 			result.add(getTeacherResponseDto(teacher));
 		}

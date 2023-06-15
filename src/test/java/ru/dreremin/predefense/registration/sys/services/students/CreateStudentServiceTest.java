@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.StudentDto;
+import ru.dreremin.predefense.registration.sys.dto.request.StudentRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Person;
@@ -37,19 +37,19 @@ class CreateStudentServiceTest {
 	@Autowired private ActorRepository author;
 	@Autowired private EmailRepository box;
 	@Autowired private PersonRepository person;
-	private StudentDto currentDto;
-	private StudentDto firstDto;
+	private StudentRequestDto currentDto;
+	private StudentRequestDto firstDto;
 	private Instant time;
 	
 	@BeforeAll
 	void beforeAll() {
-		firstDto = new StudentDto(
+		firstDto = new StudentRequestDto(
+				"ivanlogin", 
+				"password12345",
 				"Иванов", 
 				"Иван", 
 				"Иванович", 
 				"ivan@mail.ru", 
-				"ivanlogin", 
-				"password12345",
 				"ПИ",
 				"Очно",
 				"ЗИ981");
@@ -76,13 +76,13 @@ class CreateStudentServiceTest {
 	@Test
 	void createStudent_LoginExists() throws UniquenessViolationException {
 		service.createStudent(firstDto);
-		currentDto = new StudentDto(
+		currentDto = new StudentRequestDto(
+				"ivanlogin", 
+				"password6789", 
 				"Петров", 
 				"Петр", 
 				"Петрович", 
 				"petya@mail.ru", 
-				"ivanlogin", 
-				"password6789", 
 				"ПИ",
 				"Очно",
 				"ЗИ981");
@@ -95,13 +95,13 @@ class CreateStudentServiceTest {
 	@Test
 	void createStudent_BoxExists() throws UniquenessViolationException {
 		service.createStudent(firstDto);
-		currentDto = new StudentDto(
+		currentDto = new StudentRequestDto(
+				"petyalogin", 
+				"password6789",
 				"Петров", 
 				"Петр", 
 				"Петрович", 
-				"ivan@mail.ru", 
-				"petyalogin", 
-				"password6789", 
+				"ivan@mail.ru",  
 				"ПИ",
 				"Очно",
 				"ЗИ981");

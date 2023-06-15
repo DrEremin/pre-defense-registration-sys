@@ -14,6 +14,7 @@ import ru.dreremin.predefense.registration.sys.repositories.PersonRepository;
 public class DeletePersonService {
 	
 	private final EmailRepository emailRepo;
+	
 	private final PersonRepository personRepo;
 
 	public void deletePersonAndEmail(long actorId) {

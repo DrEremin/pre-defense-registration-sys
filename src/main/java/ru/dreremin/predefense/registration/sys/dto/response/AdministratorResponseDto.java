@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 public class AdministratorResponseDto {
 
 	@JsonProperty("id")
-	private final long id;
+	protected final long id;
 	
 	@JsonProperty("login")
-	private final String login;
+	protected final String login;
 }

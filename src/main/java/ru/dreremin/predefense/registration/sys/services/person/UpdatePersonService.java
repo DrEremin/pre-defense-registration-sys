@@ -31,7 +31,7 @@ public class UpdatePersonService {
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class, 
 			NotReadableRequestParameterException.class})
-	public long updatePerson(long actorId, PersonRequestDto dto) {
+	public void updatePerson(long actorId, PersonRequestDto dto) {
 		
 		Actor actor = actorRepository.findById(actorId).orElseThrow(
 				() -> new EntityNotFoundException(
@@ -70,9 +70,12 @@ public class UpdatePersonService {
 		if (dto.getEmail() != null 
 				&& !dto.getEmail().equals(email.getAddress())) {
 			emailValidation(dto.getEmail());
+			if (emailRepository.existsByBox(dto.getEmail())) {
+				throw new UniquenessViolationException(
+						"The user with this email already exists");
+			}
 			email.setAddress(dto.getEmail());
 		}
-		return person.getId();
 	}
 	
 	private void emailValidation(String address) {

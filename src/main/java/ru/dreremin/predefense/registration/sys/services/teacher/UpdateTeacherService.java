@@ -24,11 +24,11 @@ public class UpdateTeacherService {
 			EntityNotFoundException.class})
 	public void updateTeacher(long actorId, TeacherRequestDto dto) {
 		
-		long personId = updatePersonService.updatePerson(actorId, dto);
-		
-		Teacher teacher = teacherRepository.findByPersonId(personId)
+		Teacher teacher = teacherRepository.findByActorId(actorId)
 				.orElseThrow(() -> new EntityNotFoundException(
 						"Teacher with this user ID does not exist"));
+		
+		updatePersonService.updatePerson(actorId, dto);
 		
 		if (dto.getJobTitle() != null) {
 			teacher.setJobTitle(dto.getJobTitle());

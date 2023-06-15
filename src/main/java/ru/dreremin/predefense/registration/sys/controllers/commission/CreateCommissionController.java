@@ -1,6 +1,8 @@
 package ru.dreremin.predefense.registration.sys.controllers.commission;
 
 import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,11 +24,11 @@ public class CreateCommissionController {
 	
 	@PostMapping(value = "/commission", 
 			consumes = "application/json")
-	public StatusResponseDto createComission(
+	public ResponseEntity<StatusResponseDto> createComission(
 			@Valid @RequestBody CommissionRequestDto dto) {
 		service.createComission(dto);
 		log.info("CreateComissionController.createComission() success");
-		return new StatusResponseDto(200, "Ok");
+		return ResponseEntity.ok(new StatusResponseDto(200, "Ok"));
 	}
  
 }

@@ -1,4 +1,4 @@
-package ru.dreremin.predefense.registration.sys.services.comissions;
+package ru.dreremin.predefense.registration.sys.services.commission;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.services.commission.CreateCommissionService;
@@ -28,25 +28,24 @@ import ru.dreremin.predefense.registration.sys.services.commission.CreateCommiss
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CreateCommissionServiceTest {
-	
+
 	@Autowired
 	private CreateCommissionService service;
 	
 	@Autowired
 	private CommissionRepository repository;
 	
-	private CommissionDto dto;
+	private CommissionRequestDto dto;
 	
 	private Instant time;
 
 	@BeforeAll
 	void beforeAll() {
-		dto = new CommissionDto(
+		dto = new CommissionRequestDto(
 				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
-				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
+				ZonedDateTime.parse("2022-08-03T12:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
-				true,
 				"ПИ",
 				"Аудитория №7",
 				(short)2);

@@ -19,8 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherRequestDto;
 import ru.dreremin.predefense.registration.sys.models.Commission;
 import ru.dreremin.predefense.registration.sys.models.Teacher;
 import ru.dreremin.predefense.registration.sys.models.TeacherCommission;
@@ -33,7 +33,7 @@ import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherSer
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TeacherCommissionRepositoryTest {
-	
+
 	@Autowired TeacherCommissionRepository teacherComissionRepo;
 	
 	@Autowired private CreateCommissionService comissionService;
@@ -65,20 +65,19 @@ class TeacherCommissionRepositoryTest {
 	@BeforeAll
 	public void beforeAll() throws Exception {
 		
-		CommissionDto commissionDto = new CommissionDto(
+		CommissionRequestDto commissionRequestDto = new CommissionRequestDto(
 				ZonedDateTime.parse(
 						"2022-08-03T10:15:30+03:00[Europe/Moscow]"),
 				ZonedDateTime.parse(
 						"2022-08-03T12:15:30+03:00[Europe/Moscow]"),
-				true,
 				s,
 				s,
 				(short)2);
 		
 		for (int i = 0; i < 2; i++) {
-			teacherService.createTeacher(new TeacherDto(
-					s, s, s, emails[i], logins[i], s, s));
-			comissionService.createComission(commissionDto);
+			teacherService.createTeacher(new TeacherRequestDto(
+					logins[i], s, s, s, s, emails[i], s));
+			comissionService.createComission(commissionRequestDto);
 		}
 		
 		teachers = teacherRepo.findAll();
@@ -90,7 +89,7 @@ class TeacherCommissionRepositoryTest {
 							teacher.getId(), commissions.get(0).getId()));
 		}
 		
-		teacherService.createTeacher(new TeacherDto(
+		teacherService.createTeacher(new TeacherRequestDto(
 				s, s, s, emails[2], logins[2], s, s));
 		teachers = teacherRepo.findAll();
 		for (int i = 0; i < 2; i++) {
@@ -119,55 +118,55 @@ class TeacherCommissionRepositoryTest {
 
 	
 	@Test
-	void findByComissionId_Success() {
-		assertTrue(teacherComissionRepo.findByComissionId(
+	void findAllByComissionId_Success() {
+		assertTrue(teacherComissionRepo.findAllByCommissionId(
 				commissions.get(0).getId()).size() == 3);
 	}
 	
 	@Test
-	void findByComissionId_IdDoesNotExists() {
-		assertTrue(teacherComissionRepo.findByComissionId(
+	void findAllByComissionId_IdDoesNotExists() {
+		assertTrue(teacherComissionRepo.findAllByCommissionId(
 				commissions.get(0).getId() + 2).size() == 0);
 	}
 	
 	@Test
-	void findByTeacherId_Success() {
-		assertTrue(teacherComissionRepo.findByTeacherId(
+	void findAllByTeacherId_Success() {
+		assertTrue(teacherComissionRepo.findAllByTeacherId(
 				teachers.get(0).getId()).size() == 1);
-		assertTrue(teacherComissionRepo.findByTeacherId(
+		assertTrue(teacherComissionRepo.findAllByTeacherId(
 				teachers.get(2).getId()).size() == 2);
 	}
 	
 	@Test
-	void findByTeacherId_IdDoesNotExists() {
-		assertTrue(teacherComissionRepo.findByTeacherId(
+	void findAllByTeacherId_IdDoesNotExists() {
+		assertTrue(teacherComissionRepo.findAllByTeacherId(
 				teachers.get(0).getId() + 10).size() == 0);
 	}
 	
 	@Test
-	void findByTeacherIdAndComissionId_Success() {
+	void findByTeacherIdAndCommissionId_Success() {
 		Optional<TeacherCommission> opt = 
-				teacherComissionRepo.findByTeacherIdAndComissionId(
+				teacherComissionRepo.findByTeacherIdAndCommissionId(
 						teachers.get(2).getId(), 
 						commissions.get(0).getId());
 		assertTrue(opt.isPresent());
 		assertEquals(teachers.get(2).getId(), opt.get().getTeacherId());
-		assertEquals(commissions.get(0).getId(), opt.get().getComissionId());
+		assertEquals(commissions.get(0).getId(), opt.get().getCommissionId());
 	}
 	
 	@Test
-	void findByTeacherIdAndComissionId_TeacherIdDoesNotExists() {
+	void findByTeacherIdAndCommissionId_TeacherIdDoesNotExists() {
 		Optional<TeacherCommission> opt = 
-				teacherComissionRepo.findByTeacherIdAndComissionId(
+				teacherComissionRepo.findByTeacherIdAndCommissionId(
 						teachers.get(2).getId() + 10, 
 						commissions.get(0).getId());
 		assertTrue(opt.isEmpty());
 	}
 	
 	@Test
-	void findByTeacherIdAndComissionId_ComissionIdDoesNotExists() {
+	void findByTeacherIdAndCommissionId_ComissionIdDoesNotExists() {
 		Optional<TeacherCommission> opt = 
-				teacherComissionRepo.findByTeacherIdAndComissionId(
+				teacherComissionRepo.findByTeacherIdAndCommissionId(
 						teachers.get(2).getId(), 
 						commissions.get(0).getId() + 10);
 		assertTrue(opt.isEmpty());

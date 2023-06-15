@@ -8,32 +8,29 @@ import lombok.RequiredArgsConstructor;
 public class CommissionResponseDto {
 
 	@JsonProperty(value = "id")
-	protected final int id;
+	private final int id;
 	
 	@JsonProperty(value = "startTime")
-	protected final String startDateTime;
+	private final String startDateTime;
 	
 	@JsonProperty(value = "endTime")
-	protected final String endDateTime;
+	private final String endDateTime;
 	
 	@JsonProperty(value = "studyDirection")
-	protected final String studyDirection;
-	
-	@JsonProperty(value = "presenceFormat")
-	protected final String presenceFormat;
+	private final String studyDirection;
 	
 	@JsonProperty(value = "location")
-	protected final String location;
+	private final String location;
 	
 	@JsonProperty(value = "studentLimit")
-	protected final short studentLimit; 
+	private final short studentLimit; 
 	
 	@JsonProperty(value = "teachers")
-	protected final List<TeacherResponseDto> teachers;
+	private final List<TeacherResponseDto> teachers;
 	
 	@JsonProperty(value = "students")
-	protected final List<StudentResponseDto> students;
+	private final List<StudentResponseDto> students;
 	
 	@JsonProperty(value = "note")
-	protected final String note;
+	private final String note;
 }

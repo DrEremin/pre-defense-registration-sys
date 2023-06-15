@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import ru.dreremin.predefense.registration.sys.dto.response
 		 .CommissionResponseDto;
 import ru.dreremin.predefense.registration.sys.dto.response.StudentResponseDto;
@@ -40,7 +40,6 @@ import ru.dreremin.predefense.registration.sys.services.teacher
 import ru.dreremin.predefense.registration.sys.util.ZonedDateTimeProvider;
 import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReadCommissionService {
@@ -90,8 +89,7 @@ public class ReadCommissionService {
 				commission.getId(), 
 				startDateTime, 
 				endDateTime, 
-				commission.getStudyDirection(), 
-				commission.getPresenceFormat(), 
+				commission.getStudyDirection(),  
 				commission.getLocation(), 
 				commission.getStudentLimit(), 
 				teachersDto,
@@ -218,13 +216,14 @@ public class ReadCommissionService {
 	@Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {
 			EntityNotFoundException.class })
 	private WrapperForPageResponseDto<Commission, CommissionResponseDto> 
-			getMyCommissionsListForTeacher(int id, PageRequest pageRequest) {
+			getMyCommissionsList(int id, PageRequest pageRequest) {
 
 			Page<Commission> actualCommissions = commissionRepo
 					.findAllByTeacherIdAfter(
 							id, 
 							ZonedDateTime.now(), 
 							pageRequest);
+	
 			return new WrapperForPageResponseDto<>(
 					getResult(actualCommissions));
 	}
@@ -247,10 +246,10 @@ public class ReadCommissionService {
 								() -> new EntityNotFoundException(
 										"Teacher with this login does not "
 										+ "exist"));
-				log.debug(String.valueOf(teacher.getId()));
+				
 				result = my.length() == 0 
 						? getActualCommissionsList(pageRequest, null) 
-						: getMyCommissionsListForTeacher(teacher.getId(), pageRequest);
+						: getMyCommissionsList(teacher.getId(), pageRequest);
 				break;
 			case STUDENT:
 				

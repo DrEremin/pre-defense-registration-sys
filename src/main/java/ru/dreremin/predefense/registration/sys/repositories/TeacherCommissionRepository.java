@@ -13,7 +13,7 @@ public interface TeacherCommissionRepository
 	
 	List<TeacherCommission> findAllByCommissionId(int commissionId);
 	
-	List<TeacherCommission> findAllByTeacherId(long teacherId);
+	List<TeacherCommission> findAllByTeacherId(int teacherId);
 	
 	Optional<TeacherCommission> findByTeacherIdAndCommissionId(
 			int teacherId, 

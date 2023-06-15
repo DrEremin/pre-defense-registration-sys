@@ -19,6 +19,7 @@ import ru.dreremin.predefense.registration.sys.repositories
 public class DeleteAdministratorService {
 
 	private final AdministratorRepository administratorRepository;
+	
 	private final ActorRepository actorRepository;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE, 

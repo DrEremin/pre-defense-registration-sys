@@ -27,7 +27,7 @@ public class UpdateTeacherController {
 			value = "/teacher/{id}",
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<StatusResponseDto> updateTeacher(
-			@PathVariable(value = "id") @Min(1) @Max(Long.MAX_VALUE) long id, 
+			@PathVariable(value = "id") @Min(1) @Max(Integer.MAX_VALUE) int id, 
 			@RequestBody TeacherRequestDto dto) {
 		
 		updateTeacherService.updateTeacher(id, dto);

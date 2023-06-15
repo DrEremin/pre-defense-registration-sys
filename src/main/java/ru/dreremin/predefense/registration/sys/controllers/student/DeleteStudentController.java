@@ -2,7 +2,6 @@ package ru.dreremin.predefense.registration.sys.controllers.student;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import ru.dreremin.predefense.registration.sys.services.student
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users")
 public class DeleteStudentController {
 
 	private final DeleteStudentService deleteStudentService;

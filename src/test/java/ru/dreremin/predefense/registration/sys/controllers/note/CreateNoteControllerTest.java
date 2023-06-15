@@ -1,9 +1,8 @@
-package ru.dreremin.predefense.registration.sys.controllers.create;
+package ru.dreremin.predefense.registration.sys.controllers.note;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request
-				 .MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result
 				 .MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result
@@ -34,13 +33,20 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.CommissionDto;
-import ru.dreremin.predefense.registration.sys.dto.request.NoteDto;
+import ru.dreremin.predefense.registration.sys.dto.request.AuthenticationRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.CommissionRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.NoteRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherRequestDto;
+import ru.dreremin.predefense.registration.sys.repositories.ActorRepository;
 import ru.dreremin.predefense.registration.sys.repositories
 		 .CommissionRepository;
 import ru.dreremin.predefense.registration.sys.repositories.NoteRepository;
+import ru.dreremin.predefense.registration.sys.services.auth.AuthenticationService;
 import ru.dreremin.predefense.registration.sys.services.commission.CreateCommissionService;
+import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherService;
+import ru.dreremin.predefense.registration.sys.services.user.DeleteUserService;
 
 @Slf4j
 @SpringBootTest
@@ -59,26 +65,45 @@ class CreateNoteControllerTest {
 	@Autowired private CommissionRepository comissionRepo;
 	
 	@Autowired private ObjectMapper mapper;
+	
+	@Autowired private CreateTeacherService createTeacherService;
+	
+	@Autowired private DeleteUserService deleteUserService;
+	
+	@Autowired private AuthenticationService authenticationService;
+	
+	@Autowired private ActorRepository actorRepository;
 
 	private Instant time;
 	
 	private int comissionId;
 	
-	private String str;
+	private String str, urn, token;
 	
 	@BeforeAll
 	void beforeAll() throws Exception {
 		str = "placeholder";
-		comissionService.createComission(new CommissionDto(
+		comissionService.createComission(new CommissionRequestDto(
 				ZonedDateTime.parse("2022-08-03T10:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
 				ZonedDateTime.parse("2022-08-03T12:15:30+03:00[Europe/Moscow]", 
 						DateTimeFormatter.ISO_ZONED_DATE_TIME),
-				true,
 				str,
 				str,
 				(short)2));
 		comissionId = comissionRepo.findAll().get(0).getId();
+		urn = "/note/commission/" + String.valueOf(comissionId);
+		createTeacherService.createTeacher(
+				new TeacherRequestDto(
+						"teacher", 
+						"123", 
+						"", 
+						"", 
+						"", 
+						"teacher@mail.ru", 
+						""));
+		token = "Bearer_" + authenticationService.getToken(
+				new AuthenticationRequestDto("teacher", "123"));
 	}
 	
 	@BeforeEach
@@ -91,13 +116,18 @@ class CreateNoteControllerTest {
 	}
 	
 	@AfterAll
-	void afterAll() { comissionRepo.deleteAll(); }
+	void afterAll() { 
+		comissionRepo.deleteAll(); 
+		deleteUserService.deleteUser(
+				actorRepository.findByLogin("teacher").get().getId());
+	}
 	
 	@Test
 	void createNote_Success() throws Exception {
-		mockMvc.perform(put("/create-note")
+		mockMvc.perform(post(urn)
+						.header("Authorization", token)
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(mapper.writeValueAsString(new NoteDto(comissionId, str)))
+						.content(mapper.writeValueAsString(new NoteRequestDto(str)))
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -110,12 +140,10 @@ class CreateNoteControllerTest {
 	@Test
 	void createNote_RequestBodyIsMissingField() throws Exception {
 		
-		String json = mapper.writeValueAsString(new NoteDto(comissionId, str))
-				.replace("\"comissionId\":" + comissionId + ",", "");
-		
-		mockMvc.perform(put("/create-note")
+		mockMvc.perform(post(urn)
+						.header("Authorization", token)
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(json)
+						.content("{\"content\":\"\"}")
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -131,10 +159,11 @@ class CreateNoteControllerTest {
 	@Test
 	void createNote_invalidRequestBodySyntax() throws Exception {
 		
-		String json = mapper.writeValueAsString(new NoteDto(comissionId, str))
-				.replaceFirst(",", "");
+		String json = mapper.writeValueAsString(new NoteRequestDto(str))
+				.replaceFirst("}", "");
 		
-		mockMvc.perform(put("/create-note")
+		mockMvc.perform(post(urn)
+						.header("Authorization", token)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(json)
 						.accept(MediaType.APPLICATION_JSON))
@@ -152,16 +181,17 @@ class CreateNoteControllerTest {
 	@Test
 	void createNote_ComissionDoesNotExist() throws Exception {
 		
-		mockMvc.perform(put("/create-note")
+		mockMvc.perform(post(urn + "329")
+						.header("Authorization", token)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(mapper.writeValueAsString(
-								new NoteDto(comissionId + 10, str)))
+								new NoteRequestDto(str)))
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isConflict())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.status", is(409)))
 				.andExpect(jsonPath("$.message", 
-						is("There is not exists comission with this Id")))
+						is("Commission with this ID does not exists")))
 				.andExpect(r -> assertInstanceOf(
 						EntityNotFoundException.class, 
 						r.getResolvedException()));

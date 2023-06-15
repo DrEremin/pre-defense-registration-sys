@@ -40,7 +40,7 @@ public interface ActorRepository extends JpaRepository<Actor, Long>{
 			+ "join Person p on t.personId = p.id "
 			+ "join Actor a on p.actorId = a.id "
 			+ "where t.id = :teacherId")
-	Optional<Actor> findByTeacherId(@Param("teacherId") long id);
+	Optional<Actor> findByTeacherId(@Param("teacherId") int id);
 	
 	@Query("select ac "
 			+ "from Actor ac "

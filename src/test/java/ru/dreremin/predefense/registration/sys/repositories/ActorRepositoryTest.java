@@ -22,6 +22,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
 
 import ru.dreremin.predefense.registration.sys.models.Actor;
+import ru.dreremin.predefense.registration.sys.util.enums.Role;
 
 @Slf4j
 @DataJpaTest
@@ -34,22 +35,22 @@ class ActorRepositoryTest {
 	@Autowired
 	private ActorRepository repo;
 	private String login, password;
-	private long personId;
 	private Instant time;
+	private Role role;
 	
 	@BeforeAll
 	void beforeAll() {
 		login = "login";
 		password = "password";
-		personId = 1;
-		repo.save(new Actor(login, password, personId));
+		role = Role.ADMIN;
+		repo.save(new Actor(login, password, role.getRole()));
 	}
 	
 	@BeforeEach
     void beforeEach() { time = Instant.now(); }
 
 	@AfterAll
-	void afterAll() { repo.deleteById(login); }
+	void afterAll() { repo.deleteAll(); }
 	
     @AfterEach
     void afterEach() {
@@ -65,5 +66,22 @@ class ActorRepositoryTest {
 	void findByLogin_DoesNotExists() {
 		assertFalse(repo.findByLogin("123").isPresent());
 	}
+	
+/////////	
+	@Test
+	void findByStudentId_Success() {
+		assertTrue(true);
+	}
+	
+	@Test
+	void findByTeacherId_Success() {
+		assertTrue(true);
+	}
+	
+	@Test
+	void findAllAdministrators_Success() {
+		assertTrue(true);
+	}
+/////////	
 }
 

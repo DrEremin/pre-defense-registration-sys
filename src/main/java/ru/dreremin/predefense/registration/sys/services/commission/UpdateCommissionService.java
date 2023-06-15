@@ -56,9 +56,6 @@ public class UpdateCommissionService {
 				dto.getStartDateTime(), 
 				dto.getEndDateTime(), 
 				commission);
-		if (dto.getPresenceFormat() != null) {
-			commission.setPresenceFormat(dto.getPresenceFormat());
-		}
 		if (dto.getStudyDirection() != null) {
 			checkingPossibilityOfUpdateStudyDirection(commission.getId());
 			commission.setStudyDirection(dto.getStudyDirection());
@@ -66,7 +63,7 @@ public class UpdateCommissionService {
 		if (dto.getLocation() != null) {
 			commission.setLocation(dto.getLocation());
 		}
-		if (dto.getStudentLimit() != null) {
+		if (dto.getStudentLimit() != 0) {
 			checkingPossibilityOfUpdateStudentLimit(
 					commission.getId(), 
 					dto.getStudentLimit());

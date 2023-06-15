@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherRequestDto;
 import ru.dreremin.predefense.registration.sys.exceptions
 		 .UniquenessViolationException;
 import ru.dreremin.predefense.registration.sys.models.Person;
@@ -33,24 +33,24 @@ import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherSer
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CreateTeacherServiceTest {
-	
+
 	@Autowired private CreateTeacherService service;
 	@Autowired private ActorRepository author;
 	@Autowired private EmailRepository box;
 	@Autowired private PersonRepository person;
-	private TeacherDto currentDto;
-	private TeacherDto firstDto;
+	private TeacherRequestDto currentDto;
+	private TeacherRequestDto firstDto;
 	private Instant time;
 	
 	@BeforeAll
 	void beforeAll() {
-		firstDto = new TeacherDto(
+		firstDto = new TeacherRequestDto(
+				"ivanlogin", 
+				"password12345", 
 				"Иванов", 
 				"Иван", 
 				"Иванович", 
 				"ivan@mail.ru", 
-				"ivanlogin", 
-				"password12345", 
 				"Профессор");
 	}
 	
@@ -75,13 +75,13 @@ class CreateTeacherServiceTest {
 	@Test
 	void createTeacher_LoginExists() throws UniquenessViolationException {
 		service.createTeacher(firstDto);
-		currentDto = new TeacherDto(
+		currentDto = new TeacherRequestDto(
+				"ivanlogin", 
+				"password6789", 
 				"Петров", 
 				"Петр", 
 				"Петрович", 
 				"petya@mail.ru", 
-				"ivanlogin", 
-				"password6789", 
 				"Доцент");
 		assertThrowsExactly(UniquenessViolationException.class, 
 				() -> service.createTeacher(currentDto));
@@ -92,13 +92,13 @@ class CreateTeacherServiceTest {
 	@Test
 	void createTeacher_BoxExists() throws UniquenessViolationException {
 		service.createTeacher(firstDto);
-		currentDto = new TeacherDto(
+		currentDto = new TeacherRequestDto(
+				"petyalogin", 
+				"password6789", 
 				"Петров", 
 				"Петр", 
 				"Петрович", 
 				"ivan@mail.ru", 
-				"petyalogin", 
-				"password6789", 
 				"Доцент");
 		assertThrowsExactly(UniquenessViolationException.class, 
 				() -> service.createTeacher(currentDto));

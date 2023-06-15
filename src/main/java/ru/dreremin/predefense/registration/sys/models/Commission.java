@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "comission")
+@Table(name = "commission")
 public class Commission implements Comparable<Commission>{
 
 	@Id
@@ -26,9 +26,6 @@ public class Commission implements Comparable<Commission>{
 	
 	@Column(name = "end_datetime_c")
 	private ZonedDateTime endDateTime;
-	
-	@Column(name = "presence_format_c")
-	private String presenceFormat;
 	
 	@Column(name = "study_direction_c")
 	private String studyDirection;
@@ -43,13 +40,11 @@ public class Commission implements Comparable<Commission>{
 	
 	public Commission(ZonedDateTime startDateTime,
 					 ZonedDateTime endDateTime,
-					 String presenceFormat,
 					 String studyDirection,
 					 String location,
 					 Short studentLimit) {
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
-		this.presenceFormat = presenceFormat;
 		this.studyDirection = studyDirection;
 		this.location = location;
 		this.studentLimit = studentLimit;
@@ -59,14 +54,12 @@ public class Commission implements Comparable<Commission>{
 			int id,
 			ZonedDateTime startDateTime,
 			ZonedDateTime endDateTime,
-			String presenceFormat,
 			String studyDirection,
 			String location,
 			Short studentLimit) {
 		this.id = id;
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
-		this.presenceFormat = presenceFormat;
 		this.studyDirection = studyDirection;
 		this.location = location;
 		this.studentLimit = studentLimit;

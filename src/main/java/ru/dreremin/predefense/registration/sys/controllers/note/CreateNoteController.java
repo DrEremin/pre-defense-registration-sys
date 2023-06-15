@@ -22,7 +22,7 @@ public class CreateNoteController {
 	
 	private final CreateNoteService crateNoteService;
 	
-	@PostMapping("/commission/{id}/note")
+	@PostMapping("/note/commission/{id}")
 	public ResponseEntity<StatusResponseDto> createNote(
 			@PathVariable(value = "id")
 			@Min(1)

@@ -22,8 +22,6 @@ public interface StudentRepository extends JpaRepository<Student, Long>{
 		return findByPersonId(id).isPresent();
 	}
 	
-	List<Student> findAllByGroupNumber(String groupNumber);
-	
 	@Query("select new Student("
 			+ "s.id, "
 			+ "s.personId, "
@@ -63,20 +61,6 @@ public interface StudentRepository extends JpaRepository<Student, Long>{
 				+ "on s.personId = p.id "
 			+ "order by p.lastName asc")
 	Page<Student> findAllOrderByLastName(Pageable pageable);
-	
-	@Query("select new Student("
-			+ "s.id, "
-			+ "s.personId, "
-			+ "s.groupNumber, "
-			+ "s.studyDirection, "
-			+ "s.studyType) "
-			+ "from Student s "
-			+ "join Person p "
-				+ "on s.personId = p.id "
-			+ "where s.groupNumber = :groupNumber "
-			+ "order by p.lastName asc")
-	Page<Student> findAllByGroupNumberOrderByLastName(
-			@Param("groupNumber") String groupNumber, Pageable pageable);
 	
 	@Query("select new Student("
 			+ "s.id, "

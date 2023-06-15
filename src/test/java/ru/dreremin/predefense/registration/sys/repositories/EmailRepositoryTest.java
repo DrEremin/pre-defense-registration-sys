@@ -16,8 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import lombok.extern.slf4j.Slf4j;
-import ru.dreremin.predefense.registration.sys.dto.request.StudentDto;
-import ru.dreremin.predefense.registration.sys.dto.request.TeacherDto;
+import ru.dreremin.predefense.registration.sys.dto.request.StudentRequestDto;
+import ru.dreremin.predefense.registration.sys.dto.request.TeacherRequestDto;
 import ru.dreremin.predefense.registration.sys.services.student.CreateStudentService;
 import ru.dreremin.predefense.registration.sys.services.teacher.CreateTeacherService;
 
@@ -38,9 +38,9 @@ class EmailRepositoryTest {
 	
 	@Autowired private PersonRepository personRepo;	
 	
-	@Autowired private CreateStudentService studentService;
+	@Autowired private CreateStudentService createStudentService;
 	
-	@Autowired private CreateTeacherService teacherService;
+	@Autowired private CreateTeacherService createTeacherService;
 	
 	private String login;
 	
@@ -57,26 +57,26 @@ class EmailRepositoryTest {
 		password = "password";
 		for (int i = 0; i < 3; i++) {
 			login = new StringBuilder("name").append(i).toString();
-			studentService.createStudent(new StudentDto(
+			createStudentService.createStudent(new StudentRequestDto(
+					login,
+					password,
 					"lastname", 
 					"firstname", 
 					"patronymic", 
 					new StringBuilder(login).append(suffix).toString(),
-					login,
-					password,
-					"Программная инженерия",
+					"ПИ",
 					"Заочное",
 					"111"));
 		}
 		for (int i = 3; i < 5; i++) {
 			login = new StringBuilder("name").append(i).toString();
-			teacherService.createTeacher(new TeacherDto(
+			createTeacherService.createTeacher(new TeacherRequestDto(
+					login,
+					password,
 					"lastname", 
 					"firstname", 
 					"patronymic", 
 					new StringBuilder(login).append(suffix).toString(),
-					login,
-					password,
 					"Professor"));
 		}
 	}
@@ -100,7 +100,7 @@ class EmailRepositoryTest {
     
 	@Test
 	void findByBox_Success() {
-		assertTrue(emailRepo.findByBox(new StringBuilder("name")
+		assertTrue(emailRepo.findByAddress(new StringBuilder("name")
 						.append(2)
 						.append(suffix)
 						.toString())
@@ -109,7 +109,7 @@ class EmailRepositoryTest {
 	
 	@Test
 	void findByBox_DoesNotExists() {
-		assertFalse(emailRepo.findByBox(new StringBuilder("name")
+		assertFalse(emailRepo.findByAddress(new StringBuilder("name")
 						.append(10)
 						.append(suffix)
 						.toString())
